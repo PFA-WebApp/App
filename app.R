@@ -77,7 +77,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
         )
 
         session$onSessionEnded(function() {
-            DBI::dbDisconnect(.values$db)
+            # DBI::dbDisconnect(.values$db)
         })
     }
 
