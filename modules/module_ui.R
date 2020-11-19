@@ -11,6 +11,10 @@ module_ui_ui <- function(id) {
         shinydashboard::menuItem(
           text = "Login",
           tabName = "login"
+        ),
+        shinydashboard::menuItem(
+          text = "QR-Generator",
+          tabName = "qr_generator"
         )
       )
     ),
@@ -18,6 +22,12 @@ module_ui_ui <- function(id) {
       shinydashboard::tabItems(
         shinydashboard::tabItem(
           tabName = "login"
+        ),
+        shinydashboard::tabItem(
+          tabName = "qr_generator",
+          qr_generator_ui(
+            id = ns("id_qr_generator")
+          )
         )
       )
     )
@@ -37,4 +47,10 @@ module_ui <- function(
       selected = tabName
     )
   }
+
+  shiny::callModule(
+    module = qr_generator,
+    id = "id_qr_generator",
+    .values = .values
+  )
 }
