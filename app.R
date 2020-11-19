@@ -8,7 +8,9 @@ ui_server <- function(source_to_globalenv = FALSE) {
     # If source_to_global_env all sourced functions get added to the global
     # environment which takes some time after the app has stopped
 
-    QWUtils::source_directory(
+    source("init/source_directory.R")
+
+    source_directory(
         # chdir makes it possible to use relative paths in source statements inside
         # these sourced files (for example DataStorage2.R)
         path = "modules", encoding = "UTF-8", modifiedOnly = FALSE,
