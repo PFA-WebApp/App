@@ -13,67 +13,54 @@ sidebar_menu_server <- function(id, .values) {
 
       ns <- session$ns
 
+      # Name of menu items that are visible according to access right
+      access_list <- list(
+        not_logged = "login",
+        admin = c(
+          "login", "operate", "reporting", "user_management",
+          "sensor_management"
+        ),
+        moderator = c("login", "operate", "reporting", "user_management"),
+        user = c("login", "operate")
+      )
+
+      # List of all possible menu items. Extraction is done according to access
+      # right
+      menu_item_list <- list(
+        login = shinydashboard::menuItem(
+          text = "Login",
+          tabName = "login"
+        ),
+        operate = shinydashboard::menuItem(
+          text = "Ausleihen & Zurückgeben",
+          tabName = "operate"
+        ),
+        reporting = shinydashboard::menuItem(
+          text = "Reporting",
+          tabName = "reporting"
+        ),
+        sensor_management = shinydashboard::menuItem(
+          text = "Sensorverwaltung",
+          tabName = "sensor_management"
+        ),
+        user_management = shinydashboard::menuItem(
+          text = "Nutzerverwaltung",
+          tabName = "user_management"
+        )
+      )
+
       output$menu <- shinydashboard::renderMenu({
         print(sidebar_menu_r())
       })
 
+      user_type_r <- shiny::reactive({
+        if (!.values$user$logged()) "not_logged" else .values$user$type()
+      })
+
       sidebar_menu_r <- shiny::reactive({
-        if (!.values$user$logged()) return(sidebar_menu_not_logged_r())
+        menu_items <- unname(menu_item_list[access_list[[user_type_r()]]])
 
-        switch(
-          .values$user$type(),
-          "admin" = sidebar_menu_admin_r(),
-          "moderator" = sidebar_menu_moderator_r(),
-          "user" = sidebar_menu_user_r()
-        )
-      })
-
-      sidebar_menu_not_logged_r <- shiny::reactive({
-        shinydashboard::sidebarMenu(
-          shinydashboard::menuItem(
-            text = "Login",
-            tabName = "login"
-          )
-        )
-      })
-
-      sidebar_menu_admin_r <- shiny::reactive({
-        shinydashboard::sidebarMenu(
-          shinydashboard::menuItem(
-            text = "Login",
-            tabName = "login"
-          ),
-          shinydashboard::menuItem(
-            text = "Admin",
-            tabName = "admin"
-          )
-        )
-      })
-
-      sidebar_menu_moderator_r <- shiny::reactive({
-        shinydashboard::sidebarMenu(
-          shinydashboard::menuItem(
-            text = "Login",
-            tabName = "login"
-          ),
-          shinydashboard::menuItem(
-            text = "Moderator",
-            tabName = "moderator"
-          )
-        )
-      })
-
-      sidebar_menu_user_r <- shiny::reactive({
-        shinydashboard::sidebarMenu(
-          shinydashboard::menuItem(
-            text = "Login",
-            tabName = "login"
-          ),
-          shinydashboard::menuItem(
-            text = "User",
-            tabName = "user"
-          )
-        )
+        shinydashboard::sidebarMenu(.list = menu_items)
       })
     }
   )

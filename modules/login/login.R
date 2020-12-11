@@ -21,7 +21,6 @@ login_server <- function(id, .values) {
       ns <- session$ns
 
       shiny::observeEvent(input$user_type, {
-        print(input$user_type)
         if (input$user_type == "not_logged") {
           .values$user$logged(FALSE)
           .values$user$type(NULL)
