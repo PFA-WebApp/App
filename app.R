@@ -36,8 +36,8 @@ ui_server <- function(source_to_globalenv = FALSE) {
         ),
         # ui_ui generates the UI which is displayed in the content_list,
         # viewer_data and viewer_plot
-        module_ui_ui(
-            id = "id_ui"
+        container_ui(
+            id = "container"
         ),
         # Enable shinyjs
         useShinyjs(),
@@ -63,7 +63,9 @@ ui_server <- function(source_to_globalenv = FALSE) {
         # store a trigger for each instance
         .values$trigger_list <- list()
 
-        .values$logged <- shiny::reactiveVal(FALSE)
+        .values$user <- list()
+        .values$user$logged <- shiny::reactiveVal(FALSE)
+        .values$user$type <- shiny::reactiveVal(NULL)
 
         # Connect to db
         # .values$db <- DBI::dbConnect(RSQLite::SQLite(), "./db/db.sqlite")
@@ -71,10 +73,9 @@ ui_server <- function(source_to_globalenv = FALSE) {
         # Use regex
         # RSQLite::initRegExp(.values$db)
 
-        # CALL MODULE ----------------------------------------------------------
-        shiny::callModule(
-            module = module_ui,
-            id = "id_ui",
+        # Call container module
+        container_server(
+            id = "container",
             .values = .values
         )
 
