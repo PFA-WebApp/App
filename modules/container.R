@@ -6,18 +6,17 @@ container_ui <- function(id) {
       title = "QRTools"
     ),
     shinydashboard::dashboardSidebar(
-      shinydashboard::sidebarMenu(
-        id = ns("sidebar"),
-        shinydashboard::menuItem(
-          text = "Login",
-          tabName = "login"
-        )
+      sidebar_menu_ui(
+        id = ns("sidebar_menu")
       )
     ),
     shinydashboard::dashboardBody(
       shinydashboard::tabItems(
         shinydashboard::tabItem(
-          tabName = "login"
+          tabName = "login",
+          login_ui(
+            id = ns("login")
+          )
         )
       )
     )
@@ -28,8 +27,10 @@ container_server <- function(id, .values) {
   moduleServer(
     id,
     function(input, output, session) {
+
       ns <- session$ns
 
+      # Register function for updating sidebar from other modules
       .values$update_sidebar <- function(tabName) {
         shinydashboard::updateTabItems(
           session = session,
@@ -37,6 +38,16 @@ container_server <- function(id, .values) {
           selected = tabName
         )
       }
+
+      sidebar_menu_server(
+        id = "sidebar_menu",
+        .values = .values
+      )
+
+      login_server(
+        id = "login",
+        .values = .values
+      )
     }
   )
 }
