@@ -50,7 +50,7 @@ sidebar_menu_server <- function(id, .values) {
       )
 
       output$menu <- shinydashboard::renderMenu({
-        print(sidebar_menu_r())
+        sidebar_menu_r()
       })
 
       user_type_r <- shiny::reactive({

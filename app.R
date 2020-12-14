@@ -68,7 +68,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$user$type <- shiny::reactiveVal(NULL)
 
         # Connect to db
-        # .values$db <- DBI::dbConnect(RSQLite::SQLite(), "./db/db.sqlite")
+        .values$db <- DBI::dbConnect(RSQLite::SQLite(), "./db/db.sqlite")
 
         # Use regex
         # RSQLite::initRegExp(.values$db)

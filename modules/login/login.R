@@ -1,14 +1,20 @@
 login_ui <- function(id) {
   ns <- shiny::NS(id)
 
-  shiny::selectInput(
-    inputId = ns("user_type"),
-    label = "User type",
-    choices = c(
-      `Not logged` = "not_logged",
-      Admin = "admin",
-      Moderator = "moderator",
-      User = "user"
+  htmltools::tagList(
+    shiny::selectInput(
+      inputId = ns("user_type"),
+      label = "User type",
+      choices = c(
+        `Not logged` = "not_logged",
+        Admin = "admin",
+        Moderator = "moderator",
+        User = "user"
+      )
+    ),
+    shiny::actionButton(
+      inputId = ns("print_client_data"),
+      label = "Gimme Client Data"
     )
   )
 }
@@ -28,6 +34,10 @@ login_server <- function(id, .values) {
           .values$user$logged(TRUE)
           .values$user$type(input$user_type)
         }
+      })
+
+      shiny::observeEvent(input$print_client_data, {
+        print(parseQueryString(session$clientData$url_search))
       })
     }
   )
