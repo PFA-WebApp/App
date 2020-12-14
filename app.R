@@ -3,6 +3,7 @@ library(shinydashboard)
 library(shinyjs)
 library(dplyr)
 library(stringr)
+library(qrcode)
 
 ui_server <- function(source_to_globalenv = FALSE) {
     # If source_to_global_env all sourced functions get added to the global
