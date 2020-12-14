@@ -1,20 +1,18 @@
 login_ui <- function(id) {
   ns <- shiny::NS(id)
 
-  htmltools::tagList(
-    shiny::selectInput(
-      inputId = ns("user_type"),
-      label = "User type",
-      choices = c(
-        `Not logged` = "not_logged",
-        Admin = "admin",
-        Moderator = "moderator",
-        User = "user"
+  shiny::fluidRow(
+    shiny::column(
+      width = 6,
+      shinydashboard::box(
+        width = NULL,
+        status = "primary",
+        title = "Anmeldung",
+        solidHeader = TRUE,
+        shiny::uiOutput(
+          outputId = ns("login")
+        )
       )
-    ),
-    shiny::actionButton(
-      inputId = ns("print_client_data"),
-      label = "Gimme Client Data"
     )
   )
 }
@@ -26,18 +24,85 @@ login_server <- function(id, .values) {
 
       ns <- session$ns
 
-      shiny::observeEvent(input$user_type, {
-        if (input$user_type == "not_logged") {
-          .values$user$logged(FALSE)
-          .values$user$type(NULL)
+      output$login <- shiny::renderUI({
+        if (.values$user$status() == "not_logged") {
+          login_r()
         } else {
-          .values$user$logged(TRUE)
-          .values$user$type(input$user_type)
+          logout_r()
         }
       })
 
-      shiny::observeEvent(input$print_client_data, {
-        print(parseQueryString(session$clientData$url_search))
+      login_r <- shiny::reactive({
+        htmltools::tagList(
+          shiny::selectInput(
+            inputId = ns("user_name"),
+            label = "Benutzername",
+            choices = user_name_choices_r()
+          ),
+          shiny::passwordInput(
+            inputId = ns("user_password"),
+            label = "Passwort",
+            placeholder = "Passwort"
+          ),
+          shiny::actionButton(
+            inputId = ns("user_login"),
+            label = "Anmelden",
+            width = "100%"
+          )
+        )
+      })
+
+      shiny::observeEvent(input$user_login, {
+        user_pwd <- db_get_password(
+          db = .values$db,
+          name = input$user_name
+        )
+
+        pwd_correct <- bcrypt::checkpw(input$user_password, user_pwd)
+
+        if (pwd_correct) {
+          .values$user$status(db_get_user_status(db, input$user_name))
+
+          shiny::showNotification(
+            ui = "Du hast Dich erfolgreich angemeldet.",
+            type = "default",
+            duration = 3
+          )
+        } else {
+          shiny::showNotification(
+            ui = "Falsches Passwort! Bitte versuche es erneut.",
+            type = "error",
+            duration = 3
+          )
+        }
+
+        shiny::updateTextInput(
+          session = session,
+          inputId = "user_password",
+          value = ""
+        )
+      })
+
+      logout_r <- shiny::reactive({
+        shiny::actionButton(
+          inputId = ns("user_logout"),
+          label = "Abmelden",
+          width = "100%"
+        )
+      })
+
+      shiny::observeEvent(input$user_logout, {
+        .values$user$status("not_logged")
+
+        shiny::showNotification(
+          ui = "Du hast Dich erfolgreich abgemeldet. Bis zum nächsten Mal.",
+          type = "default",
+          duration = 3
+        )
+      })
+
+      user_name_choices_r <- shiny::reactive({
+        db_get_user_names(.values$db)
       })
     }
   )

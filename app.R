@@ -14,8 +14,20 @@ ui_server <- function(source_to_globalenv = FALSE) {
     source_directory(
         # chdir makes it possible to use relative paths in source statements inside
         # these sourced files (for example DataStorage2.R)
-        path = "modules", encoding = "UTF-8", modifiedOnly = FALSE,
-        chdir = TRUE, recursive = TRUE,
+        path = "modules",
+        encoding = "UTF-8",
+        modifiedOnly = FALSE,
+        chdir = TRUE,
+        recursive = TRUE,
+        envir = if (source_to_globalenv) globalenv() else environment()
+    )
+
+    source_directory(
+        path = "db",
+        encoding = "UTF-8",
+        modifiedOnly = FALSE,
+        chdir = TRUE,
+        recursive = TRUE,
         envir = if (source_to_globalenv) globalenv() else environment()
     )
 
@@ -65,8 +77,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$trigger_list <- list()
 
         .values$user <- list()
-        .values$user$logged <- shiny::reactiveVal(FALSE)
-        .values$user$type <- shiny::reactiveVal(NULL)
+        .values$user$status <- shiny::reactiveVal("not_logged")
 
         # Connect to db
         .values$db <- DBI::dbConnect(RSQLite::SQLite(), "./db/db.sqlite")
