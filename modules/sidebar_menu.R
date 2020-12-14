@@ -20,7 +20,7 @@ sidebar_menu_server <- function(id, .values) {
           "login", "operate", "reporting", "user_management",
           "sensor_management"
         ),
-        moderator = c("login", "operate", "reporting", "user_management"),
+        mod = c("login", "operate", "reporting", "user_management"),
         user = c("login", "operate")
       )
 

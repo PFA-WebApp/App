@@ -102,7 +102,9 @@ login_server <- function(id, .values) {
       })
 
       user_name_choices_r <- shiny::reactive({
-        db_get_user_names(.values$db)
+        .values$update$user()
+
+        sort(db_get_user_names(.values$db))
       })
     }
   )

@@ -19,6 +19,12 @@ container_ui <- function(id) {
           )
         ),
         shinydashboard::tabItem(
+          tabName = "user_management",
+          user_management_ui(
+            id = ns("user_management")
+          )
+        ),
+        shinydashboard::tabItem(
           tabName = "sensor_management",
           sensor_management_ui(
             id = ns("sensor_management")
@@ -52,6 +58,11 @@ container_server <- function(id, .values) {
 
       login_server(
         id = "login",
+        .values = .values
+      )
+
+      user_management_server(
+        id = "user_management",
         .values = .values
       )
 

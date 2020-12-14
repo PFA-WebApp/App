@@ -79,6 +79,8 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$user <- list()
         .values$user$status <- shiny::reactiveVal("not_logged")
 
+        .values$update$user <- shiny::reactiveVal(0)
+
         # Connect to db
         .values$db <- DBI::dbConnect(RSQLite::SQLite(), "./db/db.sqlite")
 

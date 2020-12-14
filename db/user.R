@@ -44,3 +44,15 @@ db_get_password <- function(db, name) {
     params = list(name)
   )$password
 }
+
+db_set_password <- function(db, name, password) {
+  DBI::dbExecute(
+    db,
+    "UPDATE user SET password = ? WHERE name = ?",
+    params = list(password, name)
+  )
+}
+
+db_has_user_name <- function(db, name) {
+  name %in% db_get_user_names(db)
+}
