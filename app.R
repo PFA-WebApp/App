@@ -5,6 +5,9 @@ library(dplyr)
 library(stringr)
 library(qrcode)
 
+# Custom libraries
+library(DB)
+
 ui_server <- function(source_to_globalenv = FALSE) {
     # If source_to_global_env all sourced functions get added to the global
     # environment which takes some time after the app has stopped
@@ -94,7 +97,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
         )
 
         session$onSessionEnded(function() {
-            # DBI::dbDisconnect(.values$db)
+            DBI::dbDisconnect(.values$db)
         })
     }
 

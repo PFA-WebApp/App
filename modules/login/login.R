@@ -53,7 +53,7 @@ login_server <- function(id, .values) {
       })
 
       shiny::observeEvent(input$user_login, {
-        user_pwd <- db_get_password(
+        user_pwd <- DB::db_get_password(
           db = .values$db,
           name = input$user_name
         )
@@ -61,7 +61,7 @@ login_server <- function(id, .values) {
         pwd_correct <- bcrypt::checkpw(input$user_password, user_pwd)
 
         if (pwd_correct) {
-          .values$user$status(db_get_user_status(db, input$user_name))
+          .values$user$status(DB::db_get_user_status(.values$db, input$user_name))
 
           shiny::showNotification(
             ui = "Du hast Dich erfolgreich angemeldet.",
@@ -104,7 +104,7 @@ login_server <- function(id, .values) {
       user_name_choices_r <- shiny::reactive({
         .values$update$user()
 
-        sort(db_get_user_names(.values$db))
+        sort(DB::db_get_user_names(.values$db))
       })
     }
   )

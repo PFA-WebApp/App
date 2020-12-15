@@ -86,7 +86,7 @@ user_management_server <- function(id, .values) {
           value = ""
         )
 
-        if (db_has_user_name(.values$db, input$user_name)) {
+        if (DB::db_has_user_name(.values$db, input$user_name)) {
           shiny::showNotification(
             ui = paste0(
               "Es exisitiert bereits ein Nutzer mit dem Benutzernamen \"",
@@ -130,8 +130,8 @@ user_management_server <- function(id, .values) {
           )
         )
 
-        db_add_user(
-          db = db,
+        DB::db_add_user(
+          db = .values$db,
           name = input$user_name,
           status = input$user_status,
           password = bcrypt::hashpw(input$user_password_1)
@@ -143,7 +143,7 @@ user_management_server <- function(id, .values) {
       output$user_table <- DT::renderDataTable({
         .values$update$user()
 
-        db_get_table(.values$db, "user") %>%
+        DB::db_get_table(.values$db, "user") %>%
           dplyr::select(Benutzername = name, Status = status)
       })
 
