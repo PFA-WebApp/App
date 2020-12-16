@@ -20,7 +20,7 @@ sidebar_menu_server <- function(id, .values) {
           "login", "operate", "reporting", "user_management",
           "sensor_management"
         ),
-        moderator = c("login", "operate", "reporting", "user_management"),
+        mod = c("login", "operate", "reporting", "user_management"),
         user = c("login", "operate")
       )
 
@@ -53,12 +53,8 @@ sidebar_menu_server <- function(id, .values) {
         sidebar_menu_r()
       })
 
-      user_type_r <- shiny::reactive({
-        if (!.values$user$logged()) "not_logged" else .values$user$type()
-      })
-
       sidebar_menu_r <- shiny::reactive({
-        menu_items <- unname(menu_item_list[access_list[[user_type_r()]]])
+        menu_items <- unname(menu_item_list[access_list[[.values$user$status()]]])
 
         shinydashboard::sidebarMenu(.list = menu_items)
       })
