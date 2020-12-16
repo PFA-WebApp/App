@@ -18,10 +18,12 @@ sidebar_menu_server <- function(id, .values) {
         not_logged = "login",
         admin = c(
           "login", "operate", "reporting", "user_management",
-          "sensor_management"
+          "sensor_management", "settings"
         ),
-        mod = c("login", "operate", "reporting", "user_management"),
-        user = c("login", "operate")
+        mod = c(
+          "login", "operate", "reporting", "user_management", "settings"
+        ),
+        user = c("login", "operate", "settings")
       )
 
       # List of all possible menu items. Extraction is done according to access
@@ -29,23 +31,33 @@ sidebar_menu_server <- function(id, .values) {
       menu_item_list <- list(
         login = shinydashboard::menuItem(
           text = "Login",
-          tabName = "login"
+          tabName = "login",
+          icon = shiny::icon("sign-in-alt")
         ),
         operate = shinydashboard::menuItem(
           text = "Ausleihen & Zurückgeben",
-          tabName = "operate"
+          tabName = "operate",
+          icon = shiny::icon("shipping-fast")
         ),
         reporting = shinydashboard::menuItem(
           text = "Reporting",
-          tabName = "reporting"
+          tabName = "reporting",
+          icon = shiny::icon("chart-line")
         ),
         sensor_management = shinydashboard::menuItem(
           text = "Sensorverwaltung",
-          tabName = "sensor_management"
+          tabName = "sensor_management",
+          icon = shiny::icon("temperature-low")
         ),
         user_management = shinydashboard::menuItem(
           text = "Nutzerverwaltung",
-          tabName = "user_management"
+          tabName = "user_management",
+          icon = shiny::icon("user-edit")
+        ),
+        settings = shinydashboard::menuItem(
+          text = "Einstellungen",
+          tabName = "settings",
+          icon = shiny::icon("cog")
         )
       )
 

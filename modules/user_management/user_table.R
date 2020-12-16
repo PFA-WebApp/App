@@ -19,12 +19,6 @@ user_table_server <- function(id, .values) {
 
       ns <- session$ns
 
-      status_mapper <- c(
-        admin = "Administrator",
-        mod = "Moderator",
-        user = "Benutzer"
-      )
-
       taken_user_names_rvs <- shiny::reactiveValues(
         remove = character(),
         reset_password = character()
@@ -35,62 +29,81 @@ user_table_server <- function(id, .values) {
 
         tbl <- DB::db_get_table(.values$db, "user")
 
-        tbl$remove <- purrr::map_chr(tbl$name, function(user_name) {
-          if (!user_name %in% taken_user_names_rvs$remove) {
-            taken_user_names_rvs$remove <- c(
-              taken_user_names_rvs$remove, user_name
-            )
+        tbl$remove <- purrr::map2_chr(
+          tbl$name, tbl$status,
+          function(user_name, status) {
+            if (!user_name %in% taken_user_names_rvs$remove) {
+              taken_user_names_rvs$remove <- c(
+                taken_user_names_rvs$remove, user_name
+              )
 
-            shiny::observeEvent(input[["remove" %_% user_name]], {
-              shiny::showModal(shiny::modalDialog(
-                easyClose = TRUE,
-                title = "Benutzer löschen",
-                htmltools::div(
-                  paste0(
-                    "Bist du sicher, dass du den Benutzer \"",
-                    user_name,
-                    "\" löschen möchtest?"
+              shiny::observeEvent(input[["remove" %_% user_name]], {
+                if (.values$user$status() == "mod" && status != "user") {
+                  shiny::showModal(shiny::modalDialog(
+                    easyClose = TRUE,
+                    title = "Zugriff verweigert!",
+                    htmltools::div(
+                      "Moderatoren dürfen nur Benutzer löschen."
+                    ),
+                    footer = shiny::modalButton(
+                      label = NULL,
+                      icon = shiny::icon("window-close")
+                    )
+                  ))
+
+                  return()
+                }
+
+                shiny::showModal(shiny::modalDialog(
+                  easyClose = TRUE,
+                  title = "Benutzer löschen",
+                  htmltools::div(
+                    paste0(
+                      "Bist du sicher, dass du den Benutzer \"",
+                      user_name,
+                      "\" löschen möchtest?"
+                    )
+                  ),
+                  footer = shiny::actionButton(
+                    inputId = ns("confirm_remove" %_% user_name),
+                    label = "Ja"
                   )
-                ),
-                footer = shiny::actionButton(
-                  inputId = ns("confirm_remove" %_% user_name),
-                  label = "Ja"
+                ))
+              })
+
+              shiny::observeEvent(input[["confirm_remove" %_% user_name]], {
+                shiny::removeModal()
+
+                shiny::showNotification(
+                  ui = paste0(
+                    "Der Benutzer \"",
+                    user_name,
+                    "\" wurde erfolgreich gelöscht."
+                  ),
+                  type = "warning",
+                  duration = NULL
                 )
-              ))
-            })
 
-            shiny::observeEvent(input[["confirm_remove" %_% user_name]], {
-              shiny::removeModal()
+                DB::db_remove_user(.values$db, user_name)
 
-              shiny::showNotification(
-                ui = paste0(
-                  "Der Benutzer \"",
-                  user_name,
-                  "\" wurde erfolgreich gelöscht."
-                ),
-                type = "warning",
-                duration = NULL
-              )
+                .values$update$user(.values$update$user() + 1)
+              })
+            }
 
-              DB::db_remove_user(.values$db, user_name)
-
-              .values$update$user(.values$update$user() + 1)
-            })
-          }
-
-          as.character(
-            shiny::actionButton(
-              inputId = ns("remove" %_% user_name),
-              label = NULL,
-              icon = shiny::icon("trash-alt"),
-              class = "primary",
-              onclick = glue::glue(
-                'Shiny.setInputValue(\"{inputId}\", this.id + Math.random())',
-                inputId = ns("remove" %_% user_name)
+            as.character(
+              shiny::actionButton(
+                inputId = ns("remove" %_% user_name),
+                label = NULL,
+                icon = shiny::icon("user-alt-slash"),
+                class = "primary",
+                onclick = glue::glue(
+                  'Shiny.setInputValue(\"{inputId}\", this.id + Math.random())',
+                  inputId = ns("remove" %_% user_name)
+                )
               )
             )
-          )
-        })
+          }
+        )
 
         tbl$reset_password <- purrr::map_chr(tbl$name, function(user_name) {
           if (!user_name %in% taken_user_names_rvs$reset_password) {
@@ -153,7 +166,7 @@ user_table_server <- function(id, .values) {
 
         tbl <- tbl %>%
           dplyr::select(name, status, remove, reset_password) %>%
-          dplyr::mutate(status = status_mapper[status])
+          dplyr::mutate(status = .values$settings$status_mapper[status])
 
         DT::datatable(
           data = tbl,

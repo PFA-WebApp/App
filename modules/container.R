@@ -8,7 +8,8 @@ container_ui <- function(id) {
     shinydashboard::dashboardSidebar(
       sidebar_menu_ui(
         id = ns("sidebar_menu")
-      )
+      ),
+      collapsed = TRUE
     ),
     shinydashboard::dashboardBody(
       shinydashboard::tabItems(
@@ -28,6 +29,12 @@ container_ui <- function(id) {
           tabName = "sensor_management",
           sensor_management_ui(
             id = ns("sensor_management")
+          )
+        ),
+        shinydashboard::tabItem(
+          tabName = "settings",
+          settings_ui(
+            id = ns("settings")
           )
         )
       )
@@ -68,6 +75,11 @@ container_server <- function(id, .values) {
 
       sensor_management_server(
         id = "sensor_management",
+        .values = .values
+      )
+
+      settings_server(
+        id = "settings",
         .values = .values
       )
     }

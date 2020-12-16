@@ -65,37 +65,23 @@ add_user_server <- function(id, .values) {
         )
       })
 
-      wrong_length <- function(x, id) {
-        shiny::renderUI({
-          shiny::validate(
-            shiny::need(
-              nchar(input[[id]]) >= 4,
-              paste(
-                x,
-                "benötigt mindestens vier Zeichen!\n\n"
-              )
-            ),
-            shiny::need(
-              nchar(input[[id]]) <= 16,
-              paste(
-                x,
-                "darf nicht länger sein als 16 Zeichen!\n\n"
-              )
-            ),
-            errorClass = "PFA"
-          )
-        })
-      }
-
       output$wrong_name_length <- shiny::renderUI({
         shiny::validate(
           shiny::need(
             !user_name_too_short_r(),
-            "Der Benutzername benötigt mindestens vier Zeichen!\n\n"
+            paste(
+              "Der Benutzername benötigt mindestens",
+              as_german(.values$settings$user_name$length$min),
+              "Zeichen!\n\n"
+            )
           ),
           shiny::need(
             !user_name_too_long_r(),
-            "Der Benutzername darf nicht länger sein als 16 Zeichen!\n\n"
+            paste(
+              "Der Benutzername darf nicht länger sein als",
+              as_german(.values$settings$user_name$length$max),
+              "Zeichen!\n\n"
+            )
           ),
           errorClass = "PFA"
         )
@@ -115,11 +101,19 @@ add_user_server <- function(id, .values) {
         shiny::validate(
           shiny::need(
             !password_too_short_r(),
-            "Das Passwort benötigt mindestens vier Zeichen!\n\n"
+            paste(
+              "Das Passwort benötigt mindestens",
+              as_german(.values$settings$password$length$min),
+              "Zeichen!\n\n"
+            )
           ),
           shiny::need(
             !password_too_long_r(),
-            "Das Passwort darf nicht länger sein als 16 Zeichen!\n\n"
+            paste(
+              "Das Passwort darf nicht länger sein als",
+              as_german(.values$settings$user_name$length$max),
+              "Zeichen!\n\n"
+            )
           ),
           errorClass = "PFA"
         )
@@ -163,11 +157,11 @@ add_user_server <- function(id, .values) {
       })
 
       user_name_too_short_r <- shiny::reactive({
-        nchar(input$user_name) < 4
+        nchar(input$user_name) < .values$settings$password$length$min
       })
 
       user_name_too_long_r <- shiny::reactive({
-        nchar(input$user_name) > 16
+        nchar(input$user_name) > .values$settings$password$length$max
       })
 
       user_name_taken_r <- shiny::reactive({
@@ -175,11 +169,11 @@ add_user_server <- function(id, .values) {
       })
 
       password_too_short_r <- shiny::reactive({
-        nchar(input$user_password_1) < 4
+        nchar(input$user_password_1) < .values$settings$password$length$min
       })
 
       password_too_long_r <- shiny::reactive({
-        nchar(input$user_password_1) > 16
+        nchar(input$user_password_1) > .values$settings$password$length$max
       })
 
       non_matching_passwords_r <- shiny::reactive({

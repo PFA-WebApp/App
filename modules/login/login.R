@@ -13,6 +13,12 @@ login_ui <- function(id) {
           outputId = ns("login")
         )
       )
+    ),
+    shiny::column(
+      width = 6,
+      shiny::uiOutput(
+        outputId = ns("user_info")
+      )
     )
   )
 }
@@ -106,6 +112,18 @@ login_server <- function(id, .values) {
         .values$update$user()
 
         sort(DB::db_get_user_names(.values$db))
+      })
+
+      output$user_info <- shiny::renderUI({
+        if (.values$user$status() != "not_logged") {
+          shinydashboard::infoBox(
+            title = .values$settings$status_mapper[.values$user$status()],
+            value = .values$user$name(),
+            icon = shiny::icon("users"),
+            color = "light-blue",
+            width = NULL
+          )
+        }
       })
     }
   )

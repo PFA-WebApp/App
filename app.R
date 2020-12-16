@@ -80,9 +80,16 @@ ui_server <- function(source_to_globalenv = FALSE) {
         # store a trigger for each instance
         .values$trigger_list <- list()
 
-        .values$user <- list()
         .values$user$status <- shiny::reactiveVal("admin")
         .values$user$name <- shiny::reactiveVal("admin")
+
+        .values$settings$password$length <- list(min = 4, max = 16)
+        .values$settings$user_name$length <- list(min = 4, max = 16)
+        .values$settings$status_mapper <- c(
+            admin = "Administrator",
+            mod = "Moderator",
+            user = "Benutzer"
+        )
 
         .values$update$user <- shiny::reactiveVal(0)
 
