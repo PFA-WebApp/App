@@ -48,7 +48,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
     ui <- htmltools::div(
         tags$head(
             # Include custom css styles
-            # shiny::includeCSS("www/css/styles.css")
+            shiny::includeCSS("www/css/styles.css")
         ),
         # ui_ui generates the UI which is displayed in the content_list,
         # viewer_data and viewer_plot
@@ -80,7 +80,8 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$trigger_list <- list()
 
         .values$user <- list()
-        .values$user$status <- shiny::reactiveVal("not_logged")
+        .values$user$status <- shiny::reactiveVal("admin")
+        .values$user$name <- shiny::reactiveVal("admin")
 
         .values$update$user <- shiny::reactiveVal(0)
 

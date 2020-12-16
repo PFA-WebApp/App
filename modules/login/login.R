@@ -62,6 +62,7 @@ login_server <- function(id, .values) {
 
         if (pwd_correct) {
           .values$user$status(DB::db_get_user_status(.values$db, input$user_name))
+          .values$user$name(input$user_name)
 
           shiny::showNotification(
             ui = "Du hast Dich erfolgreich angemeldet.",
