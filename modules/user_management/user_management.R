@@ -33,12 +33,19 @@ user_management_server <- function(id, .values) {
 
       ns <- session$ns
 
-      output$user_table <- DT::renderDataTable({
+      output$user_table <- DT::renderDataTable(
+        options = list(
+          language = list(
+            url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/German.json'
+            )
+          ),
+        {
         .values$update$user()
 
         DB::db_get_table(.values$db, "user") %>%
           dplyr::select(Benutzername = name, Status = status)
-      })
+        }
+      )
 
       add_user_server(
         id = "add_user",

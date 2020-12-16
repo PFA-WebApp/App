@@ -69,14 +69,14 @@ add_user_server <- function(id, .values) {
               nchar(input[[id]]) >= 4,
               paste(
                 x,
-                "benötigt mindestens vier Zeichen!"
+                "benötigt mindestens vier Zeichen!\n\n"
               )
             ),
             shiny::need(
               nchar(input[[id]]) <= 16,
               paste(
                 x,
-                "darf nicht länger sein als 16 Zeichen!"
+                "darf nicht länger sein als 16 Zeichen!\n\n"
               )
             ),
             errorClass = "PFA"
