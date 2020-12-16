@@ -1,3 +1,5 @@
+# Currently not used
+
 password_reset_ui <- function(id) {
   ns <- shiny::NS(id)
 
@@ -51,7 +53,7 @@ password_reset_server <- function(id, .values) {
           ),
           footer = shiny::actionButton(
             inputId = ns("confirm_reset"),
-            label = "Bestätigen"
+            label = "Ja"
           )
         ))
       })
@@ -73,7 +75,7 @@ password_reset_server <- function(id, .values) {
           duration = NULL
         )
 
-        DB::db_set_password(db, input$user_name, bcrypt::hashpw(reset_pwd))
+        DB::db_set_password(.values$db, input$user_name, bcrypt::hashpw(reset_pwd))
       })
 
     }

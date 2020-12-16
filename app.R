@@ -4,6 +4,7 @@ library(shinyjs)
 library(dplyr)
 library(stringr)
 library(qrcode)
+library(purrr)
 
 # Custom libraries
 library(DB)

@@ -14,6 +14,9 @@ add_user_ui <- function(id) {
     shiny::uiOutput(
       outputId = ns("wrong_name_length")
     ),
+    shiny::uiOutput(
+      outputId = ns("user_name_taken")
+    ),
     shiny::passwordInput(
       inputId = ns("user_password_1"),
       label = "Passwort"
@@ -84,18 +87,52 @@ add_user_server <- function(id, .values) {
         })
       }
 
-      output$wrong_name_length <- wrong_length(
-        x = "Benutzername",
-        id = "user_name"
-      )
+      output$wrong_name_length <- shiny::renderUI({
+        shiny::validate(
+          shiny::need(
+            !user_name_too_short_r(),
+            "Der Benutzername benötigt mindestens vier Zeichen!\n\n"
+          ),
+          shiny::need(
+            !user_name_too_long_r(),
+            "Der Benutzername darf nicht länger sein als 16 Zeichen!\n\n"
+          ),
+          errorClass = "PFA"
+        )
+      })
 
-      output$wrong_password_length <- wrong_length(
-        x = "Passwort",
-        id = "user_password_1"
-      )
+      output$user_name_taken <- shiny::renderUI({
+        shiny::validate(
+          shiny::need(
+            !user_name_taken_r(),
+            "Der Benutzername existiert bereits!\n\n"
+          ),
+          errorClass = "PFA"
+        )
+      })
+
+      output$wrong_password_length <- shiny::renderUI({
+        shiny::validate(
+          shiny::need(
+            !password_too_short_r(),
+            "Das Passwort benötigt mindestens vier Zeichen!\n\n"
+          ),
+          shiny::need(
+            !password_too_long_r(),
+            "Das Passwort darf nicht länger sein als 16 Zeichen!\n\n"
+          ),
+          errorClass = "PFA"
+        )
+      })
 
       output$non_matching_passwords <- shiny::renderUI({
-
+        shiny::validate(
+          shiny::need(
+            !non_matching_passwords_r(),
+            "Die Passwörter stimmen nicht überein!\n\n"
+          ),
+          errorClass = "PFA"
+        )
       })
 
       output$add_user <- shiny::renderUI({
@@ -117,8 +154,36 @@ add_user_server <- function(id, .values) {
       })
 
       error_r <- shiny::reactive({
-        nchar(input$user_name) < 4 || nchar(input$user_password_1) < 4 ||
-          nchar(input$user_name) > 16 || nchar(input$user_password_1) > 16
+        user_name_too_short_r() ||
+          user_name_too_long_r() ||
+          user_name_taken_r() ||
+          password_too_short_r() ||
+          password_too_long_r() ||
+          non_matching_passwords_r()
+      })
+
+      user_name_too_short_r <- shiny::reactive({
+        nchar(input$user_name) < 4
+      })
+
+      user_name_too_long_r <- shiny::reactive({
+        nchar(input$user_name) > 16
+      })
+
+      user_name_taken_r <- shiny::reactive({
+        DB::db_has_user_name(.values$db, input$user_name)
+      })
+
+      password_too_short_r <- shiny::reactive({
+        nchar(input$user_password_1) < 4
+      })
+
+      password_too_long_r <- shiny::reactive({
+        nchar(input$user_password_1) > 16
+      })
+
+      non_matching_passwords_r <- shiny::reactive({
+        input$user_password_1 != input$user_password_2
       })
 
       shiny::observeEvent(input$add_user, {
@@ -133,36 +198,6 @@ add_user_server <- function(id, .values) {
           inputId = "user_password_2",
           value = ""
         )
-
-        if (DB::db_has_user_name(.values$db, input$user_name)) {
-          shiny::showNotification(
-            ui = paste0(
-              "Es exisitiert bereits ein Nutzer mit dem Benutzernamen \"",
-              input$user_name,
-              "\"! Bitte versuche es erneut."
-            ),
-            type = "error",
-            duration = 3
-          )
-
-          shiny::updateTextInput(
-            session = session,
-            inputId = "user_name",
-            value = ""
-          )
-
-          return()
-        }
-
-        if (input$user_password_1 != input$user_password_2) {
-          shiny::showNotification(
-            ui = "Die Passwörter stimmen nicht überein! Bitte versuche es erneut.",
-            type = "error",
-            duration = 3
-          )
-
-          return()
-        }
 
         shiny::updateTextInput(
           session = session,
