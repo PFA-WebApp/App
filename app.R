@@ -85,7 +85,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
 
         .values$settings$password$length <- list(min = 4, max = 16)
         .values$settings$user_name$length <- list(min = 4, max = 16)
-        .values$settings$status_mapper <- c(
+        .values$settings$status_dict <- c(
             admin = "Administrator",
             mod = "Moderator",
             user = "Benutzer"

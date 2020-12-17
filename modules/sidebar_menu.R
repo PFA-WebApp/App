@@ -40,7 +40,7 @@ sidebar_menu_server <- function(id, .values) {
           icon = shiny::icon("shipping-fast")
         ),
         reporting = shinydashboard::menuItem(
-          text = "Reporting",
+          text = "Berichtswesen",
           tabName = "reporting",
           icon = shiny::icon("chart-line")
         ),

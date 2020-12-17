@@ -5,3 +5,7 @@
 .primary {
   color: #3c8dbc;
 }
+
+.main-header .logo {
+  font-variant: small-caps;
+}

@@ -117,7 +117,7 @@ login_server <- function(id, .values) {
       output$user_info <- shiny::renderUI({
         if (.values$user$status() != "not_logged") {
           shinydashboard::infoBox(
-            title = .values$settings$status_mapper[.values$user$status()],
+            title = .values$settings$status_dict[.values$user$status()],
             value = .values$user$name(),
             icon = shiny::icon("users"),
             color = "light-blue",

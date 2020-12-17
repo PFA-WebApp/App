@@ -3,13 +3,13 @@ container_ui <- function(id) {
 
   shinydashboard::dashboardPage(
     shinydashboard::dashboardHeader(
-      title = "QRTools"
+      title = "Sensotheka"
     ),
     shinydashboard::dashboardSidebar(
       sidebar_menu_ui(
         id = ns("sidebar_menu")
       ),
-      collapsed = TRUE
+      collapsed = FALSE
     ),
     shinydashboard::dashboardBody(
       shinydashboard::tabItems(
@@ -17,6 +17,18 @@ container_ui <- function(id) {
           tabName = "login",
           login_ui(
             id = ns("login")
+          )
+        ),
+        shinydashboard::tabItem(
+          tabName = "operate",
+          operate_ui(
+            id = ns("operate")
+          )
+        ),
+        shinydashboard::tabItem(
+          tabName = "reporting",
+          reporting_ui(
+            id = ns("reporting")
           )
         ),
         shinydashboard::tabItem(
@@ -65,6 +77,16 @@ container_server <- function(id, .values) {
 
       login_server(
         id = "login",
+        .values = .values
+      )
+
+      operate_server(
+        id = "operate",
+        .values = .values
+      )
+
+      reporting_server(
+        id = "reporting",
         .values = .values
       )
 
