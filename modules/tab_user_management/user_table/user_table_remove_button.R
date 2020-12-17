@@ -15,7 +15,12 @@ user_table_remove_button_ui <- function(id) {
   )
 }
 
-user_table_remove_button_server <- function(id, .values, user_name, status) {
+user_table_remove_button_server <- function(id,
+                                            .values,
+                                            user_name,
+                                            status,
+                                            added_from
+) {
   shiny::moduleServer(
     id,
     function(input, output, session) {
@@ -23,12 +28,41 @@ user_table_remove_button_server <- function(id, .values, user_name, status) {
       ns <- session$ns
 
       shiny::observeEvent(input$remove, {
-        if (.values$user$status() == "mod" && status != "user") {
+        # Check that moderators can only remove users they added themselves
+        if (
+          .values$user$status() == "mod" &&
+          (status != "user" || added_from != .values$user$name())
+        ) {
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
             title = "Zugriff verweigert!",
             htmltools::div(
-              "Moderatoren dürfen nur Benutzer löschen."
+              paste0(
+                "Moderatoren dürfen nur Benutzer löschen, die sie selbst
+                hinzugefügt haben. \"",
+                user_name,
+                "\" wurde von \"",
+                added_from,
+                "\" hinzugefügt."
+              )
+            ),
+            footer = shiny::modalButton(
+              label = NULL,
+              icon = shiny::icon("window-close")
+            )
+          ))
+
+          return()
+        }
+
+
+        # Check that admins can't remove themselves
+        if (user_name == .values$user$name()) {
+          shiny::showModal(shiny::modalDialog(
+            easyClose = TRUE,
+            title = "Zugriff verweigert!",
+            htmltools::div(
+              "Administratoren können sich selbst nicht löschen."
             ),
             footer = shiny::modalButton(
               label = NULL,

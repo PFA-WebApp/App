@@ -29,9 +29,9 @@ user_table_server <- function(id, .values) {
 
         tbl <- DB::db_get_table(.values$db, "user")
 
-        tbl$remove <- purrr::map2_chr(
-          tbl$name, tbl$status,
-          function(user_name, status) {
+        tbl$remove <- purrr::pmap_chr(
+          list(tbl$name, tbl$status, tbl$added_from),
+          function(user_name, status, added_from) {
             if (!user_name %in% taken_user_names_rvs$remove) {
               taken_user_names_rvs$remove <- c(
                 taken_user_names_rvs$remove, user_name
@@ -41,7 +41,8 @@ user_table_server <- function(id, .values) {
                 id = "user_table_remove_button" %_% user_name,
                 .values = .values,
                 user_name = user_name,
-                status = status
+                status = status,
+                added_from = added_from
               )
             }
 
