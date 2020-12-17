@@ -4,7 +4,7 @@ user_table_reset_password_ui <- function(id) {
   as.character(
     shiny::actionButton(
       inputId = ns("reset_password"),
-      label = "Passwort",
+      label = NULL,
       icon = shiny::icon("eraser"),
       class = "primary",
       onclick = glue::glue(
@@ -15,7 +15,7 @@ user_table_reset_password_ui <- function(id) {
   )
 }
 
-user_table_reset_password_server <- function(id, .values, user_name, status) {
+user_table_reset_password_server <- function(id, .values, user_name) {
   shiny::moduleServer(
     id,
     function(input, output, session) {
