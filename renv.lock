@@ -21,12 +21,12 @@
       "Version": "0.1.0",
       "Source": "GitHub",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "DB",
       "RemoteUsername": "PFA-WebApp",
+      "RemoteRepo": "DB",
       "RemoteRef": "HEAD",
-      "RemoteSha": "cf6d1bc668eef0a67205411194561955717cd74c",
-      "Hash": "c325887661cfde01cac8d45eee146f71"
+      "RemoteSha": "659fc0690ebb4b4dc52cd9f83169ddcd30234f48",
+      "RemoteHost": "api.github.com",
+      "Hash": "25753ffbe198abffc723786e7b2ebf89"
     },
     "DBI": {
       "Package": "DBI",

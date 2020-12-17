@@ -16,8 +16,8 @@ login_ui <- function(id) {
     ),
     shiny::column(
       width = 6,
-      shiny::uiOutput(
-        outputId = ns("user_info")
+      login_user_info_ui(
+        id = ns("login_user_info")
       )
     )
   )
@@ -69,6 +69,8 @@ login_server <- function(id, .values) {
         if (pwd_correct) {
           .values$user$status(DB::db_get_user_status(.values$db, input$user_name))
           .values$user$name(input$user_name)
+          DB::db_log_user_in(.values$db, input$user_name)
+          .values$update$user(.values$update$user() + 1)
 
           shiny::showNotification(
             ui = "Du hast Dich erfolgreich angemeldet.",
@@ -114,17 +116,12 @@ login_server <- function(id, .values) {
         sort(DB::db_get_user_names(.values$db))
       })
 
-      output$user_info <- shiny::renderUI({
-        if (.values$user$status() != "not_logged") {
-          shinydashboard::infoBox(
-            title = .values$settings$status_mapper[.values$user$status()],
-            value = .values$user$name(),
-            icon = shiny::icon("users"),
-            color = "light-blue",
-            width = NULL
-          )
-        }
-      })
+
+
+      login_user_info_server(
+        id = "login_user_info",
+        .values = .values
+      )
     }
   )
 }

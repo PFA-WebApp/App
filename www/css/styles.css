@@ -5,3 +5,16 @@
 .primary {
   color: #3c8dbc;
 }
+
+.main-header .logo {
+  font-variant: small-caps;
+}
+
+.relative {
+  position: relative;
+}
+
+.refresh-user-last-logged-btn {
+  position: absolute;
+  left: calc(100% - 45px);
+}

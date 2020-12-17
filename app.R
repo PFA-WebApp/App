@@ -81,14 +81,21 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$trigger_list <- list()
 
         .values$user$status <- shiny::reactiveVal("admin")
-        .values$user$name <- shiny::reactiveVal("admin")
+        .values$user$name <- shiny::reactiveVal("Admin")
 
         .values$settings$password$length <- list(min = 4, max = 16)
         .values$settings$user_name$length <- list(min = 4, max = 16)
-        .values$settings$status_mapper <- c(
+        .values$settings$status_dict <- c(
             admin = "Administrator",
             mod = "Moderator",
             user = "Benutzer"
+        )
+        .values$settings$time_unit_dict <- c(
+            secs = "Sekunden",
+            mins = "Minuten",
+            hours = "Stunden",
+            days = "Tagen",
+            weeks = "Wochen"
         )
 
         .values$update$user <- shiny::reactiveVal(0)
