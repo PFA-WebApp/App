@@ -5,7 +5,7 @@ user_table_remove_user_ui <- function(id) {
     shiny::actionButton(
       inputId = ns("remove"),
       label = NULL,
-      icon = shiny::icon("user-alt-slash"),
+      icon = shiny::icon("user-minus"),
       class = "primary",
       onclick = glue::glue(
         'Shiny.setInputValue(\"{inputId}\", this.id + Math.random())',

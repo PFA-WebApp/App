@@ -38,9 +38,21 @@ container_ui <- function(id) {
           )
         ),
         shinydashboard::tabItem(
-          tabName = "sensor_management",
-          sensor_management_ui(
-            id = ns("sensor_management")
+          tabName = "group",
+          group_ui(
+            id = ns("group")
+          )
+        ),
+        shinydashboard::tabItem(
+          tabName = "type",
+          type_ui(
+            id = ns("type")
+          )
+        ),
+        shinydashboard::tabItem(
+          tabName = "subtype",
+          subtype_ui(
+            id = ns("subtype")
           )
         ),
         shinydashboard::tabItem(
@@ -95,8 +107,18 @@ container_server <- function(id, .values) {
         .values = .values
       )
 
-      sensor_management_server(
-        id = "sensor_management",
+      group_server(
+        id = "group",
+        .values = .values
+      )
+
+      type_server(
+        id = "type",
+        .values = .values
+      )
+
+      subtype_server(
+        id = "subtype",
         .values = .values
       )
 

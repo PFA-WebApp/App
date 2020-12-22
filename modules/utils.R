@@ -1,5 +1,7 @@
 `%_%` <- function(x, y) paste0(x, "_", y)
 
+`%||%` <- function(x, y) if (!is.null(x)) x else y
+
 as_german <- function(x) {
   dict <- c(
     "1"  = "ein",
