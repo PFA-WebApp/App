@@ -69,6 +69,7 @@ login_server <- function(id, .values) {
         if (pwd_correct) {
           .values$user$status(DB::db_get_user_status(.values$db, input$user_name))
           .values$user$name(input$user_name)
+          .values$user$last_logged(DB::db_get_user_last_logged(.values$db, input$user_name))
           DB::db_log_user_in(.values$db, input$user_name)
           .values$update$user(.values$update$user() + 1)
 
@@ -102,6 +103,8 @@ login_server <- function(id, .values) {
 
       shiny::observeEvent(input$user_logout, {
         .values$user$status("not_logged")
+        .values$user$name("")
+        .values$user$last_logged("")
 
         shiny::showNotification(
           ui = "Du hast Dich erfolgreich abgemeldet. Bis zum nächsten Mal.",
