@@ -27,7 +27,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
     )
 
     source_directory(
-        path = "db",
+        path = "../../Hobby/Programmieren/R/Packages/DB/R",
         encoding = "UTF-8",
         modifiedOnly = FALSE,
         chdir = TRUE,
@@ -86,6 +86,8 @@ ui_server <- function(source_to_globalenv = FALSE) {
 
         .values$settings$password$length <- list(min = 4, max = 16)
         .values$settings$user_name$length <- list(min = 4, max = 16)
+        .values$settings$group_name$length <- list(min = 4, max = 16)
+        .values$settings$type_name$length <- list(min = 4, max = 16)
         .values$settings$status_dict <- c(
             admin = "Administrator",
             mod = "Moderator",
@@ -100,6 +102,8 @@ ui_server <- function(source_to_globalenv = FALSE) {
         )
 
         .values$update$user <- shiny::reactiveVal(0)
+        .values$update$group <- shiny::reactiveVal(0)
+        .values$update$type <- shiny::reactiveVal(0)
 
         # Connect to db
         .values$db <- DBI::dbConnect(RSQLite::SQLite(), "./db/db.sqlite")

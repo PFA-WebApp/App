@@ -157,11 +157,11 @@ add_user_server <- function(id, .values) {
       })
 
       user_name_too_short_r <- shiny::reactive({
-        nchar(input$user_name) < .values$settings$password$length$min
+        nchar(input$user_name) < .values$settings$user_name$length$min
       })
 
       user_name_too_long_r <- shiny::reactive({
-        nchar(input$user_name) > .values$settings$password$length$max
+        nchar(input$user_name) > .values$settings$user_name$length$max
       })
 
       user_name_taken_r <- shiny::reactive({

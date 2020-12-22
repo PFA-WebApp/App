@@ -62,7 +62,32 @@ user_table_change_status_server <- function(id, .values, user_name, status) {
       shiny::observeEvent(input$confirm_status, {
         shiny::removeModal()
 
-        DB::db_set_user_status(.values$db, user_name, input$user_status)
+        success <- DB::db_set_user_status(.values$db, user_name, input$user_status)
+
+        if (success) {
+          shiny::showNotification(
+            ui = paste0(
+              "Der Status von Benutzer \"",
+              user_name,
+              "\" wurde erfolgreich auf \"",
+              .values$settings$status_dict[input$user_status],
+              "\" geändert."
+            ),
+            type = "warning",
+            duration = 5
+          )
+        } else {
+          shiny::showNotification(
+            ui = paste0(
+              "Der Status von Benutzer \"",
+              user_name,
+              "\" konnte nicht geändert werden."
+            ),
+            type = "error",
+            duration = 5
+          )
+        }
+
         .values$update$user(.values$update$user() + 1)
       })
     }
