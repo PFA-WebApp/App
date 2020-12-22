@@ -82,11 +82,13 @@ type_server <- function(id, .values) {
         id = "type_table",
         .values = .values,
         .values_type = "type",
+        .values_settings = "type_name",
         db_table = "type",
         db_object_id = "type_id",
         db_object_name = "type_name",
         colnames = c("Typname", "Typname ändern", "Entfernen"),
         get_objects_func = DB::db_get_types,
+        has_object_name_func = DB::db_has_type_name,
         set_object_name_func = DB::db_set_type_name,
         remove_object_func = DB::db_remove_type,
         label = list(

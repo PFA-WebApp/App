@@ -43,11 +43,13 @@ group_server <- function(id, .values) {
         id = "group_table",
         .values = .values,
         .values_type = "group",
+        .values_settings = "group_name",
         db_table = "groups",
         db_object_id = "group_id",
         db_object_name = "group_name",
         colnames = c("Gruppenname", "Gruppenname ändern", "Entfernen"),
         get_objects_func = DB::db_get_groups,
+        has_object_name_func = DB::db_has_group_name,
         set_object_name_func = DB::db_set_group_name,
         remove_object_func = DB::db_remove_group,
         label = list(

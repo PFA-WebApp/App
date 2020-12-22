@@ -19,7 +19,9 @@ object_table_change_object_name_server <- function(id,
                                                    .values,
                                                    object_id,
                                                    .values_type,
+                                                   .values_settings,
                                                    get_objects_func,
+                                                   has_object_name_func,
                                                    set_object_name_func,
                                                    label
 ) {
@@ -44,11 +46,87 @@ object_table_change_object_name_server <- function(id,
             label = label$new_name,
             value = old_object_name_r()
           ),
-          footer = shiny::actionButton(
+          shiny::uiOutput(
+            outputId = ns("wrong_name_length")
+          ),
+          shiny::uiOutput(
+            outputId = ns("name_taken")
+          ),
+          footer = shiny::uiOutput(
+            outputId = ns("confirm_object_name")
+          )
+        ))
+      })
+
+      output$wrong_name_length <- shiny::renderUI({
+        shiny::validate(
+          shiny::need(
+            !name_too_short_r(),
+            paste(
+              label$object_name_with_article,
+              "benötigt mindestens",
+              as_german(.values$settings[[.values_settings]]$length$min),
+              "Zeichen!\n\n"
+            )
+          ),
+          shiny::need(
+            !name_too_long_r(),
+            paste(
+              label$object_name_with_article,
+              "darf nicht länger sein als",
+              as_german(.values$settings[[.values_settings]]$length$max),
+              "Zeichen!\n\n"
+            )
+          ),
+          errorClass = "PFA"
+        )
+      })
+
+      output$name_taken <- shiny::renderUI({
+        shiny::validate(
+          shiny::need(
+            !name_taken_r(),
+            paste(
+              label$object_name_with_article,
+              "existiert bereits!\n\n"
+            )
+          ),
+          errorClass = "PFA"
+        )
+      })
+
+      output$confirm_object_name <- shiny::renderUI({
+        if (error_r()) {
+          shinyjs::disabled(
+            shiny::actionButton(
+              inputId = ns("confirm_object_name"),
+              label = "Bestätigen"
+            )
+          )
+        } else {
+          shiny::actionButton(
             inputId = ns("confirm_object_name"),
             label = "Bestätigen"
           )
-        ))
+        }
+      })
+
+      name_too_short_r <- shiny::reactive({
+        nchar(input$object_name) < .values$settings[[.values_settings]]$length$min
+      })
+
+      name_too_long_r <- shiny::reactive({
+        nchar(input$object_name) > .values$settings[[.values_settings]]$length$max
+      })
+
+      name_taken_r <- shiny::reactive({
+        has_object_name_func(.values$db, input$object_name)
+      })
+
+      error_r <- shiny::reactive({
+        name_too_short_r() ||
+          name_too_long_r() ||
+          name_taken_r()
       })
 
       shiny::observeEvent(input$confirm_object_name, {

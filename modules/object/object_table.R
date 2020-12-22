@@ -15,11 +15,13 @@ object_table_ui <- function(id, title) {
 object_table_server <- function(id,
                                 .values,
                                 .values_type,
+                                .values_settings,
                                 db_table,
                                 db_object_id,
                                 db_object_name,
                                 colnames = c("Name", "Name ändern", "Entfernen"),
                                 get_objects_func,
+                                has_object_name_func,
                                 set_object_name_func,
                                 remove_object_func,
                                 label
@@ -53,7 +55,9 @@ object_table_server <- function(id,
                 .values = .values,
                 object_id = object_id,
                 .values_type = .values_type,
+                .values_settings = .values_settings,
                 get_objects_func = get_objects_func,
+                has_object_name_func = has_object_name_func,
                 set_object_name_func = set_object_name_func,
                 label = label
               )
