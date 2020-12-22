@@ -59,8 +59,8 @@ user_table_server <- function(id, .values) {
                 taken_user_names_rvs$remove, user_name
               )
 
-              user_table_remove_button_server(
-                id = "user_table_remove_button" %_% user_name,
+              user_table_remove_user_server(
+                id = "user_table_remove_user" %_% user_name,
                 .values = .values,
                 user_name = user_name,
                 status = status,
@@ -68,8 +68,8 @@ user_table_server <- function(id, .values) {
               )
             }
 
-            user_table_remove_button_ui(
-              id = ns("user_table_remove_button" %_% user_name)
+            user_table_remove_user_ui(
+              id = ns("user_table_remove_user" %_% user_name)
             )
           }
         )

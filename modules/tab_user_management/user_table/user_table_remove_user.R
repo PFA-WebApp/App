@@ -1,4 +1,4 @@
-user_table_remove_button_ui <- function(id) {
+user_table_remove_user_ui <- function(id) {
   ns <- shiny::NS(id)
 
   as.character(
@@ -15,7 +15,7 @@ user_table_remove_button_ui <- function(id) {
   )
 }
 
-user_table_remove_button_server <- function(id,
+user_table_remove_user_server <- function(id,
                                             .values,
                                             user_name,
                                             status,
