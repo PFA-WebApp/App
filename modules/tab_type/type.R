@@ -39,6 +39,10 @@ type_ui <- function(id) {
         title = "Typ hinzufügen",
         label = "Typname",
         placeholder = "PT 100"
+      ),
+      show_connections_ui(
+        id = ns("show_groups"),
+        title = "Gruppen anzeigen"
       )
     ),
     shiny::column(
@@ -67,17 +71,6 @@ type_server <- function(id, .values) {
         qrcode_gen(link_r())
       })
 
-      add_object_server(
-        id = "add_type",
-        .values = .values,
-        object_id = "type",
-        object_name = "type_name",
-        object_with_article = "Der Typ",
-        add_label = "Typ hinzufügen",
-        add_object_func = DB::db_add_type,
-        has_object_name_func = DB::db_has_type_name
-      )
-
       settings = list(
         is_group_object = FALSE,
         update_name = "type",
@@ -104,11 +97,33 @@ type_server <- function(id, .values) {
         colnames = c("Typname", "Typname bearbeiten", "Gruppen bearbeiten", "Entfernen"),
         connection_modification = "Die Gruppen von Typ",
         connections = "Gruppen",
+        connection_name = "Gruppenname",
         new_name = "Neuer Typname",
+        object = "Typ",
         object_name_with_article = "Der Typname",
         object_with_article = "Der Typ",
         object_with_small_article = "der Typ",
         remove_btn_title = "Typ entfernen"
+      )
+
+
+      add_object_server(
+        id = "add_type",
+        .values = .values,
+        object_id = "type",
+        object_name = "type_name",
+        object_with_article = "Der Typ",
+        add_label = "Typ hinzufügen",
+        add_object_func = DB::db_add_type,
+        has_object_name_func = DB::db_has_type_name
+      )
+
+      show_connections_server(
+        id = "show_groups",
+        .values = .values,
+        settings = settings,
+        db = db,
+        label = label
       )
 
       object_table_server(

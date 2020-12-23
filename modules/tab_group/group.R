@@ -10,8 +10,9 @@ group_ui <- function(id) {
         label = "Gruppenname",
         placeholder = "Versuchsaufbau"
       ),
-      show_types_ui(
-        id = ns("show_types")
+      show_connections_ui(
+        id = ns("show_types"),
+        title = "Typen anzeigen"
       )
     ),
     shiny::column(
@@ -30,22 +31,6 @@ group_server <- function(id, .values) {
     function(input, output, session) {
 
       ns <- session$ns
-
-      add_object_server(
-        id = "add_group",
-        .values = .values,
-        object_id = "group",
-        object_name = "group_name",
-        object_with_article =  "Die Gruppe",
-        add_label = "Gruppe hinzufügen",
-        add_object_func = DB::db_add_group,
-        has_object_name_func = DB::db_has_group_name
-      )
-
-      show_types_server(
-        id = "show_types",
-        .values = .values
-      )
 
       settings = list(
         is_group_object = TRUE,
@@ -73,11 +58,32 @@ group_server <- function(id, .values) {
         colnames = c("Gruppenname", "Gruppenname bearbeiten", "Typen bearbeiten", "Entfernen"),
         connection_modification = "Die Typen von Gruppe",
         connections = "Typen",
+        connection_name = "Typname",
         new_name = "Neuer Gruppenname",
+        object = "Gruppe",
         object_name_with_article = "Der Gruppenname",
         object_with_article = "Die Gruppe",
         object_with_small_article = "die Gruppe",
         remove_btn_title = "Gruppe entfernen"
+      )
+
+      add_object_server(
+        id = "add_group",
+        .values = .values,
+        object_id = "group",
+        object_name = "group_name",
+        object_with_article =  "Die Gruppe",
+        add_label = "Gruppe hinzufügen",
+        add_object_func = DB::db_add_group,
+        has_object_name_func = DB::db_has_group_name
+      )
+
+      show_connections_server(
+        id = "show_types",
+        .values = .values,
+        settings = settings,
+        db = db,
+        label = label
       )
 
       object_table_server(
