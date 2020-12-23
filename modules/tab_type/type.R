@@ -78,27 +78,35 @@ type_server <- function(id, .values) {
         has_object_name_func = DB::db_has_type_name
       )
 
+      db <- list(
+        table = "type",
+        id_column = "type_id",
+        name_column = "type_name",
+        func = list(
+          get_objects = DB::db_get_types,
+          has_object_name = DB::db_has_type_name,
+          set_object_name = DB::db_set_type_name,
+          remove_object = DB::db_remove_type
+        )
+      )
+
+      label <- list(
+        colnames = c("Typname", "Typname ändern", "Entfernen"),
+        change_name = "Typ ändern",
+        new_name = "Neuer Typname",
+        object_name_with_article = "Der Typname",
+        object_with_article = "Der Typ",
+        object_with_small_article = "der Typ",
+        remove_btn_title = "Typ entfernen"
+      )
+
       object_table_server(
         id = "type_table",
         .values = .values,
         .values_type = "type",
         .values_settings = "type_name",
-        db_table = "type",
-        db_object_id = "type_id",
-        db_object_name = "type_name",
-        colnames = c("Typname", "Typname ändern", "Entfernen"),
-        get_objects_func = DB::db_get_types,
-        has_object_name_func = DB::db_has_type_name,
-        set_object_name_func = DB::db_set_type_name,
-        remove_object_func = DB::db_remove_type,
-        label = list(
-          change_name = "Typ ändern",
-          new_name = "Neuer Typname",
-          object_name_with_article = "Der Typname",
-          object_with_article = "Der Typ",
-          object_with_small_article = "der Typ",
-          remove_btn_title = "Typ entfernen"
-        )
+        db = db,
+        label = label
       )
     }
   )

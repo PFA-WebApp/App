@@ -39,27 +39,35 @@ group_server <- function(id, .values) {
         has_object_name_func = DB::db_has_group_name
       )
 
+      db <- list(
+        table = "groups",
+        id_column = "group_id",
+        name_column = "group_name",
+        func = list(
+          get_objects = DB::db_get_groups,
+          has_object_name = DB::db_has_group_name,
+          set_object_name = DB::db_set_group_name,
+          remove_object = DB::db_remove_group
+        )
+      )
+
+      label <- list(
+        colnames = c("Gruppenname", "Gruppenname ändern", "Entfernen"),
+        change_name = "Gruppe ändern",
+        new_name = "Neuer Gruppenname",
+        object_name_with_article = "Der Gruppenname",
+        object_with_article = "Die Gruppe",
+        object_with_small_article = "die Gruppe",
+        remove_btn_title = "Gruppe entfernen"
+      )
+
       object_table_server(
         id = "group_table",
         .values = .values,
         .values_type = "group",
         .values_settings = "group_name",
-        db_table = "groups",
-        db_object_id = "group_id",
-        db_object_name = "group_name",
-        colnames = c("Gruppenname", "Gruppenname ändern", "Entfernen"),
-        get_objects_func = DB::db_get_groups,
-        has_object_name_func = DB::db_has_group_name,
-        set_object_name_func = DB::db_set_group_name,
-        remove_object_func = DB::db_remove_group,
-        label = list(
-          change_name = "Gruppe ändern",
-          new_name = "Neuer Gruppenname",
-          object_name_with_article = "Der Gruppenname",
-          object_with_article = "Die Gruppe",
-          object_with_small_article = "die Gruppe",
-          remove_btn_title = "Gruppe entfernen"
-        )
+        db = db,
+        label = label
       )
     }
   )

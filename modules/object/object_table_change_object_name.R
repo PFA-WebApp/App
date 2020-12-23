@@ -20,9 +20,7 @@ object_table_change_object_name_server <- function(id,
                                                    object_id,
                                                    .values_type,
                                                    .values_settings,
-                                                   get_objects_func,
-                                                   has_object_name_func,
-                                                   set_object_name_func,
+                                                   db,
                                                    label
 ) {
   shiny::moduleServer(
@@ -33,7 +31,7 @@ object_table_change_object_name_server <- function(id,
 
       old_object_name_r <- shiny::reactive({
         .values$update[[.values_type]]()
-        objects <- get_objects_func(.values$db)
+        objects <- db$func$get_objects(.values$db)
         names(objects[objects == object_id][1])
       })
 
@@ -120,7 +118,7 @@ object_table_change_object_name_server <- function(id,
       })
 
       name_taken_r <- shiny::reactive({
-        has_object_name_func(.values$db, input$object_name)
+        db$func$has_object_name(.values$db, input$object_name)
       })
 
       error_r <- shiny::reactive({
@@ -132,7 +130,7 @@ object_table_change_object_name_server <- function(id,
       shiny::observeEvent(input$confirm_object_name, {
         shiny::removeModal()
 
-        success <- set_object_name_func(.values$db, object_id, input$object_name)
+        success <- db$func$set_object_name(.values$db, object_id, input$object_name)
 
         if (success) {
           shiny::showNotification(

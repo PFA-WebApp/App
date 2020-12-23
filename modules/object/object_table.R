@@ -16,14 +16,8 @@ object_table_server <- function(id,
                                 .values,
                                 .values_type,
                                 .values_settings,
-                                db_table,
-                                db_object_id,
-                                db_object_name,
                                 colnames = c("Name", "Name ändern", "Entfernen"),
-                                get_objects_func,
-                                has_object_name_func,
-                                set_object_name_func,
-                                remove_object_func,
+                                db,
                                 label
 ) {
   shiny::moduleServer(
@@ -40,10 +34,12 @@ object_table_server <- function(id,
       output$object_table <- DT::renderDataTable({
         .values$update[[.values_type]]()
 
-        tbl <- DB::db_get_table(.values$db, db_table)
+        tbl <- DB::db_get_table(.values$db, db$table)
+
+
 
         tbl$change_object_name <- purrr::map_chr(
-          tbl[[db_object_id]],
+          tbl[[db$id_column]],
           function(object_id) {
             if (!object_id %in% taken_object_types_rvs$change_object_name) {
               taken_object_types_rvs$change_object_name <- c(
@@ -56,9 +52,7 @@ object_table_server <- function(id,
                 object_id = object_id,
                 .values_type = .values_type,
                 .values_settings = .values_settings,
-                get_objects_func = get_objects_func,
-                has_object_name_func = has_object_name_func,
-                set_object_name_func = set_object_name_func,
+                db = db,
                 label = label
               )
             }
@@ -70,7 +64,7 @@ object_table_server <- function(id,
         )
 
         tbl$remove <- purrr::map_chr(
-          tbl[[db_object_id]],
+          tbl[[db$id_column]],
           function(object_id) {
             if (!object_id %in% taken_object_types_rvs$remove) {
               taken_object_types_rvs$remove <- c(
@@ -82,8 +76,7 @@ object_table_server <- function(id,
                 .values = .values,
                 object_id = object_id,
                 .values_type = .values_type,
-                get_objects_func = get_objects_func,
-                remove_object_func = remove_object_func,
+                db = db,
                 label = label
               )
             }
@@ -94,8 +87,9 @@ object_table_server <- function(id,
           }
         )
 
+        x <- db$name_column
         tbl <- tbl %>%
-          dplyr::select({{db_object_name}}, change_object_name, remove)
+          dplyr::select({{x}}, change_object_name, remove)
 
         tbl <- tbl[rev(seq_len(nrow(tbl))), , drop = FALSE]
 
@@ -114,7 +108,7 @@ object_table_server <- function(id,
             )
           ),
           escape = FALSE,
-          colnames = colnames
+          colnames = label$colnames
         )
       })
     }

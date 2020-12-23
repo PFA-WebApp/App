@@ -19,8 +19,7 @@ object_table_remove_object_server <- function(id,
                                               .values,
                                               object_id,
                                               .values_type,
-                                              get_objects_func,
-                                              remove_object_func,
+                                              db,
                                               label
 ) {
   shiny::moduleServer(
@@ -31,7 +30,7 @@ object_table_remove_object_server <- function(id,
 
       object_name_r <- shiny::reactive({
         .values$update[[.values_type]]()
-        objects <- get_objects_func(.values$db)
+        objects <- db$func$get_objects(.values$db)
         names(objects[objects == object_id][1])
       })
 
@@ -58,7 +57,7 @@ object_table_remove_object_server <- function(id,
       shiny::observeEvent(input$confirm_remove, {
         shiny::removeModal()
 
-        success <- remove_object_func(.values$db, object_id)
+        success <- db$func$remove_object(.values$db, object_id)
 
         if (success) {
           shiny::showNotification(
