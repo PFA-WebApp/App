@@ -35,10 +35,8 @@ object_table_server <- function(id,
 
         tbl <- DB::db_get_table(.values$db, db$table)
 
-
-
         tbl$change_object_connections <- purrr::map_chr(
-          tbl[[db$id_column]],
+          tbl$rowid,
           function(object_id) {
             if (!object_id %in% taken_object_types_rvs$change_object_connections) {
               taken_object_types_rvs$change_object_connections <- c(
@@ -64,7 +62,7 @@ object_table_server <- function(id,
 
 
         tbl$change_object_name <- purrr::map_chr(
-          tbl[[db$id_column]],
+          tbl$rowid,
           function(object_id) {
             if (!object_id %in% taken_object_types_rvs$change_object_name) {
               taken_object_types_rvs$change_object_name <- c(
@@ -88,7 +86,7 @@ object_table_server <- function(id,
         )
 
         tbl$remove <- purrr::map_chr(
-          tbl[[db$id_column]],
+          tbl$rowid,
           function(object_id) {
             if (!object_id %in% taken_object_types_rvs$remove) {
               taken_object_types_rvs$remove <- c(
@@ -120,10 +118,6 @@ object_table_server <- function(id,
         DT::datatable(
           data = tbl,
           options = list(
-            language = list(
-              url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/German.json'
-            ),
-            pageLength = 6,
             columnDefs = list(
               list(
                 className = 'dt-center',

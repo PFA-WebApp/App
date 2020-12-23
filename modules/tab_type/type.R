@@ -86,7 +86,6 @@ type_server <- function(id, .values) {
 
       db <- list(
         table = "type",
-        id_column = "type_id",
         name_column = "type_name",
         func = list(
           get_connections = DB::db_get_groups_by_type,
