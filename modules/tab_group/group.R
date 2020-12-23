@@ -9,6 +9,9 @@ group_ui <- function(id) {
         title = "Gruppe hinzufügen",
         label = "Gruppenname",
         placeholder = "Versuchsaufbau"
+      ),
+      show_types_ui(
+        id = ns("show_types")
       )
     ),
     shiny::column(
@@ -37,6 +40,11 @@ group_server <- function(id, .values) {
         add_label = "Gruppe hinzufügen",
         add_object_func = DB::db_add_group,
         has_object_name_func = DB::db_has_group_name
+      )
+
+      show_types_server(
+        id = "show_types",
+        .values = .values
       )
 
       settings = list(
