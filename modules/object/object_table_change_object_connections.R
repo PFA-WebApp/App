@@ -34,8 +34,14 @@ object_table_change_object_connections_server <- function(id,
       })
 
       shiny::observeEvent(input$change_object_connections, {
+        title <- paste0(
+          label$change_connections,
+          " \"", db$func$get_object_name(.values$db, object_id),
+          "\""
+        )
+
         shiny::showModal(shiny::modalDialog(
-          title = label$change_connections,
+          title = title,
           easyClose = TRUE,
           shiny::selectInput(
             inputId = ns("object_connections"),

@@ -4,7 +4,7 @@ options(
     language = list(
       url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/German.json'
     ),
-    dom = "lfptp",
+    dom = "fpt",
     scrollX = TRUE
   )
 )
