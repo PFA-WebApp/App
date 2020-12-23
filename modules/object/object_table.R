@@ -14,9 +14,7 @@ object_table_ui <- function(id, title) {
 
 object_table_server <- function(id,
                                 .values,
-                                .values_type,
-                                .values_settings,
-                                colnames = c("Name", "Name ändern", "Entfernen"),
+                                settings,
                                 db,
                                 label
 ) {
@@ -27,14 +25,41 @@ object_table_server <- function(id,
       ns <- session$ns
 
       taken_object_types_rvs <- shiny::reactiveValues(
+        change_object_connections = character(),
         change_object_name = character(),
         remove = character()
       )
 
       output$object_table <- DT::renderDataTable({
-        .values$update[[.values_type]]()
+        .values$update[[settings$update_name]]()
 
         tbl <- DB::db_get_table(.values$db, db$table)
+
+
+
+        tbl$change_object_connections <- purrr::map_chr(
+          tbl[[db$id_column]],
+          function(object_id) {
+            if (!object_id %in% taken_object_types_rvs$change_object_connections) {
+              taken_object_types_rvs$change_object_connections <- c(
+                taken_object_types_rvs$change_object_connections, object_id
+              )
+
+              object_table_change_object_connections_server(
+                id = "object_table_change_object_connections" %_% object_id,
+                .values = .values,
+                object_id = object_id,
+                settings = settings,
+                db = db,
+                label = label
+              )
+            }
+
+            object_table_change_object_connections_ui(
+              id = ns("object_table_change_object_connections" %_% object_id)
+            )
+          }
+        )
 
 
 
@@ -50,8 +75,7 @@ object_table_server <- function(id,
                 id = "object_table_change_object_name" %_% object_id,
                 .values = .values,
                 object_id = object_id,
-                .values_type = .values_type,
-                .values_settings = .values_settings,
+                settings = settings,
                 db = db,
                 label = label
               )
@@ -75,7 +99,7 @@ object_table_server <- function(id,
                 id = "object_table_remove_object" %_% object_id,
                 .values = .values,
                 object_id = object_id,
-                .values_type = .values_type,
+                settings = settings,
                 db = db,
                 label = label
               )
@@ -89,7 +113,7 @@ object_table_server <- function(id,
 
         x <- db$name_column
         tbl <- tbl %>%
-          dplyr::select({{x}}, change_object_name, remove)
+          dplyr::select({{x}}, change_object_name, change_object_connections, remove)
 
         tbl <- tbl[rev(seq_len(nrow(tbl))), , drop = FALSE]
 
@@ -103,7 +127,7 @@ object_table_server <- function(id,
             columnDefs = list(
               list(
                 className = 'dt-center',
-                targets = 2:3
+                targets = 2:4
               )
             )
           ),

@@ -18,8 +18,7 @@ object_table_change_object_name_ui <- function(id) {
 object_table_change_object_name_server <- function(id,
                                                    .values,
                                                    object_id,
-                                                   .values_type,
-                                                   .values_settings,
+                                                   settings,
                                                    db,
                                                    label
 ) {
@@ -30,7 +29,7 @@ object_table_change_object_name_server <- function(id,
       ns <- session$ns
 
       old_object_name_r <- shiny::reactive({
-        .values$update[[.values_type]]()
+        .values$update[[settings$update_name]]()
         objects <- db$func$get_objects(.values$db)
         names(objects[objects == object_id][1])
       })
@@ -63,7 +62,7 @@ object_table_change_object_name_server <- function(id,
             paste(
               label$object_name_with_article,
               "benötigt mindestens",
-              as_german(.values$settings[[.values_settings]]$length$min),
+              as_german(.values$settings[[settings$length_name]]$length$min),
               "Zeichen!\n\n"
             )
           ),
@@ -72,7 +71,7 @@ object_table_change_object_name_server <- function(id,
             paste(
               label$object_name_with_article,
               "darf nicht länger sein als",
-              as_german(.values$settings[[.values_settings]]$length$max),
+              as_german(.values$settings[[settings$length_name]]$length$max),
               "Zeichen!\n\n"
             )
           ),
@@ -110,11 +109,11 @@ object_table_change_object_name_server <- function(id,
       })
 
       name_too_short_r <- shiny::reactive({
-        nchar(input$object_name) < .values$settings[[.values_settings]]$length$min
+        nchar(input$object_name) < .values$settings[[settings$length_name]]$length$min
       })
 
       name_too_long_r <- shiny::reactive({
-        nchar(input$object_name) > .values$settings[[.values_settings]]$length$max
+        nchar(input$object_name) > .values$settings[[settings$length_name]]$length$max
       })
 
       name_taken_r <- shiny::reactive({
@@ -154,7 +153,7 @@ object_table_change_object_name_server <- function(id,
           )
         }
 
-        .values$update[[.values_type]](.values$update[[.values_type]]() + 1)
+        .values$update[[settings$update_name]](.values$update[[settings$update_name]]() + 1)
       })
     }
   )

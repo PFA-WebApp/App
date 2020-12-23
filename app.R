@@ -104,6 +104,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$update$user <- shiny::reactiveVal(0)
         .values$update$group <- shiny::reactiveVal(0)
         .values$update$type <- shiny::reactiveVal(0)
+        .values$update$group_type <- shiny::reactiveVal(0)
 
         # Connect to db
         .values$db <- DBI::dbConnect(RSQLite::SQLite(), "./db/db.sqlite")

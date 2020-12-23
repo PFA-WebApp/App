@@ -78,12 +78,21 @@ type_server <- function(id, .values) {
         has_object_name_func = DB::db_has_type_name
       )
 
+      settings = list(
+        is_group_object = FALSE,
+        update_name = "type",
+        length_name = "type_name"
+      )
+
       db <- list(
         table = "type",
         id_column = "type_id",
         name_column = "type_name",
         func = list(
+          get_connections = DB::db_get_groups_by_type,
+          get_possible_connections = DB::db_get_groups,
           get_objects = DB::db_get_types,
+          get_object_name = DB::db_get_type_name,
           has_object_name = DB::db_has_type_name,
           set_object_name = DB::db_set_type_name,
           remove_object = DB::db_remove_type
@@ -91,8 +100,11 @@ type_server <- function(id, .values) {
       )
 
       label <- list(
-        colnames = c("Typname", "Typname ändern", "Entfernen"),
-        change_name = "Typ ändern",
+        change_connection = "Gruppen ändern",
+        change_name = "Typname bearbeiten",
+        colnames = c("Typname", "Typname bearbeiten", "Gruppen bearbeiten", "Entfernen"),
+        connection_modification = "Die Gruppen von Typ",
+        connections = "Gruppen",
         new_name = "Neuer Typname",
         object_name_with_article = "Der Typname",
         object_with_article = "Der Typ",
@@ -103,8 +115,7 @@ type_server <- function(id, .values) {
       object_table_server(
         id = "type_table",
         .values = .values,
-        .values_type = "type",
-        .values_settings = "type_name",
+        settings = settings,
         db = db,
         label = label
       )

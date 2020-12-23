@@ -18,7 +18,7 @@ object_table_remove_object_ui <- function(id) {
 object_table_remove_object_server <- function(id,
                                               .values,
                                               object_id,
-                                              .values_type,
+                                              settings,
                                               db,
                                               label
 ) {
@@ -29,7 +29,7 @@ object_table_remove_object_server <- function(id,
       ns <- session$ns
 
       object_name_r <- shiny::reactive({
-        .values$update[[.values_type]]()
+        .values$update[[settings$update_name]]()
         objects <- db$func$get_objects(.values$db)
         names(objects[objects == object_id][1])
       })
@@ -83,7 +83,7 @@ object_table_remove_object_server <- function(id,
           )
         }
 
-        .values$update[[.values_type]](.values$update[[.values_type]]() + 1)
+        .values$update[[settings$update_name]](.values$update[[settings$update_name]]() + 1)
       })
     }
   )
