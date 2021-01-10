@@ -6,6 +6,7 @@ add_object_ui <- function(id, title, label, placeholder) {
     status = "primary",
     title = title,
     solidHeader = TRUE,
+    collapsible = TRUE,
     shiny::textInput(
       inputId = ns("object_name"),
       label = label,

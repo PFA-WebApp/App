@@ -40,11 +40,6 @@ ui_server <- function(source_to_globalenv = FALSE) {
     # Allow bigger file inputs
     options(shiny.maxRequestSize = 100*1024^2)
 
-    options(.language = "de")
-
-    # Enable scrolling for wide DT tables
-    options(DT.options = list(dom = "lfptp", scrollX = TRUE))
-
     # UI -----------------------------------------------------------------------
     ui <- htmltools::div(
         tags$head(
@@ -104,6 +99,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$update$user <- shiny::reactiveVal(0)
         .values$update$group <- shiny::reactiveVal(0)
         .values$update$type <- shiny::reactiveVal(0)
+        .values$update$group_type <- shiny::reactiveVal(0)
 
         # Connect to db
         .values$db <- DBI::dbConnect(RSQLite::SQLite(), "./db/db.sqlite")
