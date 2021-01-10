@@ -55,12 +55,12 @@ sidebar_menu_server <- function(id, .values) {
           shinydashboard::menuSubItem(
             text = "Sensortypen",
             tabName = "type",
-            icon = shiny::icon("qrcode")
+            icon = shiny::icon("tags")
           ),
           shinydashboard::menuSubItem(
-            text = "Sensoruntertypen",
-            tabName = "subtype",
-            icon = shiny::icon("tags")
+            text = "QR-Code",
+            tabName = "qrcode",
+            icon = shiny::icon("qrcode")
           )
         ),
         user_management = shinydashboard::menuItem(
