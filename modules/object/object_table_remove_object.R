@@ -41,7 +41,7 @@ object_table_remove_object_server <- function(id,
           htmltools::div(
             paste0(
               "Bist du sicher, dass du ",
-              label$object_name_with_small_article,
+              label$object_with_small_article,
               " \"",
               object_name_r(),
               "\" löschen möchtest?"
