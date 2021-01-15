@@ -20,6 +20,9 @@ type_ui <- function(id) {
       show_connections_ui(
         id = ns("show_groups"),
         title = "Gruppen anzeigen"
+      ),
+      subtypes_ui(
+        id = ns("subtypes")
       )
     )
   )
@@ -59,7 +62,7 @@ type_server <- function(id, .values) {
           set_object_name = db_set_type_name,
           remove_object = function(db, type_id) {
             db_remove_type(db, type_id)
-            db_remove_subtype_by_type_id(db, type_id)
+            db_remove_subtypes_by_type_id(db, type_id)
           }
         )
       )
@@ -101,6 +104,11 @@ type_server <- function(id, .values) {
         settings = settings,
         db = db,
         label = label
+      )
+
+      subtypes_server(
+        id = "subtypes",
+        .values = .values
       )
 
       object_table_server(
