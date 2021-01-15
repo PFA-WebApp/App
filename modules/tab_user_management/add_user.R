@@ -6,6 +6,7 @@ add_user_ui <- function(id) {
     status = "primary",
     title = "Nutzer hinzufügen",
     solidHeader = TRUE,
+    collapsible = TRUE,
     shiny::textInput(
       inputId = ns("user_name"),
       label = "Benutzername",
@@ -157,15 +158,15 @@ add_user_server <- function(id, .values) {
       })
 
       user_name_too_short_r <- shiny::reactive({
-        nchar(input$user_name) < .values$settings$password$length$min
+        nchar(input$user_name) < .values$settings$user_name$length$min
       })
 
       user_name_too_long_r <- shiny::reactive({
-        nchar(input$user_name) > .values$settings$password$length$max
+        nchar(input$user_name) > .values$settings$user_name$length$max
       })
 
       user_name_taken_r <- shiny::reactive({
-        DB::db_has_user_name(.values$db, input$user_name)
+        db_has_user_name(.values$db, input$user_name)
       })
 
       password_too_short_r <- shiny::reactive({
@@ -207,11 +208,12 @@ add_user_server <- function(id, .values) {
           )
         )
 
-        DB::db_add_user(
+        db_add_user(
           db = .values$db,
           name = input$user_name,
           status = input$user_status,
-          password = bcrypt::hashpw(input$user_password_1)
+          password = bcrypt::hashpw(input$user_password_1),
+          added_from = .values$user$name()
         )
 
         .values$update$user(.values$update$user() + 1)

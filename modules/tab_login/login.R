@@ -16,8 +16,8 @@ login_ui <- function(id) {
     ),
     shiny::column(
       width = 6,
-      shiny::uiOutput(
-        outputId = ns("user_info")
+      login_user_info_ui(
+        id = ns("login_user_info")
       )
     )
   )
@@ -59,7 +59,7 @@ login_server <- function(id, .values) {
       })
 
       shiny::observeEvent(input$user_login, {
-        user_pwd <- DB::db_get_password(
+        user_pwd <- db_get_password(
           db = .values$db,
           name = input$user_name
         )
@@ -67,8 +67,11 @@ login_server <- function(id, .values) {
         pwd_correct <- bcrypt::checkpw(input$user_password, user_pwd)
 
         if (pwd_correct) {
-          .values$user$status(DB::db_get_user_status(.values$db, input$user_name))
+          .values$user$status(db_get_user_status(.values$db, input$user_name))
           .values$user$name(input$user_name)
+          .values$user$last_logged(db_get_user_last_logged(.values$db, input$user_name))
+          db_log_user_in(.values$db, input$user_name)
+          .values$update$user(.values$update$user() + 1)
 
           shiny::showNotification(
             ui = "Du hast Dich erfolgreich angemeldet.",
@@ -100,6 +103,8 @@ login_server <- function(id, .values) {
 
       shiny::observeEvent(input$user_logout, {
         .values$user$status("not_logged")
+        .values$user$name("")
+        .values$user$last_logged("")
 
         shiny::showNotification(
           ui = "Du hast Dich erfolgreich abgemeldet. Bis zum nächsten Mal.",
@@ -111,20 +116,15 @@ login_server <- function(id, .values) {
       user_name_choices_r <- shiny::reactive({
         .values$update$user()
 
-        sort(DB::db_get_user_names(.values$db))
+        sort(db_get_user_names(.values$db))
       })
 
-      output$user_info <- shiny::renderUI({
-        if (.values$user$status() != "not_logged") {
-          shinydashboard::infoBox(
-            title = .values$settings$status_mapper[.values$user$status()],
-            value = .values$user$name(),
-            icon = shiny::icon("users"),
-            color = "light-blue",
-            width = NULL
-          )
-        }
-      })
+
+
+      login_user_info_server(
+        id = "login_user_info",
+        .values = .values
+      )
     }
   )
 }

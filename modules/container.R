@@ -3,13 +3,13 @@ container_ui <- function(id) {
 
   shinydashboard::dashboardPage(
     shinydashboard::dashboardHeader(
-      title = "QRTools"
+      title = "Sensotheka"
     ),
     shinydashboard::dashboardSidebar(
       sidebar_menu_ui(
         id = ns("sidebar_menu")
       ),
-      collapsed = TRUE
+      collapsed = FALSE
     ),
     shinydashboard::dashboardBody(
       shinydashboard::tabItems(
@@ -20,15 +20,39 @@ container_ui <- function(id) {
           )
         ),
         shinydashboard::tabItem(
+          tabName = "operate",
+          operate_ui(
+            id = ns("operate")
+          )
+        ),
+        shinydashboard::tabItem(
+          tabName = "reporting",
+          reporting_ui(
+            id = ns("reporting")
+          )
+        ),
+        shinydashboard::tabItem(
           tabName = "user_management",
           user_management_ui(
             id = ns("user_management")
           )
         ),
         shinydashboard::tabItem(
-          tabName = "sensor_management",
-          sensor_management_ui(
-            id = ns("sensor_management")
+          tabName = "group",
+          group_ui(
+            id = ns("group")
+          )
+        ),
+        shinydashboard::tabItem(
+          tabName = "type",
+          type_ui(
+            id = ns("type")
+          )
+        ),
+        shinydashboard::tabItem(
+          tabName = "qrcode",
+          qrcode_ui(
+            id = ns("qrcode")
           )
         ),
         shinydashboard::tabItem(
@@ -68,13 +92,33 @@ container_server <- function(id, .values) {
         .values = .values
       )
 
+      operate_server(
+        id = "operate",
+        .values = .values
+      )
+
+      reporting_server(
+        id = "reporting",
+        .values = .values
+      )
+
       user_management_server(
         id = "user_management",
         .values = .values
       )
 
-      sensor_management_server(
-        id = "sensor_management",
+      group_server(
+        id = "group",
+        .values = .values
+      )
+
+      type_server(
+        id = "type",
+        .values = .values
+      )
+
+      qrcode_server(
+        id = "qrcode",
         .values = .values
       )
 
