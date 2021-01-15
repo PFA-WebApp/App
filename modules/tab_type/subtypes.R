@@ -74,8 +74,23 @@ subtypes_server <- function(id, .values) {
           }
         )
 
+        tbl <- tbl %>%
+          dplyr::select(
+            Untertyp = subtype_name,
+            Menge = quantity,
+            Entfernen = remove
+          )
+
         DT::datatable(
           tbl,
+          options = list(
+            columnDefs = list(
+              list(
+                className = 'dt-center',
+                targets = 3
+              )
+            )
+          ),
           escape = FALSE
         )
       })
