@@ -6,9 +6,6 @@ library(stringr)
 library(qrcode)
 library(purrr)
 
-# Custom libraries
-library(DB)
-
 ui_server <- function(source_to_globalenv = FALSE) {
     # If source_to_global_env all sourced functions get added to the global
     # environment which takes some time after the app has stopped
@@ -27,7 +24,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
     )
 
     source_directory(
-        path = "../../Hobby/Programmieren/R/Packages/DB/R",
+        path = "db/func",
         encoding = "UTF-8",
         modifiedOnly = FALSE,
         chdir = TRUE,
@@ -99,6 +96,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$update$user <- shiny::reactiveVal(0)
         .values$update$group <- shiny::reactiveVal(0)
         .values$update$type <- shiny::reactiveVal(0)
+        .values$update$subtype <- shiny::reactiveVal(0)
         .values$update$group_type <- shiny::reactiveVal(0)
 
         # Connect to db

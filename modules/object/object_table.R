@@ -33,7 +33,7 @@ object_table_server <- function(id,
       output$object_table <- DT::renderDataTable({
         .values$update[[settings$update_name]]()
 
-        tbl <- DB::db_get_table(.values$db, db$table)
+        tbl <- db_get_table(.values$db, db$table)
 
         tbl$change_object_connections <- purrr::map_chr(
           tbl$rowid,

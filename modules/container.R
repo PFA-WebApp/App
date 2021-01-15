@@ -50,9 +50,9 @@ container_ui <- function(id) {
           )
         ),
         shinydashboard::tabItem(
-          tabName = "subtype",
-          subtype_ui(
-            id = ns("subtype")
+          tabName = "qrcode",
+          qrcode_ui(
+            id = ns("qrcode")
           )
         ),
         shinydashboard::tabItem(
@@ -117,8 +117,8 @@ container_server <- function(id, .values) {
         .values = .values
       )
 
-      subtype_server(
-        id = "subtype",
+      qrcode_server(
+        id = "qrcode",
         .values = .values
       )
 

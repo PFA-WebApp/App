@@ -62,7 +62,7 @@ user_table_change_status_server <- function(id, .values, user_name, status) {
       shiny::observeEvent(input$confirm_status, {
         shiny::removeModal()
 
-        success <- DB::db_set_user_status(.values$db, user_name, input$user_status)
+        success <- db_set_user_status(.values$db, user_name, input$user_status)
 
         if (success) {
           shiny::showNotification(

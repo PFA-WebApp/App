@@ -93,7 +93,7 @@ user_table_remove_user_server <- function(id,
       shiny::observeEvent(input$confirm_remove, {
         shiny::removeModal()
 
-        success <- DB::db_remove_user(.values$db, user_name)
+        success <- db_remove_user(.values$db, user_name)
 
         if (success) {
           shiny::showNotification(

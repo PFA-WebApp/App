@@ -28,7 +28,7 @@ user_table_server <- function(id, .values) {
       output$user_table <- DT::renderDataTable({
         .values$update$user()
 
-        tbl <- DB::db_get_table(.values$db, "user")
+        tbl <- db_get_table(.values$db, "user")
 
         tbl$change_status <- purrr::map2_chr(
           tbl$name, tbl$status, function(user_name, status) {

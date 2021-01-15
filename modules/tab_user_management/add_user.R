@@ -166,7 +166,7 @@ add_user_server <- function(id, .values) {
       })
 
       user_name_taken_r <- shiny::reactive({
-        DB::db_has_user_name(.values$db, input$user_name)
+        db_has_user_name(.values$db, input$user_name)
       })
 
       password_too_short_r <- shiny::reactive({
@@ -208,7 +208,7 @@ add_user_server <- function(id, .values) {
           )
         )
 
-        DB::db_add_user(
+        db_add_user(
           db = .values$db,
           name = input$user_name,
           status = input$user_status,

@@ -4,52 +4,25 @@ type_ui <- function(id) {
   shiny::fluidRow(
     shiny::column(
       width = 6,
-      # shinydashboard::box(
-      #   width = NULL,
-      #   status = "primary",
-      #   title = "Sensorinformationen",
-      #   solidHeader = TRUE,
-      #   shiny::textInput(
-      #     inputId = ns("type"),
-      #     label = "Typ",
-      #     placeholder = "S-Klasse"
-      #   ),
-      #   shiny::textInput(
-      #     inputId = ns("subtype"),
-      #     label = "Untertyp",
-      #     placeholder = "W220"
-      #   )
-      # ),
-      # shinydashboard::box(
-      #   width = NULL,
-      #   status = "success",
-      #   title = "QR-Code generieren",
-      #   solidHeader = TRUE,
-      #   actionButton(
-      #     inputId = ns("generate"),
-      #     label = "Generieren",
-      #     width = "100%"
-      #   ),
-      #   shiny::plotOutput(
-      #     outputId = ns("code")
-      #   )
-      # )
       add_object_ui(
         id = ns("add_type"),
         title = "Typ hinzufügen",
         label = "Typname",
         placeholder = "PT 100"
       ),
-      show_connections_ui(
-        id = ns("show_groups"),
-        title = "Gruppen anzeigen"
+      object_table_ui(
+        id = ns("type_table"),
+        title = "Typtabelle"
       )
     ),
     shiny::column(
       width = 6,
-      object_table_ui(
-        id = ns("type_table"),
-        title = "Typtabelle"
+      show_connections_ui(
+        id = ns("show_groups"),
+        title = "Gruppen anzeigen"
+      ),
+      subtypes_ui(
+        id = ns("subtypes")
       )
     )
   )
@@ -81,13 +54,16 @@ type_server <- function(id, .values) {
         table = "type",
         name_column = "type_name",
         func = list(
-          get_connections = DB::db_get_groups_by_type,
-          get_possible_connections = DB::db_get_groups,
-          get_objects = DB::db_get_types,
-          get_object_name = DB::db_get_type_name,
-          has_object_name = DB::db_has_type_name,
-          set_object_name = DB::db_set_type_name,
-          remove_object = DB::db_remove_type
+          get_connections = db_get_groups_by_type,
+          get_possible_connections = db_get_groups,
+          get_objects = db_get_types,
+          get_object_name = db_get_type_name,
+          has_object_name = db_has_type_name,
+          set_object_name = db_set_type_name,
+          remove_object = function(db, type_id) {
+            db_remove_type(db, type_id)
+            db_remove_subtypes_by_type_id(db, type_id)
+          }
         )
       )
 
@@ -102,7 +78,7 @@ type_server <- function(id, .values) {
         object = "Typ",
         object_name_with_article = "Der Typname",
         object_with_article = "Der Typ",
-        object_with_small_article = "der Typ",
+        object_with_small_article = "den Typen",
         remove_btn_title = "Typ entfernen"
       )
 
@@ -112,10 +88,15 @@ type_server <- function(id, .values) {
         .values = .values,
         object_id = "type",
         object_name = "type_name",
+        object_name_with_article = "Der Typname",
         object_with_article = "Der Typ",
         add_label = "Typ hinzufügen",
-        add_object_func = DB::db_add_type,
-        has_object_name_func = DB::db_has_type_name
+        add_object_func = function(db, name) {
+          db_add_type(db, name)
+          id <- db_get_type_id(db, name)
+          db_add_subtype(db, id, "Standard", 0)
+        },
+        has_object_name_func = db_has_type_name
       )
 
       show_connections_server(
@@ -124,6 +105,11 @@ type_server <- function(id, .values) {
         settings = settings,
         db = db,
         label = label
+      )
+
+      subtypes_server(
+        id = "subtypes",
+        .values = .values
       )
 
       object_table_server(
