@@ -57,7 +57,10 @@ type_server <- function(id, .values) {
           get_object_name = db_get_type_name,
           has_object_name = db_has_type_name,
           set_object_name = db_set_type_name,
-          remove_object = db_remove_type
+          remove_object = function(db, type_id) {
+            db_remove_type(db, type_id)
+            db_remove_subtype_by_type_id(db, type_id)
+          }
         )
       )
 
@@ -84,7 +87,11 @@ type_server <- function(id, .values) {
         object_name = "type_name",
         object_with_article = "Der Typ",
         add_label = "Typ hinzufügen",
-        add_object_func = db_add_type,
+        add_object_func = function(db, name) {
+          db_add_type(db, name)
+          id <- db_get_type_id(db, name)
+          db_add_subtype(db, id, "Standard", 0)
+        },
         has_object_name_func = db_has_type_name
       )
 

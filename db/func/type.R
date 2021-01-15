@@ -76,6 +76,27 @@ db_get_type_name <- function(db, type_id) {
 
 
 
+#' Get Type ID
+#'
+#' Get the ID of the type with name \code{type_name}.
+#'
+#' @template db
+#' @template xxx-name
+#' @templateVar key type
+#'
+#' @family type
+#'
+#' @export
+db_get_type_id <- function(db, type_name) {
+  DBI::dbGetQuery(
+    db,
+    "SELECT rowid FROM type WHERE type_name = ?",
+    params = list(type_name)
+  )$rowid
+}
+
+
+
 #' Check If Type Table Has Type Name
 #'
 #' @template db

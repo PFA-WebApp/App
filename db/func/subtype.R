@@ -12,7 +12,8 @@
 db_add_subtype <- function(db, type_id, subtype_name, quantity) {
   entry <- tibble::tibble(
     type_id = type_id,
-    subtype_name = subtype_name
+    subtype_name = subtype_name,
+    quantity = quantity
   )
 
   DBI::dbAppendTable(db, "subtype", entry)
@@ -54,5 +55,24 @@ db_set_subtype_quantity <- function(db, subtype_id, quantity) {
     db,
     "UPDATE subtype SET quantity = ? WHERE rowid = ?",
     params = list(quantity, subtype_id)
+  )
+}
+
+
+
+#' Remove Subtype by Type Id
+#'
+#' @template db
+#' @template id
+#' @templateVar key type
+#'
+#' @family subtype
+#'
+#' @export
+db_remove_subtype_by_type_id <- function(db, type_id) {
+  DBI::dbExecute(
+    db,
+    "DELETE FROM subtype WHERE type_id = ?",
+    params = list(type_id)
   )
 }
