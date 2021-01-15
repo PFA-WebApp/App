@@ -88,6 +88,7 @@ type_server <- function(id, .values) {
         .values = .values,
         object_id = "type",
         object_name = "type_name",
+        object_name_with_article = "Der Typname",
         object_with_article = "Der Typ",
         add_label = "Typ hinzufügen",
         add_object_func = function(db, name) {

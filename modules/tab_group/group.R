@@ -72,6 +72,7 @@ group_server <- function(id, .values) {
         .values = .values,
         object_id = "group",
         object_name = "group_name",
+        object_name_with_article = "Der Gruppenname",
         object_with_article =  "Die Gruppe",
         add_label = "Gruppe hinzufügen",
         add_object_func = db_add_group,

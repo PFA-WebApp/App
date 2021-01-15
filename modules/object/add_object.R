@@ -28,6 +28,7 @@ add_object_server <- function(id,
                               .values,
                               object_id,
                               object_name,
+                              object_name_with_article,
                               object_with_article,
                               add_label,
                               add_object_func,
@@ -44,7 +45,7 @@ add_object_server <- function(id,
           shiny::need(
             !name_too_short_r(),
             paste(
-              object_with_article,
+              object_name_with_article,
               "benötigt mindestens",
               as_german(.values$settings[[object_name]]$length$min),
               "Zeichen!\n\n"
@@ -53,7 +54,7 @@ add_object_server <- function(id,
           shiny::need(
             !name_too_long_r(),
             paste(
-              object_with_article,
+              object_name_with_article,
               "darf nicht länger sein als",
               as_german(.values$settings[[object_name]]$length$max),
               "Zeichen!\n\n"
@@ -68,7 +69,7 @@ add_object_server <- function(id,
           shiny::need(
             !name_taken_r(),
             paste(
-              object_with_article,
+              object_name_with_article,
               "existiert bereits!\n\n"
             )
           ),
