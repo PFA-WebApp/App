@@ -51,13 +51,13 @@ type_server <- function(id, .values) {
         table = "type",
         name_column = "type_name",
         func = list(
-          get_connections = DB::db_get_groups_by_type,
-          get_possible_connections = DB::db_get_groups,
-          get_objects = DB::db_get_types,
-          get_object_name = DB::db_get_type_name,
-          has_object_name = DB::db_has_type_name,
-          set_object_name = DB::db_set_type_name,
-          remove_object = DB::db_remove_type
+          get_connections = db_get_groups_by_type,
+          get_possible_connections = db_get_groups,
+          get_objects = db_get_types,
+          get_object_name = db_get_type_name,
+          has_object_name = db_has_type_name,
+          set_object_name = db_set_type_name,
+          remove_object = db_remove_type
         )
       )
 
@@ -84,8 +84,8 @@ type_server <- function(id, .values) {
         object_name = "type_name",
         object_with_article = "Der Typ",
         add_label = "Typ hinzufügen",
-        add_object_func = DB::db_add_type,
-        has_object_name_func = DB::db_has_type_name
+        add_object_func = db_add_type,
+        has_object_name_func = db_has_type_name
       )
 
       show_connections_server(

@@ -27,7 +27,7 @@ group_table_server <- function(id, .values) {
       output$group_table <- DT::renderDataTable({
         .values$update$group()
 
-        tbl <- DB::db_get_table(.values$db, "groups")
+        tbl <- db_get_table(.values$db, "groups")
 
         tbl$change_group_name <- purrr::map_chr(
           tbl$group_id,

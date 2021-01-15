@@ -24,7 +24,7 @@ group_table_change_group_name_server <- function(id, .values, group_id) {
 
       old_group_name_r <- shiny::reactive({
         .values$update$group()
-        groups <- DB::db_get_groups(.values$db)
+        groups <- db_get_groups(.values$db)
         names(groups[groups == group_id][1])
       })
 
@@ -47,7 +47,7 @@ group_table_change_group_name_server <- function(id, .values, group_id) {
       shiny::observeEvent(input$confirm_group_name, {
         shiny::removeModal()
 
-        success <- DB::db_set_group_name(.values$db, group_id, input$group_name)
+        success <- db_set_group_name(.values$db, group_id, input$group_name)
 
         if (success) {
           shiny::showNotification(

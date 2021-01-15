@@ -42,13 +42,13 @@ group_server <- function(id, .values) {
         table = "groups",
         name_column = "group_name",
         func = list(
-          get_connections = DB::db_get_types_by_group,
-          get_possible_connections = DB::db_get_types,
-          get_objects = DB::db_get_groups,
-          get_object_name = DB::db_get_group_name,
-          has_object_name = DB::db_has_group_name,
-          set_object_name = DB::db_set_group_name,
-          remove_object = DB::db_remove_group
+          get_connections = db_get_types_by_group,
+          get_possible_connections = db_get_types,
+          get_objects = db_get_groups,
+          get_object_name = db_get_group_name,
+          has_object_name = db_has_group_name,
+          set_object_name = db_set_group_name,
+          remove_object = db_remove_group
         )
       )
 
@@ -74,8 +74,8 @@ group_server <- function(id, .values) {
         object_name = "group_name",
         object_with_article =  "Die Gruppe",
         add_label = "Gruppe hinzufügen",
-        add_object_func = DB::db_add_group,
-        has_object_name_func = DB::db_has_group_name
+        add_object_func = db_add_group,
+        has_object_name_func = db_has_group_name
       )
 
       show_connections_server(

@@ -125,7 +125,7 @@ settings_server <- function(id, .values) {
           value = ""
         )
 
-        DB::db_set_password(
+        db_set_password(
           db = .values$db,
           name = .values$user$name(),
           password = bcrypt::hashpw(input$user_password_1)

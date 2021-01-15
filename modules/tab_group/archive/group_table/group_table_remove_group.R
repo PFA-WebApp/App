@@ -27,7 +27,7 @@ group_table_remove_group_server <- function(id,
 
       group_name_r <- shiny::reactive({
         .values$update$group()
-        groups <- DB::db_get_groups(.values$db)
+        groups <- db_get_groups(.values$db)
         names(groups[groups == group_id][1])
       })
 
@@ -52,7 +52,7 @@ group_table_remove_group_server <- function(id,
       shiny::observeEvent(input$confirm_remove, {
         shiny::removeModal()
 
-        success <- DB::db_remove_group(.values$db, group_id)
+        success <- db_remove_group(.values$db, group_id)
 
         if (success) {
           shiny::showNotification(

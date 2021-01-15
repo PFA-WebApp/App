@@ -29,7 +29,7 @@ password_reset_server <- function(id, .values) {
       user_name_choices_r <- shiny::reactive({
         .values$update$user()
 
-        sort(DB::db_get_user_names(.values$db))
+        sort(db_get_user_names(.values$db))
       })
 
       output$user_name <- shiny::renderUI({
@@ -75,7 +75,7 @@ password_reset_server <- function(id, .values) {
           duration = NULL
         )
 
-        DB::db_set_password(.values$db, input$user_name, bcrypt::hashpw(reset_pwd))
+        db_set_password(.values$db, input$user_name, bcrypt::hashpw(reset_pwd))
       })
 
     }

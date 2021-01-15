@@ -69,7 +69,7 @@ object_table_change_object_connections_server <- function(id,
             type_id <- object_id
           }
 
-          DB::db_add_group_type(
+          db_add_group_type(
             db = .values$db,
             group_id = group_id,
             type_id = type_id
