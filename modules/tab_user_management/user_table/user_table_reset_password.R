@@ -57,7 +57,7 @@ user_table_reset_password_server <- function(id, .values, user_name) {
           duration = 5
         )
 
-        DB::db_set_password(.values$db, user_name, bcrypt::hashpw(reset_pwd))
+        db_set_password(.values$db, user_name, bcrypt::hashpw(reset_pwd))
       })
     }
   )

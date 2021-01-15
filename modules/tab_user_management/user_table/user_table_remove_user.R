@@ -1,11 +1,11 @@
-user_table_remove_button_ui <- function(id) {
+user_table_remove_user_ui <- function(id) {
   ns <- shiny::NS(id)
 
   as.character(
     shiny::actionButton(
       inputId = ns("remove"),
       label = NULL,
-      icon = shiny::icon("user-alt-slash"),
+      icon = shiny::icon("user-minus"),
       class = "primary",
       onclick = glue::glue(
         'Shiny.setInputValue(\"{inputId}\", this.id + Math.random())',
@@ -15,7 +15,7 @@ user_table_remove_button_ui <- function(id) {
   )
 }
 
-user_table_remove_button_server <- function(id,
+user_table_remove_user_server <- function(id,
                                             .values,
                                             user_name,
                                             status,
@@ -93,7 +93,7 @@ user_table_remove_button_server <- function(id,
       shiny::observeEvent(input$confirm_remove, {
         shiny::removeModal()
 
-        success <- DB::db_remove_user(.values$db, user_name)
+        success <- db_remove_user(.values$db, user_name)
 
         if (success) {
           shiny::showNotification(

@@ -6,7 +6,13 @@ login_user_info_ui <- function(id) {
       outputId = ns("user_name")
     ),
     shiny::uiOutput(
+      outputId = ns("user_logged_since")
+    ),
+    shiny::uiOutput(
       outputId = ns("user_last_logged")
+    ),
+    shiny::uiOutput(
+      outputId = ns("user_times_logged")
     )
   )
 }
@@ -17,6 +23,8 @@ login_user_info_server <- function(id, .values) {
     function(input, output, session) {
 
       ns <- session$ns
+
+      timer_r <- shiny::reactiveTimer(intervalMs = 5000)
 
       is_logged_r <- shiny::reactive({
         .values$user$status() != "not_logged"
@@ -34,43 +42,85 @@ login_user_info_server <- function(id, .values) {
         }
       })
 
-      diff_time_r <- shiny::reactive({
+      diff_time_since_r <- shiny::reactive({
         .values$update$user()
-        input$refresh_last_logged
+        timer_r()
 
-
-        last_logged_time <- DB::db_get_user_last_logged(
+        current_logged_time <- db_get_user_last_logged(
           db = .values$db,
           name = .values$user$name()
         )
 
-        last_logged_time <- lubridate::ymd_hms(last_logged_time)
+        current_logged_time <- lubridate::ymd_hms(current_logged_time)
+        current_time <- lubridate::ymd_hms(Sys.time())
+
+        diff_time <- current_time - current_logged_time
+      })
+
+      logged_since_r <- shiny::reactive({
+        unit <- .values$settings$time_unit_dict[attr(diff_time_since_r(), "units")]
+        value <- round(as.numeric(diff_time_since_r()))
+        paste(value, unit)
+      })
+
+      output$user_logged_since <- shiny::renderUI({
+        if (is_logged_r()) {
+          shinydashboard::infoBox(
+            title = "Eingeloggt seit",
+            value = htmltools::div(
+              class = "relative",
+              logged_since_r()
+            ),
+            icon = shiny::icon("user-clock"),
+            color = "light-blue",
+            width = NULL
+          )
+        }
+      })
+
+      diff_time_last_r <- shiny::reactive({
+        timer_r()
+
+        last_logged_time <- lubridate::ymd_hms(.values$user$last_logged())
         current_time <- lubridate::ymd_hms(Sys.time())
 
         diff_time <- current_time - last_logged_time
       })
 
       last_logged_r <- shiny::reactive({
-        unit <- .values$settings$time_unit_dict[attr(diff_time_r(), "units")]
-        value <- round(as.numeric(diff_time_r()))
+        unit <- .values$settings$time_unit_dict[attr(diff_time_last_r(), "units")]
+        value <- round(as.numeric(diff_time_last_r()))
         paste(value, unit)
       })
 
       output$user_last_logged <- shiny::renderUI({
         if (is_logged_r()) {
           shinydashboard::infoBox(
-            title = "Eingeloggt seit",
+            title = "Zuletzt eingeloggt vor",
             value = htmltools::div(
               class = "relative",
-              last_logged_r(),
-              shiny::actionButton(
-                inputId = ns("refresh_last_logged"),
-                label = NULL,
-                icon = shiny::icon("redo-alt"),
-                class = "refresh-user-last-logged-btn"
-              )
+              last_logged_r()
             ),
-            icon = shiny::icon("user-clock"),
+            icon = shiny::icon("history"),
+            color = "light-blue",
+            width = NULL
+          )
+        }
+      })
+
+      times_logged_r <- shiny::reactive({
+        db_get_user_times_logged(.values$db, .values$user$name())
+      })
+
+      output$user_times_logged <- shiny::renderUI({
+        if (is_logged_r()) {
+          shinydashboard::infoBox(
+            title = "Anzahl Besuche",
+            value = htmltools::div(
+              class = "relative",
+              times_logged_r()
+            ),
+            icon = shiny::icon("door-open"),
             color = "light-blue",
             width = NULL
           )

@@ -6,9 +6,6 @@ library(stringr)
 library(qrcode)
 library(purrr)
 
-# Custom libraries
-library(DB)
-
 ui_server <- function(source_to_globalenv = FALSE) {
     # If source_to_global_env all sourced functions get added to the global
     # environment which takes some time after the app has stopped
@@ -27,7 +24,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
     )
 
     source_directory(
-        path = "db",
+        path = "db/func",
         encoding = "UTF-8",
         modifiedOnly = FALSE,
         chdir = TRUE,
@@ -39,11 +36,6 @@ ui_server <- function(source_to_globalenv = FALSE) {
 
     # Allow bigger file inputs
     options(shiny.maxRequestSize = 100*1024^2)
-
-    options(.language = "de")
-
-    # Enable scrolling for wide DT tables
-    options(DT.options = list(dom = "lfptp", scrollX = TRUE))
 
     # UI -----------------------------------------------------------------------
     ui <- htmltools::div(
@@ -82,9 +74,12 @@ ui_server <- function(source_to_globalenv = FALSE) {
 
         .values$user$status <- shiny::reactiveVal("admin")
         .values$user$name <- shiny::reactiveVal("Admin")
+        .values$user$last_logged <- shiny::reactiveVal("2011-11-11 11:11:11")
 
         .values$settings$password$length <- list(min = 4, max = 16)
         .values$settings$user_name$length <- list(min = 4, max = 16)
+        .values$settings$group_name$length <- list(min = 4, max = 16)
+        .values$settings$type_name$length <- list(min = 4, max = 16)
         .values$settings$status_dict <- c(
             admin = "Administrator",
             mod = "Moderator",
@@ -99,6 +94,10 @@ ui_server <- function(source_to_globalenv = FALSE) {
         )
 
         .values$update$user <- shiny::reactiveVal(0)
+        .values$update$group <- shiny::reactiveVal(0)
+        .values$update$type <- shiny::reactiveVal(0)
+        .values$update$subtype <- shiny::reactiveVal(0)
+        .values$update$group_type <- shiny::reactiveVal(0)
 
         # Connect to db
         .values$db <- DBI::dbConnect(RSQLite::SQLite(), "./db/db.sqlite")

@@ -28,7 +28,7 @@ user_table_server <- function(id, .values) {
       output$user_table <- DT::renderDataTable({
         .values$update$user()
 
-        tbl <- DB::db_get_table(.values$db, "user")
+        tbl <- db_get_table(.values$db, "user")
 
         tbl$change_status <- purrr::map2_chr(
           tbl$name, tbl$status, function(user_name, status) {
@@ -59,8 +59,8 @@ user_table_server <- function(id, .values) {
                 taken_user_names_rvs$remove, user_name
               )
 
-              user_table_remove_button_server(
-                id = "user_table_remove_button" %_% user_name,
+              user_table_remove_user_server(
+                id = "user_table_remove_user" %_% user_name,
                 .values = .values,
                 user_name = user_name,
                 status = status,
@@ -68,8 +68,8 @@ user_table_server <- function(id, .values) {
               )
             }
 
-            user_table_remove_button_ui(
-              id = ns("user_table_remove_button" %_% user_name)
+            user_table_remove_user_ui(
+              id = ns("user_table_remove_user" %_% user_name)
             )
           }
         )
@@ -96,7 +96,7 @@ user_table_server <- function(id, .values) {
           dplyr::select(name, status, change_status, remove, reset_password) %>%
           dplyr::mutate(status = .values$settings$status_dict[status])
 
-        tbl <- tbl[rev(seq_len(nrow(tbl))),]
+        tbl <- tbl[rev(seq_len(nrow(tbl))), , drop = FALSE]
 
         tbl <- tbl[, col_names_by_status_r()]
 

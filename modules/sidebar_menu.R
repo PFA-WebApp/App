@@ -46,8 +46,22 @@ sidebar_menu_server <- function(id, .values) {
         ),
         sensor_management = shinydashboard::menuItem(
           text = "Sensorverwaltung",
-          tabName = "sensor_management",
-          icon = shiny::icon("temperature-low")
+          icon = shiny::icon("temperature-low"),
+          shinydashboard::menuSubItem(
+            text = "Gruppen",
+            tabName = "group",
+            icon = shiny::icon("layer-group")
+          ),
+          shinydashboard::menuSubItem(
+            text = "Sensortypen",
+            tabName = "type",
+            icon = shiny::icon("tags")
+          ),
+          shinydashboard::menuSubItem(
+            text = "QR-Code",
+            tabName = "qrcode",
+            icon = shiny::icon("qrcode")
+          )
         ),
         user_management = shinydashboard::menuItem(
           text = "Nutzerverwaltung",
