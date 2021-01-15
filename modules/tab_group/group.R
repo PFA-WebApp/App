@@ -10,16 +10,16 @@ group_ui <- function(id) {
         label = "Gruppenname",
         placeholder = "Versuchsaufbau"
       ),
-      show_connections_ui(
-        id = ns("show_types"),
-        title = "Typen anzeigen"
+      object_table_ui(
+        id = ns("group_table"),
+        title = "Gruppentabelle"
       )
     ),
     shiny::column(
       width = 6,
-      object_table_ui(
-        id = ns("group_table"),
-        title = "Gruppentabelle"
+      show_connections_ui(
+        id = ns("show_types"),
+        title = "Typen anzeigen"
       )
     )
   )

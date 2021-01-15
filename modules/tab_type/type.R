@@ -4,52 +4,22 @@ type_ui <- function(id) {
   shiny::fluidRow(
     shiny::column(
       width = 6,
-      # shinydashboard::box(
-      #   width = NULL,
-      #   status = "primary",
-      #   title = "Sensorinformationen",
-      #   solidHeader = TRUE,
-      #   shiny::textInput(
-      #     inputId = ns("type"),
-      #     label = "Typ",
-      #     placeholder = "S-Klasse"
-      #   ),
-      #   shiny::textInput(
-      #     inputId = ns("subtype"),
-      #     label = "Untertyp",
-      #     placeholder = "W220"
-      #   )
-      # ),
-      # shinydashboard::box(
-      #   width = NULL,
-      #   status = "success",
-      #   title = "QR-Code generieren",
-      #   solidHeader = TRUE,
-      #   actionButton(
-      #     inputId = ns("generate"),
-      #     label = "Generieren",
-      #     width = "100%"
-      #   ),
-      #   shiny::plotOutput(
-      #     outputId = ns("code")
-      #   )
-      # )
       add_object_ui(
         id = ns("add_type"),
         title = "Typ hinzufügen",
         label = "Typname",
         placeholder = "PT 100"
       ),
-      show_connections_ui(
-        id = ns("show_groups"),
-        title = "Gruppen anzeigen"
+      object_table_ui(
+        id = ns("type_table"),
+        title = "Typtabelle"
       )
     ),
     shiny::column(
       width = 6,
-      object_table_ui(
-        id = ns("type_table"),
-        title = "Typtabelle"
+      show_connections_ui(
+        id = ns("show_groups"),
+        title = "Gruppen anzeigen"
       )
     )
   )
