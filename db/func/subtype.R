@@ -84,6 +84,24 @@ db_get_subtypes_by_type_id <- function(db, type_id) {
 
 
 
+#' Get Type ID by Subtype ID
+#' @template db
+#' @template id
+#' @templateVar key subtype
+#'
+#' @family subtype
+#'
+#' @export
+db_get_type_id_by_subtype_id <- function(db, subtype_id) {
+  DBI::dbGetQuery(
+    db,
+    "SELECT type_id FROM subtype WHERE rowid = ?",
+    params = list(subtype_id)
+  )$type_id
+}
+
+
+
 #' Get All Subtypes
 #'
 #' @template db

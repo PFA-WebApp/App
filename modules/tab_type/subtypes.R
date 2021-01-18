@@ -12,10 +12,12 @@ subtypes_ui <- function(id) {
     DT::dataTableOutput(
       outputId = ns("subtype_table")
     ),
+    htmltools::br(),
     shiny::actionButton(
       inputId = ns("add_subtype"),
       label = "Untertyp hinzufügen",
-      icon = shiny::icon("plus")
+      icon = shiny::icon("plus"),
+      width = "100%"
     )
   )
 }
@@ -63,7 +65,8 @@ subtypes_server <- function(id, .values) {
                   func = list(
                     get_objects = db_get_subtypes,
                     has_object_id = db_has_subtype_id,
-                    remove_objects = db_remove_subtype
+                    remove_objects = db_remove_subtype,
+                    remove_allowed = remove_subtype_allowed
                   )
                 ),
                 label = list(
