@@ -40,6 +40,25 @@ db_set_subtype_name <- function(db, subtype_id, subtype_name) {
 
 
 
+#' Get Subtype Name
+#'
+#' @template db
+#' @template id
+#' @templateVar key subtype
+#'
+#' @family subtype
+#'
+#' @export
+db_get_subtype_name <- function(db, subtype_id) {
+  DBI::dbGetQuery(
+    db,
+    "SELECT subtype_name FROM subtype WHERE rowid = ?",
+    params = list(subtype_id)
+  )$subtype_name
+}
+
+
+
 #' Set Available Quantity of Subtype
 #'
 #' @template db

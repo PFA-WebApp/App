@@ -38,6 +38,7 @@ subtypes_server <- function(id, .values) {
       })
 
       taken_object_types_rvs <- shiny::reactiveValues(
+        change_object_name = character(),
         remove = character()
       )
 
@@ -45,6 +46,44 @@ subtypes_server <- function(id, .values) {
         .values$update$subtype()
 
         tbl <- db_get_subtype_table_by_type_id(.values$db, input$type)
+
+        tbl$name <-purrr::map_chr(
+          tbl$subtype_id,
+          function(object_id) {
+            if (!object_id %in% taken_object_types_rvs$change_object_name) {
+              taken_object_types_rvs$change_object_name <- c(
+                taken_object_types_rvs$change_object_name, object_id
+              )
+
+              object_table_change_object_name_server(
+                id = "object_table_change_object_name" %_% object_id,
+                .values = .values,
+                object_id = object_id,
+                settings = list(
+                  update_name = "subtype",
+                  length_name = "subtype_name"
+                ),
+                db = list(
+                  func = list(
+                    get_objects = db_get_subtypes,
+                    has_object_name = db_has_subtype_name,
+                    set_object_name = db_set_subtype_name
+                  )
+                ),
+                label = list(
+                  change_name = "Untertypenname bearbeiten",
+                  new_name = "Neuer Untertypenname",
+                  object_name_with_article = "Der Untertypenname"
+                )
+              )
+            }
+
+            object_table_change_object_name_ui(
+              id = ns("object_table_change_object_name" %_% object_id),
+              name = db_get_subtype_name(.values$db, object_id)
+            )
+          }
+        )
 
         tbl$remove <- purrr::map_chr(
           tbl$subtype_id,
@@ -85,7 +124,7 @@ subtypes_server <- function(id, .values) {
 
         tbl <- tbl %>%
           dplyr::select(
-            Untertyp = subtype_name,
+            Untertyp = name,
             Menge = quantity,
             Entfernen = remove
           )
