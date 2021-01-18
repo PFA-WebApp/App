@@ -95,6 +95,21 @@ db_has_group_name <- function(db, group_name) {
 
 
 
+#' Check If Group Table Has Group ID
+#'
+#' @template db
+#' @template id
+#' @templateVar key group
+#'
+#' @family group
+#'
+#' @export
+db_has_group_id <- function(db, group_id) {
+  group_id %in% db_get_groups(db)
+}
+
+
+
 #' Get Group Names
 #'
 #' @template db

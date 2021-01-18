@@ -57,6 +57,8 @@ object_table_remove_object_server <- function(id,
       shiny::observeEvent(input$confirm_remove, {
         shiny::removeModal()
 
+        if (!db$func$has_object_id(.values$db, object_id)) return()
+
         success <- db$func$remove_object(.values$db, object_id)
 
         if (success) {

@@ -112,6 +112,21 @@ db_has_type_name <- function(db, type_name) {
 
 
 
+#' Check If Type Table Has Type ID
+#'
+#' @template db
+#' @template id
+#' @templateVar key type
+#'
+#' @family type
+#'
+#' @export
+db_has_type_id <- function(db, type_id) {
+  type_id %in% db_get_types(db)
+}
+
+
+
 #' Get Type Names
 #'
 #' @template db

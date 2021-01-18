@@ -11,6 +11,11 @@ subtypes_ui <- function(id) {
     ),
     DT::dataTableOutput(
       outputId = ns("subtype_table")
+    ),
+    shiny::actionButton(
+      inputId = ns("add_subtype"),
+      label = "Untertyp hinzufügen",
+      icon = shiny::icon("plus")
     )
   )
 }
@@ -26,7 +31,7 @@ subtypes_server <- function(id, .values) {
         shiny::selectInput(
           inputId = ns("type"),
           label = "Typ",
-          choices = db_get_types(db)
+          choices = db_get_types(.values$db)
         )
       })
 
@@ -37,7 +42,7 @@ subtypes_server <- function(id, .values) {
       output$subtype_table <- DT::renderDataTable({
         .values$update$subtype()
 
-        tbl <- db_get_subtype_table_by_type_id(db, input$type)
+        tbl <- db_get_subtype_table_by_type_id(.values$db, input$type)
 
         tbl$remove <- purrr::map_chr(
           tbl$subtype_id,
@@ -57,6 +62,7 @@ subtypes_server <- function(id, .values) {
                 db = list(
                   func = list(
                     get_objects = db_get_subtypes,
+                    has_object_id = db_has_subtype_id,
                     remove_objects = db_remove_subtype
                   )
                 ),

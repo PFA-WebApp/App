@@ -58,6 +58,7 @@ type_server <- function(id, .values) {
           get_possible_connections = db_get_groups,
           get_objects = db_get_types,
           get_object_name = db_get_type_name,
+          has_object_id = db_has_type_id,
           has_object_name = db_has_type_name,
           set_object_name = db_set_type_name,
           remove_object = function(db, type_id) {
