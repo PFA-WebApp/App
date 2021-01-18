@@ -40,6 +40,25 @@ db_set_subtype_name <- function(db, subtype_id, subtype_name) {
 
 
 
+#' Get Subtype Name
+#'
+#' @template db
+#' @template id
+#' @templateVar key subtype
+#'
+#' @family subtype
+#'
+#' @export
+db_get_subtype_name <- function(db, subtype_id) {
+  DBI::dbGetQuery(
+    db,
+    "SELECT subtype_name FROM subtype WHERE rowid = ?",
+    params = list(subtype_id)
+  )$subtype_name
+}
+
+
+
 #' Set Available Quantity of Subtype
 #'
 #' @template db
@@ -84,6 +103,31 @@ db_get_subtypes_by_type_id <- function(db, type_id) {
 
 
 
+#' Get Type ID by Subtype ID
+#' @template db
+#' @template id
+#' @templateVar key subtype
+#'
+#' @family subtype
+#'
+#' @export
+db_get_type_id_by_subtype_id <- function(db, subtype_id) {
+  DBI::dbGetQuery(
+    db,
+    "SELECT type_id FROM subtype WHERE rowid = ?",
+    params = list(subtype_id)
+  )$type_id
+}
+
+
+
+#' Get All Subtypes
+#'
+#' @template db
+#'
+#' @family subtype
+#'
+#' @export
 db_get_subtypes <- function(db) {
   tbl <- DBI::dbGetQuery(
     db,
@@ -152,4 +196,34 @@ db_remove_subtypes_by_type_id <- function(db, type_id) {
     "DELETE FROM subtype WHERE type_id = ?",
     params = list(type_id)
   )
+}
+
+
+
+#' Check If Table Has Subtype ID
+#'
+#' @template db
+#' @template id
+#' @templateVar key subtype
+#'
+#' @family subtype
+#'
+#' @export
+db_has_subtype_id <- function(db, subtype_id) {
+  subtype_id %in% db_get_subtypes(db)
+}
+
+
+
+#' Check If Table Has Subtype Name
+#'
+#' @template db
+#' @template xxx-name
+#' @templateVar key subtype
+#'
+#' @family subtype
+#'
+#' @export
+db_has_subtype_name <- function(db, subtype_name) {
+  subtype_name %in% names(db_get_subtypes(db))
 }

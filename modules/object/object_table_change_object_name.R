@@ -1,11 +1,16 @@
-object_table_change_object_name_ui <- function(id) {
+object_table_change_object_name_ui <- function(id, name) {
   ns <- shiny::NS(id)
 
   as.character(
-    shiny::actionButton(
+    shiny::actionLink(
       inputId = ns("change_object_name"),
-      label = NULL,
-      icon = shiny::icon("edit"),
+      label = htmltools::div(
+        id = ns("label-container"),
+        htmltools::div(
+          id = ns("label"),
+          name
+        )
+      ),
       class = "primary",
       onclick = glue::glue(
         'Shiny.setInputValue(\"{inputId}\", this.id + Math.random())',
@@ -153,7 +158,9 @@ object_table_change_object_name_server <- function(id,
           )
         }
 
-        .values$update[[settings$update_name]](.values$update[[settings$update_name]]() + 1)
+        .values$update[[settings$update_name]](
+          .values$update[[settings$update_name]]() + 1
+        )
       })
     }
   )

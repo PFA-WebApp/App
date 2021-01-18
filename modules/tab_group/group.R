@@ -46,6 +46,7 @@ group_server <- function(id, .values) {
           get_possible_connections = db_get_types,
           get_objects = db_get_groups,
           get_object_name = db_get_group_name,
+          has_object_id = db_has_group_id,
           has_object_name = db_has_group_name,
           set_object_name = db_set_group_name,
           remove_object = db_remove_group
@@ -55,7 +56,7 @@ group_server <- function(id, .values) {
       label <- list(
         change_connections = "Typen bearbeiten für Gruppe",
         change_name = "Gruppenname bearbeiten",
-        colnames = c("Gruppenname", "Gruppenname bearbeiten", "Typen bearbeiten", "Entfernen"),
+        colnames = c("Gruppenname", "Typen bearbeiten", "Entfernen"),
         connection_modification = "Die Typen von Gruppe",
         connections = "Typen",
         connection_name = "Typname",

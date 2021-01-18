@@ -58,6 +58,7 @@ type_server <- function(id, .values) {
           get_possible_connections = db_get_groups,
           get_objects = db_get_types,
           get_object_name = db_get_type_name,
+          has_object_id = db_has_type_id,
           has_object_name = db_has_type_name,
           set_object_name = db_set_type_name,
           remove_object = function(db, type_id) {
@@ -70,7 +71,7 @@ type_server <- function(id, .values) {
       label <- list(
         change_connection = "Gruppen bearbeiten für Typ",
         change_name = "Typname bearbeiten",
-        colnames = c("Typname", "Typname bearbeiten", "Gruppen bearbeiten", "Entfernen"),
+        colnames = c("Typname", "Gruppen bearbeiten", "Entfernen"),
         connection_modification = "Die Gruppen von Typ",
         connections = "Gruppen",
         connection_name = "Gruppenname",

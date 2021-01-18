@@ -52,6 +52,9 @@
 #' @md
 #' @export
 db_init <- function(path = "db/db.sqlite") {
+  source_directory("./db/func")
+
+
   # Init DB
   db <- DBI::dbConnect(RSQLite::SQLite(), path)
 
