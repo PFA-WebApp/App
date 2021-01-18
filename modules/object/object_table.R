@@ -61,7 +61,7 @@ object_table_server <- function(id,
 
 
 
-        tbl$change_object_name <- purrr::map_chr(
+        tbl$name <- purrr::map_chr(
           tbl$rowid,
           function(object_id) {
             if (!object_id %in% taken_object_types_rvs$change_object_name) {
@@ -80,7 +80,8 @@ object_table_server <- function(id,
             }
 
             object_table_change_object_name_ui(
-              id = ns("object_table_change_object_name" %_% object_id)
+              id = ns("object_table_change_object_name" %_% object_id),
+              name = db$func$get_object_name(.values$db, object_id)
             )
           }
         )
@@ -111,7 +112,7 @@ object_table_server <- function(id,
 
         x <- db$name_column
         tbl <- tbl %>%
-          dplyr::select({{x}}, change_object_name, change_object_connections, remove)
+          dplyr::select(name, change_object_connections, remove)
 
         tbl <- tbl[rev(seq_len(nrow(tbl))), , drop = FALSE]
 
@@ -121,7 +122,7 @@ object_table_server <- function(id,
             columnDefs = list(
               list(
                 className = 'dt-center',
-                targets = 2:4
+                targets = 2:3
               )
             )
           ),

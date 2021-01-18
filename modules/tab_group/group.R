@@ -56,7 +56,7 @@ group_server <- function(id, .values) {
       label <- list(
         change_connections = "Typen bearbeiten für Gruppe",
         change_name = "Gruppenname bearbeiten",
-        colnames = c("Gruppenname", "Gruppenname bearbeiten", "Typen bearbeiten", "Entfernen"),
+        colnames = c("Gruppenname", "Typen bearbeiten", "Entfernen"),
         connection_modification = "Die Typen von Gruppe",
         connections = "Typen",
         connection_name = "Typname",
