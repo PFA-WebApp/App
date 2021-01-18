@@ -193,3 +193,18 @@ db_remove_subtypes_by_type_id <- function(db, type_id) {
 db_has_subtype_id <- function(db, subtype_id) {
   subtype_id %in% db_get_subtypes(db)
 }
+
+
+
+#' Check If Table Has Subtype Name
+#'
+#' @template db
+#' @template xxx-name
+#' @templateVar key subtype
+#'
+#' @family subtype
+#'
+#' @export
+db_has_subtype_name <- function(db, subtype_name) {
+  subtype_name %in% names(db_get_subtypes(db))
+}

@@ -1,4 +1,4 @@
-add_object_ui <- function(id, title, label, placeholder) {
+add_object_ui <- function(id, title, label, placeholder, collapsible = TRUE) {
   ns <- shiny::NS(id)
 
   shinydashboard::box(
@@ -6,7 +6,7 @@ add_object_ui <- function(id, title, label, placeholder) {
     status = "primary",
     title = title,
     solidHeader = TRUE,
-    collapsible = TRUE,
+    collapsible = collapsible,
     shiny::textInput(
       inputId = ns("object_name"),
       label = label,
@@ -32,6 +32,7 @@ add_object_server <- function(id,
                               object_with_article,
                               add_label,
                               add_object_func,
+                              add_object_func_args_r = shiny::reactive(NULL),
                               has_object_name_func
 ) {
   shiny::moduleServer(
@@ -129,10 +130,17 @@ add_object_server <- function(id,
           )
         )
 
+        args <- c(
+          list(
+            db = .values$db,
+            input$object_name
+          ),
+          add_object_func_args_r()
+        )
 
-        add_object_func(
-          db = .values$db,
-          input$object_name
+        do.call(
+          add_object_func,
+          args = args
         )
 
         .values$update[[object_id]](.values$update[[object_id]]() + 1)

@@ -103,6 +103,40 @@ subtypes_server <- function(id, .values) {
           escape = FALSE
         )
       })
+
+      shiny::observeEvent(input$add_subtype, {
+        shiny::showModal(shiny::modalDialog(
+          easyClose = TRUE,
+          add_object_ui(
+            id = ns("add_object"),
+            title = "Untertyp hinzufügen",
+            label = "Untertyp",
+            placeholder = NULL,
+            collapsible = FALSE
+          ),
+          footer = shiny::modalButton(
+            label = "Abbrechen"
+          )
+        ))
+      })
+
+      add_object_server(
+        id = "add_object",
+        .values = .values,
+        object_id = "subtype",
+        object_name = "subtype_name",
+        object_name_with_article = "Der Untertypenname",
+        object_with_article =  "Der Untertyp",
+        add_label = "Untertyp hinzufügen",
+        add_object_func = db_add_subtype,
+        add_object_func_args_r = shiny::reactive({
+          list(
+            type_id = input$type,
+            quantity = 0
+          )
+        }),
+        has_object_name_func = db_has_subtype_name
+      )
     }
   )
 }
