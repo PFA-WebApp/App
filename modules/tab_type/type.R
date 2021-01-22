@@ -10,7 +10,7 @@ type_ui <- function(id) {
         label = "Typname",
         placeholder = "PT 100"
       ),
-      object_table_ui(
+      object_table_box_ui(
         id = ns("type_table"),
         title = "Typtabelle"
       )

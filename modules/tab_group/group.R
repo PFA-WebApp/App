@@ -10,7 +10,7 @@ group_ui <- function(id) {
         label = "Gruppenname",
         placeholder = "Versuchsaufbau"
       ),
-      object_table_ui(
+      object_table_box_ui(
         id = ns("group_table"),
         title = "Gruppentabelle"
       )

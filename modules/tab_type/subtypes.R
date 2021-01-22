@@ -10,6 +10,9 @@ subtypes_ui <- function(id) {
       shiny::uiOutput(
         outputId = ns("select_type")
       ),
+      object_table_ui(
+        id = ns("object_table")
+      ),
       htmltools::br(),
       shiny::actionButton(
         inputId = ns("add_subtype"),
@@ -17,10 +20,6 @@ subtypes_ui <- function(id) {
         icon = shiny::icon("plus"),
         width = "100%"
       )
-    ),
-    object_table_ui(
-      id = ns("object_table"),
-      title = "Untertypen"
     )
   )
 }

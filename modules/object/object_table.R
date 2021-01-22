@@ -1,14 +1,20 @@
-object_table_ui <- function(id, title) {
-  ns <- shiny::NS(id)
-
+object_table_box_ui <- function(id, title) {
   shinydashboard::box(
     width = NULL,
     status = "primary",
     title = title,
     solidHeader = TRUE,
-    DT::dataTableOutput(
-      outputId = ns("object_table")
+    object_table_ui(
+      id = id
     )
+  )
+}
+
+object_table_ui <- function(id) {
+  ns <- shiny::NS(id)
+
+  DT::dataTableOutput(
+    outputId = ns("object_table")
   )
 }
 
