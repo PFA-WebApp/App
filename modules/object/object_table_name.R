@@ -21,11 +21,11 @@ object_table_name_ui <- function(id, name) {
 }
 
 object_table_name_server <- function(id,
-                                                   .values,
-                                                   object_id,
-                                                   settings,
-                                                   db,
-                                                   label
+                                     .values,
+                                     object_id,
+                                     settings,
+                                     db,
+                                     label
 ) {
   shiny::moduleServer(
     id,

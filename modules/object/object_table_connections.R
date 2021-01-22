@@ -16,11 +16,11 @@ object_table_connections_ui <- function(id) {
 }
 
 object_table_connections_server <- function(id,
-                                                          .values,
-                                                          object_id,
-                                                          settings,
-                                                          db,
-                                                          label
+                                            .values,
+                                            object_id,
+                                            settings,
+                                            db,
+                                            label
 ) {
   shiny::moduleServer(
     id,
