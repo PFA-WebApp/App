@@ -10,7 +10,7 @@ type_ui <- function(id) {
         label = "Typname",
         placeholder = "PT 100"
       ),
-      object_table_ui(
+      object_table_box_ui(
         id = ns("type_table"),
         title = "Typtabelle"
       )
@@ -54,6 +54,11 @@ type_server <- function(id, .values) {
         table = "type",
         name_column = "type_name",
         func = list(
+          add_object = function(db, name) {
+            db_add_type(db, name)
+            id <- db_get_type_id(db, name)
+            db_add_subtype(db, id, "Standard", 0)
+          },
           get_connections = db_get_groups_by_type,
           get_possible_connections = db_get_groups,
           get_objects = db_get_types,
@@ -69,7 +74,8 @@ type_server <- function(id, .values) {
       )
 
       label <- list(
-        change_connection = "Gruppen bearbeiten für Typ",
+        add_label = "Typ hinzufügen",
+        change_connections = "Gruppen bearbeiten für Typ",
         change_name = "Typname bearbeiten",
         colnames = c("Typname", "Gruppen bearbeiten", "Entfernen"),
         connection_modification = "Die Gruppen von Typ",
@@ -87,17 +93,9 @@ type_server <- function(id, .values) {
       add_object_server(
         id = "add_type",
         .values = .values,
-        object_id = "type",
-        object_name = "type_name",
-        object_name_with_article = "Der Typname",
-        object_with_article = "Der Typ",
-        add_label = "Typ hinzufügen",
-        add_object_func = function(db, name) {
-          db_add_type(db, name)
-          id <- db_get_type_id(db, name)
-          db_add_subtype(db, id, "Standard", 0)
-        },
-        has_object_name_func = db_has_type_name
+        settings = settings,
+        db = db,
+        label = label
       )
 
       show_connections_server(

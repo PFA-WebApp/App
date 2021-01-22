@@ -1,23 +1,25 @@
 subtypes_ui <- function(id) {
   ns <- shiny::NS(id)
 
-  shinydashboard::box(
-    width = NULL,
-    solidHeader = TRUE,
-    status = "primary",
-    title = "Untertypen bearbeiten",
-    shiny::uiOutput(
-      outputId = ns("select_type")
-    ),
-    DT::dataTableOutput(
-      outputId = ns("subtype_table")
-    ),
-    htmltools::br(),
-    shiny::actionButton(
-      inputId = ns("add_subtype"),
-      label = "Untertyp hinzufügen",
-      icon = shiny::icon("plus"),
-      width = "100%"
+  htmltools::tagList(
+    shinydashboard::box(
+      width = NULL,
+      solidHeader = TRUE,
+      status = "primary",
+      title = "Untertypen bearbeiten",
+      shiny::uiOutput(
+        outputId = ns("select_type")
+      ),
+      object_table_ui(
+        id = ns("object_table")
+      ),
+      htmltools::br(),
+      shiny::actionButton(
+        inputId = ns("add_subtype"),
+        label = "Untertyp hinzufügen",
+        icon = shiny::icon("plus"),
+        width = "100%"
+      )
     )
   )
 }
@@ -29,117 +31,62 @@ subtypes_server <- function(id, .values) {
 
       ns <- session$ns
 
+      settings = list(
+        is_group_object = FALSE,
+        update_name = "subtype",
+        length_name = "subtype_name",
+        show = c("name", "quantity", "remove")
+      )
+
+      db <- list(
+        table = "subtype",
+        name_column = "subtype_name",
+        func = list(
+          add_object = function(db, name) {
+            db_add_subtype(db, input$type, name, quantity_return$quantity_r())
+          },
+          add_object_allowed = function(db, name) !quantity_return$error_r(),
+          filter_table = function(db) db_get_subtypes_by_type_id(db, input$type),
+          get_object_name = db_get_subtype_name,
+          get_object_quantity = db_get_subtype_quantity,
+          has_object_id = db_has_subtype_id,
+          has_object_name = db_has_subtype_name,
+          set_object_name = db_set_subtype_name,
+          set_object_quantity = db_set_subtype_quantity,
+          remove_object = db_remove_subtype,
+          remobe_object_allowed = remove_subtype_allowed
+        )
+      )
+
+      label <- list(
+        add_label = "Untertypen hinzufügen",
+        change_name = "Untertypennamen bearbeiten",
+        change_quantity = "Untertypenmenge bearbeiten",
+        colnames = c("Untertypname", "Menge", "Entfernen"),
+        new_name = "Neuer Untertypenname",
+        new_quantity = "Neue Untertypenmenge",
+        object = "Untertyp",
+        object_name_with_article = "Der Untertypenname",
+        object_quantity_with_article = "Die Untertypenmenge",
+        object_with_article = "Der Untertyp",
+        object_with_small_article = "den Untertypen",
+        remove_btn_title = "Untertyp entfernen"
+      )
+
+      object_table_server(
+        id = "object_table",
+        .values = .values,
+        settings = settings,
+        db = db,
+        label = label
+      )
+
       output$select_type <- shiny::renderUI({
+        .values$update$type()
         shiny::selectInput(
           inputId = ns("type"),
           label = "Typ",
           choices = db_get_types(.values$db)
-        )
-      })
-
-      taken_object_types_rvs <- shiny::reactiveValues(
-        change_object_name = character(),
-        remove = character()
-      )
-
-      output$subtype_table <- DT::renderDataTable({
-        .values$update$subtype()
-
-        tbl <- db_get_subtype_table_by_type_id(.values$db, input$type)
-
-        tbl$name <-purrr::map_chr(
-          tbl$subtype_id,
-          function(object_id) {
-            if (!object_id %in% taken_object_types_rvs$change_object_name) {
-              taken_object_types_rvs$change_object_name <- c(
-                taken_object_types_rvs$change_object_name, object_id
-              )
-
-              object_table_change_object_name_server(
-                id = "object_table_change_object_name" %_% object_id,
-                .values = .values,
-                object_id = object_id,
-                settings = list(
-                  update_name = "subtype",
-                  length_name = "subtype_name"
-                ),
-                db = list(
-                  func = list(
-                    get_objects = db_get_subtypes,
-                    has_object_name = db_has_subtype_name,
-                    set_object_name = db_set_subtype_name
-                  )
-                ),
-                label = list(
-                  change_name = "Untertypenname bearbeiten",
-                  new_name = "Neuer Untertypenname",
-                  object_name_with_article = "Der Untertypenname"
-                )
-              )
-            }
-
-            object_table_change_object_name_ui(
-              id = ns("object_table_change_object_name" %_% object_id),
-              name = db_get_subtype_name(.values$db, object_id)
-            )
-          }
-        )
-
-        tbl$remove <- purrr::map_chr(
-          tbl$subtype_id,
-          function(object_id) {
-            if (!object_id %in% taken_object_types_rvs$remove) {
-              taken_object_types_rvs$remove <- c(
-                taken_object_types_rvs$remove, object_id
-              )
-
-              object_table_remove_object_server(
-                id = "object_table_remove_object" %_% object_id,
-                .values = .values,
-                object_id = object_id,
-                settings = list(
-                  update_name = "subtype"
-                ),
-                db = list(
-                  func = list(
-                    get_objects = db_get_subtypes,
-                    has_object_id = db_has_subtype_id,
-                    remove_objects = db_remove_subtype,
-                    remove_allowed = remove_subtype_allowed
-                  )
-                ),
-                label = list(
-                  remove_btn_title = "Untertyp entfernen",
-                  object_with_small_article = "den Untertypen",
-                  object_with_article = "Der Untertyp"
-                )
-              )
-            }
-
-            object_table_remove_object_ui(
-              id = ns("object_table_remove_object" %_% object_id)
-            )
-          }
-        )
-
-        tbl <- tbl %>%
-          dplyr::select(
-            Untertyp = name,
-            Menge = quantity,
-            Entfernen = remove
-          )
-
-        DT::datatable(
-          tbl,
-          options = list(
-            columnDefs = list(
-              list(
-                className = 'dt-center',
-                targets = 3
-              )
-            )
-          ),
-          escape = FALSE
         )
       })
 
@@ -151,7 +98,12 @@ subtypes_server <- function(id, .values) {
             title = "Untertyp hinzufügen",
             label = "Untertyp",
             placeholder = NULL,
-            collapsible = FALSE
+            collapsible = FALSE,
+            object_quantity_input_ui(
+              id = ns("object_quantity_input"),
+              old_quantity = 0,
+              label = label
+            )
           ),
           footer = shiny::modalButton(
             label = "Abbrechen"
@@ -162,19 +114,17 @@ subtypes_server <- function(id, .values) {
       add_object_server(
         id = "add_object",
         .values = .values,
-        object_id = "subtype",
-        object_name = "subtype_name",
-        object_name_with_article = "Der Untertypenname",
-        object_with_article =  "Der Untertyp",
-        add_label = "Untertyp hinzufügen",
-        add_object_func = db_add_subtype,
-        add_object_func_args_r = shiny::reactive({
-          list(
-            type_id = input$type,
-            quantity = 0
-          )
-        }),
-        has_object_name_func = db_has_subtype_name
+        settings = settings,
+        db = db,
+        label = label
+      )
+
+      quantity_return <- object_quantity_input_server(
+        id = "object_quantity_input",
+        .values = .values,
+        settings = settings,
+        db = db,
+        label = label
       )
     }
   )

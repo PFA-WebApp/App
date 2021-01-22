@@ -1,14 +1,20 @@
-object_table_ui <- function(id, title) {
-  ns <- shiny::NS(id)
-
+object_table_box_ui <- function(id, title) {
   shinydashboard::box(
     width = NULL,
     status = "primary",
     title = title,
     solidHeader = TRUE,
-    DT::dataTableOutput(
-      outputId = ns("object_table")
+    object_table_ui(
+      id = id
     )
+  )
+}
+
+object_table_ui <- function(id) {
+  ns <- shiny::NS(id)
+
+  DT::dataTableOutput(
+    outputId = ns("object_table")
   )
 }
 
@@ -18,6 +24,20 @@ object_table_server <- function(id,
                                 db,
                                 label
 ) {
+  required_settings <- c(
+    "is_group_object", "update_name", "length_name"
+  )
+
+  stopifnot(all(required_settings %in% names(settings)))
+
+  default_settings <- list(
+    show = c("name", "connections", "remove")
+  )
+
+  for (name in names(default_settings)) {
+    if (!name %in% names(settings)) settings[[name]] <- default_settings[[name]]
+  }
+
   shiny::moduleServer(
     id,
     function(input, output, session) {
@@ -25,8 +45,9 @@ object_table_server <- function(id,
       ns <- session$ns
 
       taken_object_types_rvs <- shiny::reactiveValues(
-        change_object_connections = character(),
-        change_object_name = character(),
+        connections = character(),
+        name = character(),
+        quantity = character(),
         remove = character()
       )
 
@@ -35,86 +56,111 @@ object_table_server <- function(id,
 
         tbl <- db_get_table(.values$db, db$table)
 
-        tbl$change_object_connections <- purrr::map_chr(
-          tbl$rowid,
-          function(object_id) {
-            if (!object_id %in% taken_object_types_rvs$change_object_connections) {
-              taken_object_types_rvs$change_object_connections <- c(
-                taken_object_types_rvs$change_object_connections, object_id
-              )
+        if (!is.null(db$func$filter_table)) {
+          tbl <- dplyr::filter(
+            tbl,
+            rowid %in% db$func$filter_table(.values$db)
+          )
+        }
 
-              object_table_change_object_connections_server(
-                id = "object_table_change_object_connections" %_% object_id,
+        if ("connections" %in% settings$show) {
+          tbl$connections <- as.character(
+            map_ui(
+              object_ids = tbl$rowid,
+              ui_func = object_table_connections_ui,
+              server_func = object_table_connections_server,
+              rvs = taken_object_types_rvs,
+              rvs_slot = "connections",
+              ns = ns,
+              id_prefix = "connection",
+              server_args = list(
                 .values = .values,
-                object_id = object_id,
+                object_id = function(object_id) object_id,
                 settings = settings,
                 db = db,
                 label = label
               )
-            }
-
-            object_table_change_object_connections_ui(
-              id = ns("object_table_change_object_connections" %_% object_id)
             )
-          }
-        )
+          )
+        }
 
-
-
-        tbl$name <- purrr::map_chr(
-          tbl$rowid,
-          function(object_id) {
-            if (!object_id %in% taken_object_types_rvs$change_object_name) {
-              taken_object_types_rvs$change_object_name <- c(
-                taken_object_types_rvs$change_object_name, object_id
-              )
-
-              object_table_change_object_name_server(
-                id = "object_table_change_object_name" %_% object_id,
+        if ("name" %in% settings$show) {
+          tbl$name <- as.character(
+            map_ui(
+              object_ids = tbl$rowid,
+              ui_func = object_table_name_ui,
+              server_func = object_table_name_server,
+              rvs = taken_object_types_rvs,
+              rvs_slot = "name",
+              ns = ns,
+              id_prefix = "name",
+              ui_args = list(
+                name = function(object_id) db$func$get_object_name(.values$db, object_id)
+              ),
+              server_args = list(
                 .values = .values,
-                object_id = object_id,
+                object_id = function(object_id) object_id,
                 settings = settings,
                 db = db,
                 label = label
               )
-            }
-
-            object_table_change_object_name_ui(
-              id = ns("object_table_change_object_name" %_% object_id),
-              name = db$func$get_object_name(.values$db, object_id)
             )
-          }
-        )
+          )
+        }
 
-        tbl$remove <- purrr::map_chr(
-          tbl$rowid,
-          function(object_id) {
-            if (!object_id %in% taken_object_types_rvs$remove) {
-              taken_object_types_rvs$remove <- c(
-                taken_object_types_rvs$remove, object_id
-              )
-
-              object_table_remove_object_server(
-                id = "object_table_remove_object" %_% object_id,
+        if ("quantity" %in% settings$show) {
+          tbl$quantity <- as.character(
+            map_ui(
+              object_ids = tbl$rowid,
+              ui_func = object_table_quantity_ui,
+              server_func = object_table_quantity_server,
+              rvs = taken_object_types_rvs,
+              rvs_slot = "quantity",
+              ns = ns,
+              id_prefix = "quantity",
+              ui_args = list(
+                quantity = function(object_id) db$func$get_object_quantity(.values$db, object_id)
+              ),
+              server_args = list(
                 .values = .values,
-                object_id = object_id,
+                object_id = function(object_id) object_id,
                 settings = settings,
                 db = db,
                 label = label
               )
-            }
-
-            object_table_remove_object_ui(
-              id = ns("object_table_remove_object" %_% object_id)
             )
-          }
-        )
+          )
+        }
+
+        if ("remove" %in% settings$show) {
+          tbl$remove <- as.character(
+            map_ui(
+              object_ids = tbl$rowid,
+              ui_func = object_table_remove_object_ui,
+              server_func = object_table_remove_object_server,
+              rvs = taken_object_types_rvs,
+              rvs_slot = "remove",
+              ns = ns,
+              id_prefix = "remove",
+              server_args = list(
+                .values = .values,
+                object_id = function(object_id) object_id,
+                settings = settings,
+                db = db,
+                label = label
+              )
+            )
+          )
+        }
 
         x <- db$name_column
-        tbl <- tbl %>%
-          dplyr::select(name, change_object_connections, remove)
+        tbl <- tbl[settings$show]
+
+        targets <- which(settings$show != "name")
 
         tbl <- tbl[rev(seq_len(nrow(tbl))), , drop = FALSE]
+
+        stopifnot(length(tbl) == length(label$colnames))
 
         DT::datatable(
           data = tbl,
@@ -122,7 +168,7 @@ object_table_server <- function(id,
             columnDefs = list(
               list(
                 className = 'dt-center',
-                targets = 2:3
+                targets = targets
               )
             )
           ),

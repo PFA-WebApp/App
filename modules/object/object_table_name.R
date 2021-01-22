@@ -1,9 +1,9 @@
-object_table_change_object_name_ui <- function(id, name) {
+object_table_name_ui <- function(id, name) {
   ns <- shiny::NS(id)
 
   as.character(
     shiny::actionLink(
-      inputId = ns("change_object_name"),
+      inputId = ns("name"),
       label = htmltools::div(
         id = ns("label-container"),
         htmltools::div(
@@ -14,18 +14,18 @@ object_table_change_object_name_ui <- function(id, name) {
       class = "primary",
       onclick = glue::glue(
         'Shiny.setInputValue(\"{inputId}\", this.id + Math.random())',
-        inputId = ns("change_object_name")
+        inputId = ns("name")
       )
     )
   )
 }
 
-object_table_change_object_name_server <- function(id,
-                                                   .values,
-                                                   object_id,
-                                                   settings,
-                                                   db,
-                                                   label
+object_table_name_server <- function(id,
+                                     .values,
+                                     object_id,
+                                     settings,
+                                     db,
+                                     label
 ) {
   shiny::moduleServer(
     id,
@@ -35,11 +35,10 @@ object_table_change_object_name_server <- function(id,
 
       old_object_name_r <- shiny::reactive({
         .values$update[[settings$update_name]]()
-        objects <- db$func$get_objects(.values$db)
-        names(objects[objects == object_id][1])
+        db$func$get_object_name(.values$db, object_id)
       })
 
-      shiny::observeEvent(input$change_object_name, {
+      shiny::observeEvent(input$name, {
         shiny::showModal(shiny::modalDialog(
           title = label$change_name,
           easyClose = TRUE,
@@ -122,6 +121,7 @@ object_table_change_object_name_server <- function(id,
       })
 
       name_taken_r <- shiny::reactive({
+        if (input$object_name == old_object_name_r()) return(FALSE)
         db$func$has_object_name(.values$db, input$object_name)
       })
 

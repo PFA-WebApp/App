@@ -10,7 +10,7 @@ group_ui <- function(id) {
         label = "Gruppenname",
         placeholder = "Versuchsaufbau"
       ),
-      object_table_ui(
+      object_table_box_ui(
         id = ns("group_table"),
         title = "Gruppentabelle"
       )
@@ -42,6 +42,7 @@ group_server <- function(id, .values) {
         table = "groups",
         name_column = "group_name",
         func = list(
+          add_label = "Gruppe hinzufügen",
           get_connections = db_get_types_by_group,
           get_possible_connections = db_get_types,
           get_objects = db_get_groups,
@@ -54,6 +55,7 @@ group_server <- function(id, .values) {
       )
 
       label <- list(
+        add_object = db_add_group,
         change_connections = "Typen bearbeiten für Gruppe",
         change_name = "Gruppenname bearbeiten",
         colnames = c("Gruppenname", "Typen bearbeiten", "Entfernen"),
@@ -71,13 +73,9 @@ group_server <- function(id, .values) {
       add_object_server(
         id = "add_group",
         .values = .values,
-        object_id = "group",
-        object_name = "group_name",
-        object_name_with_article = "Der Gruppenname",
-        object_with_article =  "Die Gruppe",
-        add_label = "Gruppe hinzufügen",
-        add_object_func = db_add_group,
-        has_object_name_func = db_has_group_name
+        settings = settings,
+        db = db,
+        label = label
       )
 
       show_connections_server(

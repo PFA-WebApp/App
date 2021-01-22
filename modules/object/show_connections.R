@@ -23,12 +23,11 @@ show_connections_server <- function(id, .values, settings, db, label) {
       ns <- session$ns
 
       objects_r <- shiny::reactive({
+        .values$update[[settings$update_name]]()
         db$func$get_objects(.values$db)
       })
 
       output$select_object <- shiny::renderUI({
-        .values$update[[settings$update_name]]
-
         shiny::selectInput(
           inputId = ns("object"),
           label = label$object,
@@ -45,20 +44,6 @@ show_connections_server <- function(id, .values, settings, db, label) {
         DT::datatable(
           tbl,
           colnames = label$connection_name
-          # options = list(
-          #   preDrawCallback = DT::JS("
-          #     function (settings) {
-          #       console.log(1);
-          #       pageScrollPos = $('body').scrollTop();
-          #     }
-          #   "),
-          #   drawCallback = DT::JS("
-          #     function (settings) {
-          #       console.log(2);
-          #       $('body').scrollTop(pageScrollPos);
-          #     }
-          #   ")
-          # )
         )
       })
     }
