@@ -33,6 +33,25 @@ db_add_user <- function(db,
 
 
 
+#' Set User Name
+#'
+#' @template db
+#' @param old_user_name Old user name.
+#' @param new_user_name New user name.
+#'
+#' @family user
+#'
+#' @export
+db_set_user_name <- function(db, old_user_name, new_user_name) {
+  DBI::dbExecute(
+    db,
+    "UPDATE user SET name = ? WHERE name = ?",
+    params = list(new_user_name, old_user_name)
+  )
+}
+
+
+
 #' Get User Status
 #'
 #' @inheritParams db_add_user
