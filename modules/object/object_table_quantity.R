@@ -42,18 +42,10 @@ object_table_quantity_server <- function(id,
         shiny::showModal(shiny::modalDialog(
           title = label$change_quantity,
           easyClose = TRUE,
-          shiny::numericInput(
-            inputId = ns("object_quantity"),
-            label = label$new_quantity,
-            value = old_quantity_r(),
-            min = 0,
-            step = 1
-          ),
-          shiny::uiOutput(
-            outputId = ns("not_integer")
-          ),
-          shiny::uiOutput(
-            outputId = ns("negative")
+          object_quantity_input_ui(
+            id = ns("object_quantity_input"),
+            old_quantity = old_quantity_r(),
+            label = label
           ),
           footer = shiny::uiOutput(
             outputId = ns("confirm_object_quantity")
@@ -62,7 +54,7 @@ object_table_quantity_server <- function(id,
       })
 
       output$confirm_object_quantity <- shiny::renderUI({
-        if (error_r()) {
+        if (quantity_return$error_r()) {
           shinyjs::disabled(
             shiny::actionButton(
               inputId = ns("confirm_object_quantity"),
@@ -77,48 +69,13 @@ object_table_quantity_server <- function(id,
         }
       })
 
-      output$not_integer <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !not_integer_r(),
-            "Die Menge muss ganzzahlig sein!"
-          ),
-          errorClass = "PFA"
-        )
-      })
-
-      output$negative <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !negative_r(),
-            "Die Menge muss größer gleich Null sein!"
-          ),
-          errorClass = "PFA"
-        )
-      })
-
-      not_integer_r <- shiny::reactive({
-        quantity <- as.integer(input$object_quantity)
-        if (is.na(quantity)) return(TRUE)
-        quantity != input$object_quantity
-      })
-
-      negative_r <- shiny::reactive({
-        input$object_quantity < 0
-      })
-
-      error_r <- shiny::reactive({
-        not_integer_r() ||
-          negative_r()
-      })
-
       shiny::observeEvent(input$confirm_object_quantity, {
         shiny::removeModal()
 
         success <- db$func$set_object_quantity(
           .values$db,
           object_id,
-          input$object_quantity
+          quantity_return$quantity_r()
         )
 
         if (success) {
@@ -126,7 +83,7 @@ object_table_quantity_server <- function(id,
             ui = paste0(
               label$object_quantity_with_article,
               " wurde erfolgreich zu \"",
-              input$object_quantity,
+              quantity_return$quantity_r(),
               "\" geändert."
             ),
             type = "warning",
@@ -147,6 +104,14 @@ object_table_quantity_server <- function(id,
           .values$update[[settings$update_name]]() + 1
         )
       })
+
+      quantity_return <- object_quantity_input_server(
+        id = "object_quantity_input",
+        .values = .values,
+        settings = settings,
+        db = db,
+        label = label
+      )
     }
   )
 }

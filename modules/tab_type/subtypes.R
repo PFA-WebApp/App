@@ -42,7 +42,10 @@ subtypes_server <- function(id, .values) {
         table = "subtype",
         name_column = "subtype_name",
         func = list(
-          add_object = function(db, name) db_add_subtype(db, input$type, name, 0),
+          add_object = function(db, name) {
+            db_add_subtype(db, input$type, name, quantity_return$quantity_r())
+          },
+          add_object_allowed = function(db, name) !quantity_return$error_r(),
           filter_table = function(db) db_get_subtypes_by_type_id(db, input$type),
           get_object_name = db_get_subtype_name,
           get_object_quantity = db_get_subtype_quantity,
@@ -95,7 +98,12 @@ subtypes_server <- function(id, .values) {
             title = "Untertyp hinzufügen",
             label = "Untertyp",
             placeholder = NULL,
-            collapsible = FALSE
+            collapsible = FALSE,
+            object_quantity_input_ui(
+              id = ns("object_quantity_input"),
+              old_quantity = 0,
+              label = label
+            )
           ),
           footer = shiny::modalButton(
             label = "Abbrechen"
@@ -105,6 +113,14 @@ subtypes_server <- function(id, .values) {
 
       add_object_server(
         id = "add_object",
+        .values = .values,
+        settings = settings,
+        db = db,
+        label = label
+      )
+
+      quantity_return <- object_quantity_input_server(
+        id = "object_quantity_input",
         .values = .values,
         settings = settings,
         db = db,

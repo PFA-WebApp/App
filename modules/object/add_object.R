@@ -1,4 +1,4 @@
-add_object_ui <- function(id, title, label, placeholder, collapsible = TRUE) {
+add_object_ui <- function(id, title, label, placeholder, collapsible = TRUE, ...) {
   ns <- shiny::NS(id)
 
   shinydashboard::box(
@@ -18,6 +18,7 @@ add_object_ui <- function(id, title, label, placeholder, collapsible = TRUE) {
     shiny::uiOutput(
       outputId = ns("name_taken")
     ),
+    ...,
     shiny::uiOutput(
       outputId = ns("add_object")
     )
@@ -105,10 +106,17 @@ add_object_server <- function(id,
         db$func$has_object_name(.values$db, input$object_name)
       })
 
+      add_object_allowed_r <- shiny::reactive({
+        if (hasName(db$func, "add_object_allowed")) {
+          db$func$add_object_allowed(.values$db, input$object_name)
+        } else TRUE
+      })
+
       error_r <- shiny::reactive({
         name_too_short_r() ||
           name_too_long_r() ||
-          name_taken_r()
+          name_taken_r() ||
+          !add_object_allowed_r()
       })
 
       shiny::observeEvent(input$add_object, {
