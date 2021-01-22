@@ -75,7 +75,7 @@ settings_user_name_server <- function(id, .values) {
       user_name_taken_r <- shiny::reactive({
         shiny::req(!is.null(input$user_name))
         if (input$user_name == .values$user$name()) return(FALSE)
-        db_has_user_name(db, input$user_name)
+        db_has_user_name(.values$db, input$user_name)
       })
 
       user_name_too_short_r <- shiny::reactive({
