@@ -10,8 +10,6 @@
 #'
 #' @export
 db_add_group_type <- function(db, group_id, type_id) {
-  if (db_has_group_type(db, group_id, type_id)) return(0)
-
   entry <- tibble::tibble(
     group_id = group_id,
     type_id = type_id
@@ -34,6 +32,22 @@ db_remove_group_type <- function(db, group_id, type_id) {
     db,
     "DELETE FROM group_type WHERE group_id = ? AND type_id = ?",
     params = list(group_id, type_id)
+  )
+}
+
+db_remove_group_type_by_type_id <- function(db, type_id) {
+  DBI::dbExecute(
+    db,
+    "DELETE FROM group_type WHERE type_id = ?",
+    params = list(type_id)
+  )
+}
+
+db_remove_group_type_by_group_id <- function(db, group_id) {
+  DBI::dbExecute(
+    db,
+    "DELETE FROM group_type WHERE group_id = ?",
+    params = list(group_id)
   )
 }
 
@@ -115,4 +129,38 @@ db_get_types_by_group <- function(db, group_id) {
   names(x) <- tbl$type_name
 
   x
+}
+
+
+
+#' Set Group Type By Group ID
+#'
+#' @template db
+#' @template id
+#' @templateVar key group
+#' @param type_ids Type IDs
+#'
+#' @family group_type
+#'
+#' @export
+db_set_group_type_by_group_id <- function(db, group_id, type_ids) {
+  db_remove_group_type_by_group_id(db, group_id)
+  db_add_group_type(db, rep(group_id, times = length(type_ids)), type_ids)
+}
+
+
+
+#' Set Group Type By Type ID
+#'
+#' @template db
+#' @template id
+#' @templateVar key type
+#' @param group_ids Group IDs
+#'
+#' @family group_type
+#'
+#' @export
+db_set_group_type_by_type_id <- function(db, type_id, group_ids) {
+  db_remove_group_type_by_type_id(db, type_id)
+  db_add_group_type(db, group_ids, rep(type_id, times = length(group_ids)))
 }

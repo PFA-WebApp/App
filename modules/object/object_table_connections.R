@@ -57,24 +57,31 @@ object_table_connections_server <- function(id,
         ))
       })
 
+      connections_r <- shiny::reactive({
+        if (
+          purrr::is_null(input$object_connections) ||
+          input$object_connections == ""
+        ) return(integer())
+
+        as.integer(input$object_connections)
+      })
+
       shiny::observeEvent(input$confirm_object_connections, {
         shiny::removeModal()
 
-        purrr::walk(input$object_connections, function(object_connection) {
-          if (settings$is_group_object) {
-            group_id <- object_id
-            type_id <- object_connection
-          } else {
-            group_id <- object_connection
-            type_id <- object_id
-          }
-
-          db_add_group_type(
-            db = .values$db,
-            group_id = group_id,
-            type_id = type_id
+        if (settings$is_group_object) {
+          db_set_group_type_by_group_id(
+            .values$db,
+            group_id = object_id,
+            type_ids = connections_r()
           )
-        })
+        } else {
+          db_set_group_type_by_type_id(
+            .values$db,
+            type_id = object_id,
+            group_ids = connections_r()
+          )
+        }
 
         shiny::showNotification(
           ui = paste0(
