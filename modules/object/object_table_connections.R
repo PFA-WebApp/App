@@ -1,21 +1,21 @@
-object_table_change_object_connections_ui <- function(id) {
+object_table_connections_ui <- function(id) {
   ns <- shiny::NS(id)
 
   as.character(
     shiny::actionButton(
-      inputId = ns("change_object_connections"),
+      inputId = ns("connections"),
       label = NULL,
       icon = shiny::icon("cog"),
       class = "primary",
       onclick = glue::glue(
         'Shiny.setInputValue(\"{inputId}\", this.id + Math.random())',
-        inputId = ns("change_object_connections")
+        inputId = ns("connections")
       )
     )
   )
 }
 
-object_table_change_object_connections_server <- function(id,
+object_table_connections_server <- function(id,
                                                           .values,
                                                           object_id,
                                                           settings,
@@ -33,7 +33,7 @@ object_table_change_object_connections_server <- function(id,
         objects <- db$func$get_connections(.values$db, object_id)
       })
 
-      shiny::observeEvent(input$change_object_connections, {
+      shiny::observeEvent(input$connections, {
         title <- paste0(
           label$change_connections,
           " \"", db$func$get_object_name(.values$db, object_id),

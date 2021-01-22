@@ -25,8 +25,8 @@ object_table_server <- function(id,
       ns <- session$ns
 
       taken_object_types_rvs <- shiny::reactiveValues(
-        change_object_connections = character(),
-        change_object_name = character(),
+        connections = character(),
+        name = character(),
         remove = character()
       )
 
@@ -35,13 +35,13 @@ object_table_server <- function(id,
 
         tbl <- db_get_table(.values$db, db$table)
 
-        tbl$change_object_connections <- as.character(
+        tbl$connections <- as.character(
           map_ui(
             object_ids = tbl$rowid,
-            ui_func = object_table_change_object_connections_ui,
-            server_func = object_table_change_object_connections_server,
+            ui_func = object_table_connections_ui,
+            server_func = object_table_connections_server,
             rvs = taken_object_types_rvs,
-            rvs_slot = "change_object_connections",
+            rvs_slot = "connections",
             ns = ns,
             id_prefix = "connection",
             server_args = list(
@@ -57,10 +57,10 @@ object_table_server <- function(id,
         tbl$name <- as.character(
           map_ui(
             object_ids = tbl$rowid,
-            ui_func = object_table_change_object_name_ui,
-            server_func = object_table_change_object_name_server,
+            ui_func = object_table_name_ui,
+            server_func = object_table_name_server,
             rvs = taken_object_types_rvs,
-            rvs_slot = "change_object_name",
+            rvs_slot = "name",
             ns = ns,
             id_prefix = "name",
             ui_args = list(
@@ -97,7 +97,7 @@ object_table_server <- function(id,
 
         x <- db$name_column
         tbl <- tbl %>%
-          dplyr::select(name, change_object_connections, remove)
+          dplyr::select(name, connections, remove)
 
         tbl <- tbl[rev(seq_len(nrow(tbl))), , drop = FALSE]
 

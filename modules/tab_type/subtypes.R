@@ -38,7 +38,7 @@ subtypes_server <- function(id, .values) {
       })
 
       taken_object_types_rvs <- shiny::reactiveValues(
-        change_object_name = character(),
+        name = character(),
         remove = character()
       )
 
@@ -50,13 +50,13 @@ subtypes_server <- function(id, .values) {
         tbl$name <-purrr::map_chr(
           tbl$subtype_id,
           function(object_id) {
-            if (!object_id %in% taken_object_types_rvs$change_object_name) {
-              taken_object_types_rvs$change_object_name <- c(
-                taken_object_types_rvs$change_object_name, object_id
+            if (!object_id %in% taken_object_types_rvs$name) {
+              taken_object_types_rvs$name <- c(
+                taken_object_types_rvs$name, object_id
               )
 
-              object_table_change_object_name_server(
-                id = "object_table_change_object_name" %_% object_id,
+              object_table_name_server(
+                id = "object_table_name" %_% object_id,
                 .values = .values,
                 object_id = object_id,
                 settings = list(
@@ -78,8 +78,8 @@ subtypes_server <- function(id, .values) {
               )
             }
 
-            object_table_change_object_name_ui(
-              id = ns("object_table_change_object_name" %_% object_id),
+            object_table_name_ui(
+              id = ns("object_table_name" %_% object_id),
               name = db_get_subtype_name(.values$db, object_id)
             )
           }
