@@ -47,6 +47,7 @@ object_table_server <- function(id,
       taken_object_types_rvs <- shiny::reactiveValues(
         connections = character(),
         name = character(),
+        quantity = character(),
         remove = character()
       )
 
@@ -95,6 +96,30 @@ object_table_server <- function(id,
               id_prefix = "name",
               ui_args = list(
                 name = function(object_id) db$func$get_object_name(.values$db, object_id)
+              ),
+              server_args = list(
+                .values = .values,
+                object_id = function(object_id) object_id,
+                settings = settings,
+                db = db,
+                label = label
+              )
+            )
+          )
+        }
+
+        if ("quantity" %in% settings$show) {
+          tbl$quantity <- as.character(
+            map_ui(
+              object_ids = tbl$rowid,
+              ui_func = object_table_quantity_ui,
+              server_func = object_table_quantity_server,
+              rvs = taken_object_types_rvs,
+              rvs_slot = "quantity",
+              ns = ns,
+              id_prefix = "quantity",
+              ui_args = list(
+                quantity = function(object_id) db$func$get_object_quantity(.values$db, object_id)
               ),
               server_args = list(
                 .values = .values,
