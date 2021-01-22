@@ -30,8 +30,7 @@ object_table_remove_object_server <- function(id,
 
       object_name_r <- shiny::reactive({
         .values$update[[settings$update_name]]()
-        objects <- db$func$get_objects(.values$db)
-        names(objects[objects == object_id][1])
+        db$func$get_object_name(.values$db, object_id)
       })
 
       shiny::observeEvent(input$remove, {

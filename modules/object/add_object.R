@@ -26,14 +26,9 @@ add_object_ui <- function(id, title, label, placeholder, collapsible = TRUE) {
 
 add_object_server <- function(id,
                               .values,
-                              object_id,
-                              object_name,
-                              object_name_with_article,
-                              object_with_article,
-                              add_label,
-                              add_object_func,
-                              add_object_func_args_r = shiny::reactive(NULL),
-                              has_object_name_func
+                              settings,
+                              db,
+                              label
 ) {
   shiny::moduleServer(
     id,
@@ -46,18 +41,18 @@ add_object_server <- function(id,
           shiny::need(
             !name_too_short_r(),
             paste(
-              object_name_with_article,
+              label$object_name_with_article,
               "benötigt mindestens",
-              as_german(.values$settings[[object_name]]$length$min),
+              as_german(.values$settings[[settings$length_name]]$length$min),
               "Zeichen!\n\n"
             )
           ),
           shiny::need(
             !name_too_long_r(),
             paste(
-              object_name_with_article,
+              label$object_name_with_article,
               "darf nicht länger sein als",
-              as_german(.values$settings[[object_name]]$length$max),
+              as_german(.values$settings[[settings$length_name]]$length$max),
               "Zeichen!\n\n"
             )
           ),
@@ -70,7 +65,7 @@ add_object_server <- function(id,
           shiny::need(
             !name_taken_r(),
             paste(
-              object_name_with_article,
+              label$object_name_with_article,
               "existiert bereits!\n\n"
             )
           ),
@@ -83,29 +78,31 @@ add_object_server <- function(id,
           shinyjs::disabled(
             shiny::actionButton(
               inputId = ns("add_object"),
-              label = add_label,
+              label = label$add_label,
               width = "100%"
             )
           )
         } else {
           shiny::actionButton(
             inputId = ns("add_object"),
-            label = add_label,
+            label = label$add_label,
             width = "100%"
           )
         }
       })
 
       name_too_short_r <- shiny::reactive({
-        nchar(input$object_name) < .values$settings[[object_name]]$length$min
+        nchar(input$object_name) <
+          .values$settings[[settings$length_name]]$length$min
       })
 
       name_too_long_r <- shiny::reactive({
-        nchar(input$object_name) > .values$settings[[object_name]]$length$max
+        nchar(input$object_name) >
+          .values$settings[[settings$length_name]]$length$max
       })
 
       name_taken_r <- shiny::reactive({
-        has_object_name_func(.values$db, input$object_name)
+        db$func$has_object_name(.values$db, input$object_name)
       })
 
       error_r <- shiny::reactive({
@@ -123,27 +120,18 @@ add_object_server <- function(id,
 
         shiny::showNotification(
           ui = paste0(
-            object_with_article,
+            label$object_with_article,
             " \"",
             input$object_name,
             "\" wurde erfolgreich hinzugefügt."
           )
         )
 
-        args <- c(
-          list(
-            db = .values$db,
-            input$object_name
-          ),
-          add_object_func_args_r()
-        )
+        db$func$add_object(.values$db, input$object_name)
 
-        do.call(
-          add_object_func,
-          args = args
+        .values$update[[settings$update_name]](
+          .values$update[[settings$update_name]]() + 1
         )
-
-        .values$update[[object_id]](.values$update[[object_id]]() + 1)
       })
 
     }

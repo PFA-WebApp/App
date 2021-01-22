@@ -42,6 +42,7 @@ subtypes_server <- function(id, .values) {
         table = "subtype",
         name_column = "subtype_name",
         func = list(
+          add_object = function(db, name) db_add_subtype(db, input$type, name, 0),
           filter_table = function(db) db_get_subtypes_by_type_id(db, input$type),
           get_object_name = db_get_subtype_name,
           has_object_id = db_has_subtype_id,
@@ -53,6 +54,7 @@ subtypes_server <- function(id, .values) {
       )
 
       label <- list(
+        add_label = "Untertypen hinzufügen",
         change_name = "Untertypennamen bearbeiten",
         colnames = c("Untertypname", "Entfernen"),
         new_name = "Neuer Untertypenname",
@@ -98,19 +100,9 @@ subtypes_server <- function(id, .values) {
       add_object_server(
         id = "add_object",
         .values = .values,
-        object_id = "subtype",
-        object_name = "subtype_name",
-        object_name_with_article = "Der Untertypenname",
-        object_with_article =  "Der Untertyp",
-        add_label = "Untertyp hinzufügen",
-        add_object_func = db_add_subtype,
-        add_object_func_args_r = shiny::reactive({
-          list(
-            type_id = input$type,
-            quantity = 0
-          )
-        }),
-        has_object_name_func = db_has_subtype_name
+        settings = settings,
+        db = db,
+        label = label
       )
     }
   )
