@@ -74,6 +74,7 @@ subtypes_server <- function(id, .values) {
       )
 
       output$select_type <- shiny::renderUI({
+        .values$update$type()
         shiny::selectInput(
           inputId = ns("type"),
           label = "Typ",
