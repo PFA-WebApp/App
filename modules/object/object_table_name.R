@@ -35,8 +35,7 @@ object_table_name_server <- function(id,
 
       old_object_name_r <- shiny::reactive({
         .values$update[[settings$update_name]]()
-        objects <- db$func$get_objects(.values$db)
-        names(objects[objects == object_id][1])
+        db$func$get_object_name(.values$db, object_id)
       })
 
       shiny::observeEvent(input$name, {
@@ -122,6 +121,7 @@ object_table_name_server <- function(id,
       })
 
       name_taken_r <- shiny::reactive({
+        if (input$object_name == old_object_name_r()) return(FALSE)
         db$func$has_object_name(.values$db, input$object_name)
       })
 
