@@ -42,7 +42,7 @@ group_server <- function(id, .values) {
         table = "groups",
         name_column = "group_name",
         func = list(
-          add_label = "Gruppe hinzufügen",
+          add_object = db_add_group,
           get_connections = db_get_types_by_group,
           get_possible_connections = db_get_types,
           get_objects = db_get_groups,
@@ -55,7 +55,7 @@ group_server <- function(id, .values) {
       )
 
       label <- list(
-        add_object = db_add_group,
+        add_label = "Gruppe hinzufügen",
         change_connections = "Typen bearbeiten für Gruppe",
         change_name = "Gruppenname bearbeiten",
         colnames = c("Gruppenname", "Typen bearbeiten", "Entfernen"),
