@@ -69,7 +69,7 @@ type_server <- function(id, .values) {
       )
 
       label <- list(
-        change_connection = "Gruppen bearbeiten für Typ",
+        change_connections = "Gruppen bearbeiten für Typ",
         change_name = "Typname bearbeiten",
         colnames = c("Typname", "Gruppen bearbeiten", "Entfernen"),
         connection_modification = "Die Gruppen von Typ",
