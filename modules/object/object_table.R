@@ -35,79 +35,64 @@ object_table_server <- function(id,
 
         tbl <- db_get_table(.values$db, db$table)
 
-        tbl$change_object_connections <- purrr::map_chr(
-          tbl$rowid,
-          function(object_id) {
-            if (!object_id %in% taken_object_types_rvs$change_object_connections) {
-              taken_object_types_rvs$change_object_connections <- c(
-                taken_object_types_rvs$change_object_connections, object_id
-              )
-
-              object_table_change_object_connections_server(
-                id = "object_table_change_object_connections" %_% object_id,
-                .values = .values,
-                object_id = object_id,
-                settings = settings,
-                db = db,
-                label = label
-              )
-            }
-
-            object_table_change_object_connections_ui(
-              id = ns("object_table_change_object_connections" %_% object_id)
+        tbl$change_object_connections <- as.character(
+          map_ui(
+            object_ids = tbl$rowid,
+            ui_func = object_table_change_object_connections_ui,
+            server_func = object_table_change_object_connections_server,
+            rvs = taken_object_types_rvs,
+            rvs_slot = "change_object_connections",
+            ns = ns,
+            id_prefix = "connection",
+            server_args = list(
+              .values = .values,
+              object_id = function(object_id) object_id,
+              settings = settings,
+              db = db,
+              label = label
             )
-          }
+          )
         )
 
-
-
-        tbl$name <- purrr::map_chr(
-          tbl$rowid,
-          function(object_id) {
-            if (!object_id %in% taken_object_types_rvs$change_object_name) {
-              taken_object_types_rvs$change_object_name <- c(
-                taken_object_types_rvs$change_object_name, object_id
-              )
-
-              object_table_change_object_name_server(
-                id = "object_table_change_object_name" %_% object_id,
-                .values = .values,
-                object_id = object_id,
-                settings = settings,
-                db = db,
-                label = label
-              )
-            }
-
-            object_table_change_object_name_ui(
-              id = ns("object_table_change_object_name" %_% object_id),
-              name = db$func$get_object_name(.values$db, object_id)
+        tbl$name <- as.character(
+          map_ui(
+            object_ids = tbl$rowid,
+            ui_func = object_table_change_object_name_ui,
+            server_func = object_table_change_object_name_server,
+            rvs = taken_object_types_rvs,
+            rvs_slot = "change_object_name",
+            ns = ns,
+            id_prefix = "name",
+            ui_args = list(
+              name = function(object_id) db$func$get_object_name(.values$db, object_id)
+            ),
+            server_args = list(
+              .values = .values,
+              object_id = function(object_id) object_id,
+              settings = settings,
+              db = db,
+              label = label
             )
-          }
+          )
         )
 
-        tbl$remove <- purrr::map_chr(
-          tbl$rowid,
-          function(object_id) {
-            if (!object_id %in% taken_object_types_rvs$remove) {
-              taken_object_types_rvs$remove <- c(
-                taken_object_types_rvs$remove, object_id
-              )
-
-              object_table_remove_object_server(
-                id = "object_table_remove_object" %_% object_id,
-                .values = .values,
-                object_id = object_id,
-                settings = settings,
-                db = db,
-                label = label
-              )
-            }
-
-            object_table_remove_object_ui(
-              id = ns("object_table_remove_object" %_% object_id)
+        tbl$remove <- as.character(
+          map_ui(
+            object_ids = tbl$rowid,
+            ui_func = object_table_remove_object_ui,
+            server_func = object_table_remove_object_server,
+            rvs = taken_object_types_rvs,
+            rvs_slot = "remove",
+            ns = ns,
+            id_prefix = "remove",
+            server_args = list(
+              .values = .values,
+              object_id = function(object_id) object_id,
+              settings = settings,
+              db = db,
+              label = label
             )
-          }
+          )
         )
 
         x <- db$name_column
