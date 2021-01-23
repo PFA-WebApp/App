@@ -37,6 +37,7 @@ show_connections_server <- function(id, .values, settings, db, label) {
       })
 
       output$connections_table <- DT::renderDataTable({
+        .values$update$group_type()
         connections <- db$func$get_connections(.values$db, input$object)
 
         tbl <- tibble(connections = names(connections))
