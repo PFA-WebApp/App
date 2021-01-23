@@ -35,12 +35,12 @@ group_server <- function(id, .values) {
       settings = list(
         is_group_object = TRUE,
         update_name = "group",
-        length_name = "group_name"
+        length_name = "group_name",
+        show = c("name", "connections", "remove")
       )
 
       db <- list(
         table = "groups",
-        name_column = "group_name",
         func = list(
           add_object = db_add_group,
           get_connections = db_get_types_by_group,

@@ -47,7 +47,8 @@ type_server <- function(id, .values) {
       settings = list(
         is_group_object = FALSE,
         update_name = "type",
-        length_name = "type_name"
+        length_name = "type_name",
+        show = c("name", "connections", "remove")
       )
 
       db <- list(

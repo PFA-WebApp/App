@@ -30,6 +30,32 @@ object_table_name_server <- function(id,
                                      db,
                                      label
 ) {
+  required <- list(
+    settings = c(
+      "length_name",
+      "update_name"
+    ),
+    db = "func",
+    func = c(
+      "get_object_name",
+      "has_object_name",
+      "set_object_name"
+    ),
+    label = c(
+      "change_name",
+      "new_name",
+      "object_name_with_article"
+    )
+  )
+
+  check_required(
+    required,
+    settings,
+    db,
+    db$func,
+    label
+  )
+
   shiny::moduleServer(
     id,
     function(input, output, session) {

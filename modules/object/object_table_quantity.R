@@ -30,6 +30,27 @@ object_table_quantity_server <- function(id,
                                          db,
                                          label
 ) {
+  required <- list(
+    settings = "update_name",
+    db = "func",
+    func = c(
+      "get_object_quantity",
+      "set_object_quantity"
+    ),
+    label = c(
+      "change_quantity",
+      "object_quantity_with_article"
+    )
+  )
+
+  check_required(
+    required,
+    settings,
+    db,
+    db$func,
+    label
+  )
+
   shiny::moduleServer(
     id,
     function(input, output, session) {

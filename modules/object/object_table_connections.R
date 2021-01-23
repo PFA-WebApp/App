@@ -25,6 +25,29 @@ object_table_connections_server <- function(id,
                                             db,
                                             label
 ) {
+  required <- list(
+    settings = "is_group_object",
+    db = "func",
+    func = c(
+      "get_connections",
+      "get_object_name",
+      "get_possible_connections"
+    ),
+    label = c(
+      "change_connections",
+      "connections",
+      "connection_modification"
+    )
+  )
+
+  check_required(
+    required,
+    settings,
+    db,
+    db$func,
+    label
+  )
+
   shiny::moduleServer(
     id,
     function(input, output, session) {

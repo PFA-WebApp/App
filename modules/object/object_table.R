@@ -24,19 +24,23 @@ object_table_server <- function(id,
                                 db,
                                 label
 ) {
-  required_settings <- c(
-    "is_group_object", "update_name", "length_name"
+  required <- list(
+    settings = c(
+      "show",
+      "update_name"
+    ),
+    db = "func",
+    func = character(),
+    label = "colnames"
   )
 
-  stopifnot(all(required_settings %in% names(settings)))
-
-  default_settings <- list(
-    show = c("name", "connections", "remove")
+  check_required(
+    required,
+    settings,
+    db,
+    db$func,
+    label
   )
-
-  for (name in names(default_settings)) {
-    if (!name %in% names(settings)) settings[[name]] <- default_settings[[name]]
-  }
 
   shiny::moduleServer(
     id,
@@ -148,7 +152,6 @@ object_table_server <- function(id,
           )
         }
 
-        x <- db$name_column
         tbl <- tbl[settings$show]
 
         targets <- which(settings$show != "name")

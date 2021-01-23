@@ -25,6 +25,29 @@ object_table_remove_object_server <- function(id,
                                               db,
                                               label
 ) {
+  required <- list(
+    settings = "update_name",
+    db = "func",
+    func = c(
+      "get_object_name",
+      "has_object_id",
+      "remove_object"
+    ),
+    label = c(
+      "object_with_article",
+      "object_with_small_article",
+      "remove_btn_title"
+    )
+  )
+
+  check_required(
+    required,
+    settings,
+    db,
+    db$func,
+    label
+  )
+
   shiny::moduleServer(
     id,
     function(input, output, session) {
