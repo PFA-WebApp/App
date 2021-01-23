@@ -44,13 +44,48 @@ object_table_server <- function(id,
 
       ns <- session$ns
 
-      taken_object_types_rvs <- shiny::reactiveValues(
-        connections = character(),
-        name = character(),
-        quantity = character(),
-        remove = character()
-      )
+      # call required servers --------------------------------------------------
+      if ("connections" %in% settings$show) {
+        object_table_connections_server(
+          id = "object_table_connections",
+          .values = .values,
+          settings = settings,
+          db = db,
+          label = label
+        )
+      }
 
+      if ("name" %in% settings$show) {
+        object_table_name_server(
+          id = "object_table_name",
+          .values = .values,
+          settings = settings,
+          db = db,
+          label = label
+        )
+      }
+
+      if ("quantity" %in% settings$show) {
+        object_table_quantity_server(
+          id = "object_table_quantity",
+          .values = .values,
+          settings = settings,
+          db = db,
+          label = label
+        )
+      }
+
+      if ("remove" %in% settings$show) {
+        object_table_remove_object_server(
+          id = "object_table_remove_object",
+          .values = .values,
+          settings = settings,
+          db = db,
+          label = label
+        )
+      }
+
+      # object table -----------------------------------------------------------
       output$object_table <- DT::renderDataTable({
         .values$update[[settings$update_name]]()
 
@@ -66,20 +101,9 @@ object_table_server <- function(id,
         if ("connections" %in% settings$show) {
           tbl$connections <- as.character(
             map_ui(
+              id = ns("object_table_connections"),
               object_ids = tbl$rowid,
-              ui_func = object_table_connections_ui,
-              server_func = object_table_connections_server,
-              rvs = taken_object_types_rvs,
-              rvs_slot = "connections",
-              ns = ns,
-              id_prefix = "connection",
-              server_args = list(
-                .values = .values,
-                object_id = function(object_id) object_id,
-                settings = settings,
-                db = db,
-                label = label
-              )
+              ui_func = object_table_connections_ui
             )
           )
         }
@@ -87,22 +111,13 @@ object_table_server <- function(id,
         if ("name" %in% settings$show) {
           tbl$name <- as.character(
             map_ui(
+              id = ns("object_table_name"),
               object_ids = tbl$rowid,
               ui_func = object_table_name_ui,
-              server_func = object_table_name_server,
-              rvs = taken_object_types_rvs,
-              rvs_slot = "name",
-              ns = ns,
-              id_prefix = "name",
               ui_args = list(
-                name = function(object_id) db$func$get_object_name(.values$db, object_id)
-              ),
-              server_args = list(
-                .values = .values,
-                object_id = function(object_id) object_id,
-                settings = settings,
-                db = db,
-                label = label
+                name = function(object_id) {
+                  db$func$get_object_name(.values$db, object_id)
+                }
               )
             )
           )
@@ -111,22 +126,13 @@ object_table_server <- function(id,
         if ("quantity" %in% settings$show) {
           tbl$quantity <- as.character(
             map_ui(
+              id = ns("object_table_quantity"),
               object_ids = tbl$rowid,
               ui_func = object_table_quantity_ui,
-              server_func = object_table_quantity_server,
-              rvs = taken_object_types_rvs,
-              rvs_slot = "quantity",
-              ns = ns,
-              id_prefix = "quantity",
               ui_args = list(
-                quantity = function(object_id) db$func$get_object_quantity(.values$db, object_id)
-              ),
-              server_args = list(
-                .values = .values,
-                object_id = function(object_id) object_id,
-                settings = settings,
-                db = db,
-                label = label
+                quantity = function(object_id) {
+                  db$func$get_object_quantity(.values$db, object_id)
+                }
               )
             )
           )
@@ -135,20 +141,9 @@ object_table_server <- function(id,
         if ("remove" %in% settings$show) {
           tbl$remove <- as.character(
             map_ui(
+              id = ns("object_table_remove_object"),
               object_ids = tbl$rowid,
-              ui_func = object_table_remove_object_ui,
-              server_func = object_table_remove_object_server,
-              rvs = taken_object_types_rvs,
-              rvs_slot = "remove",
-              ns = ns,
-              id_prefix = "remove",
-              server_args = list(
-                .values = .values,
-                object_id = function(object_id) object_id,
-                settings = settings,
-                db = db,
-                label = label
-              )
+              ui_func = object_table_remove_object_ui
             )
           )
         }

@@ -1,9 +1,9 @@
-object_table_quantity_ui <- function(id, quantity) {
+object_table_quantity_ui <- function(id, object_id, quantity) {
   ns <- shiny::NS(id)
 
   as.character(
     shiny::actionLink(
-      inputId = ns("quantity"),
+      inputId = ns("quantity") %_% object_id,
       label = htmltools::div(
         id = ns("label-container"),
         htmltools::div(
@@ -13,8 +13,12 @@ object_table_quantity_ui <- function(id, quantity) {
       ),
       class = "primary",
       onclick = glue::glue(
-        'Shiny.setInputValue(\"{inputId}\", this.id + Math.random())',
-        inputId = ns("quantity")
+        'Shiny.setInputValue(\"{inputId}\", {{
+          object_id: {object_id},
+          nonce: Math.random()
+        }});',
+        inputId = ns("quantity"),
+        object_id = object_id
       )
     )
   )
@@ -22,7 +26,6 @@ object_table_quantity_ui <- function(id, quantity) {
 
 object_table_quantity_server <- function(id,
                                          .values,
-                                         object_id,
                                          settings,
                                          db,
                                          label
@@ -33,9 +36,13 @@ object_table_quantity_server <- function(id,
 
       ns <- session$ns
 
+      object_id_r <- shiny::reactive({
+        input$quantity$object_id
+      })
+
       old_quantity_r <- shiny::reactive({
         .values$update[[settings$update_name]]()
-        db$func$get_object_quantity(.values$db, object_id)
+        db$func$get_object_quantity(.values$db, object_id_r())
       })
 
       shiny::observeEvent(input$quantity, {
@@ -74,7 +81,7 @@ object_table_quantity_server <- function(id,
 
         success <- db$func$set_object_quantity(
           .values$db,
-          object_id,
+          object_id_r(),
           quantity_return$quantity_r()
         )
 
