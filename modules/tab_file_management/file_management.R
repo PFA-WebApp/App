@@ -1,8 +1,23 @@
 file_management_ui <- function(id) {
   ns <- shiny::NS(id)
 
-  htmltools::tagList(
-
+  shiny::fluidRow(
+    shinydashboard::tabBox(
+      width = 12,
+      title = "Dateiverwaltung",
+      shiny::tabPanel(
+        title = "Gruppen",
+        icon = shiny::icon("layer-group")
+      ),
+      shiny::tabPanel(
+        title = "Typen",
+        icon = shiny::icon("tags")
+      ),
+      shiny::tabPanel(
+        title = "Untertypen",
+        icon = shiny::icon("tag")
+      )
+    )
   )
 }
 

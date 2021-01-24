@@ -13,3 +13,12 @@
 .relative {
   position: relative;
 }
+
+.nav-tabs {
+  background-color: #3c8dbc;
+}
+
+.nav-tabs-custom > .nav-tabs > li:not(.active) > a,
+.nav-tabs-custom > .nav-tabs > li.header {
+  color: white;
+}
