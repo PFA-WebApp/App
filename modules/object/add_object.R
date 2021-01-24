@@ -45,6 +45,8 @@ add_object_server <- function(id,
 
       ns <- session$ns
 
+      on_add_rv <- shiny::reactiveVal(0)
+
       output$wrong_name_length <- shiny::renderUI({
         shiny::validate(
           shiny::need(
@@ -148,8 +150,15 @@ add_object_server <- function(id,
         .values$update[[settings$update_name]](
           .values$update[[settings$update_name]]() + 1
         )
+
+        on_add_rv(on_add_rv() + 1)
       })
 
+      return_list <- list(
+        on_add_r = shiny::reactive(on_add_rv())
+      )
+
+      return(return_list)
     }
   )
 }

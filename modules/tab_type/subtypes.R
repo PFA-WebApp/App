@@ -111,7 +111,7 @@ subtypes_server <- function(id, .values) {
         ))
       })
 
-      add_object_server(
+      add_object_return <- add_object_server(
         id = "add_object",
         .values = .values,
         settings = settings,
@@ -124,7 +124,8 @@ subtypes_server <- function(id, .values) {
         .values = .values,
         settings = settings,
         db = db,
-        label = label
+        label = label,
+        reset_r = add_object_return$on_add_r
       )
     }
   )
