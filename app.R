@@ -6,6 +6,8 @@ library(stringr)
 library(qrcode)
 library(purrr)
 
+addResourcePath("files", "./files")
+
 ui_server <- function(source_to_globalenv = FALSE) {
     # If source_to_global_env all sourced functions get added to the global
     # environment which takes some time after the app has stopped

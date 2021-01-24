@@ -7,7 +7,10 @@ file_management_ui <- function(id) {
       title = "Dateiverwaltung",
       shiny::tabPanel(
         title = "Gruppen",
-        icon = shiny::icon("layer-group")
+        icon = shiny::icon("layer-group"),
+        file_manager_ui(
+          id = ns("file_manager")
+        )
       ),
       shiny::tabPanel(
         title = "Typen",
@@ -27,6 +30,11 @@ file_management_server <- function(id, .values) {
     function(input, output, session) {
 
       ns <- session$ns
+
+      file_manager_server(
+        id = "file_manager",
+        .values = .values
+      )
     }
   )
 }
