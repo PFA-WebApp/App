@@ -36,7 +36,7 @@ file_manager_server <- function(id, .values, db, table_name, label) {
 
       output$select_group <- shiny::renderUI({
         shiny::selectInput(
-          inputId = ns("select_group"),
+          inputId = ns("select_object"),
           label = label$object_name,
           choices = choices_r()
         )
@@ -47,7 +47,11 @@ file_manager_server <- function(id, .values, db, table_name, label) {
       })
 
       object_id_r <- shiny::reactive({
-        shiny::req(input$select_group)
+        shiny::req(input$select_object)
+      })
+
+      object_name_r <- shiny::reactive({
+        names(choices_r()[choices_r() == input$select_object])
       })
 
       path_r <- shiny::reactive(
@@ -108,6 +112,24 @@ file_manager_server <- function(id, .values, db, table_name, label) {
 
         .values$update$files(.values$update$files() + 1)
       })
+
+      download_all_name_r <- shiny::reactive({
+        name <- .values$settings$table_dict[table_name] %_% object_name_r() %>%
+          paste0(".pdf")
+        stringr::str_replace_all(name, "\\s", "_")
+      })
+
+      output$download_all <- shiny::downloadHandler(
+        filename = download_all_name_r,
+        content = function(file) {
+          utils::zip(
+            zipfile = file,
+            files = file.path("files", table_name, object_id_r()),
+            extras = "-j"
+          )
+        },
+        contentType = "application/zip"
+      )
     }
   )
 }

@@ -96,6 +96,11 @@ ui_server <- function(source_to_globalenv = FALSE) {
             days = "Tagen",
             weeks = "Wochen"
         )
+        .values$settings$table_dict <- c(
+            "group" = "Gruppe",
+            "type" = "Typ",
+            "subtype" = "Untertyp"
+        )
 
         .values$update$user <- shiny::reactiveVal(0)
         .values$update$group <- shiny::reactiveVal(0)
