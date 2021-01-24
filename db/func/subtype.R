@@ -193,13 +193,15 @@ db_get_subtype_table_by_type_id <- function(db, type_id) {
 #'
 #' @export
 db_remove_subtype <- function(db, subtype_id) {
-  DBI::dbExecute(
+  success <- DBI::dbExecute(
     db,
     "DELETE FROM subtype WHERE rowid = ?",
     params = list(subtype_id)
   )
 
   dir_remove("subtype", subtype_id)
+
+  success
 }
 
 

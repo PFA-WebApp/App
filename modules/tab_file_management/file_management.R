@@ -43,7 +43,10 @@ file_management_server <- function(id, .values) {
         db = list(
           get_objects = db_get_groups
         ),
-        table_name = "group",
+        settings = list(
+          table_name = "group",
+          update_name = "group"
+        ),
         label = list(
           object_name = "Gruppe"
         )
@@ -55,7 +58,10 @@ file_management_server <- function(id, .values) {
         db = list(
           get_objects = db_get_types
         ),
-        table_name = "type",
+        settings = list(
+          table_name = "type",
+          update_name = "type"
+        ),
         label = list(
           object_name = "Typ"
         )
@@ -67,7 +73,10 @@ file_management_server <- function(id, .values) {
         db = list(
           get_objects = db_get_subtypes
         ),
-        table_name = "subtype",
+        settings = list(
+          table_name = "subtype",
+          update_name = "subtype"
+        ),
         label = list(
           object_name = "Untertyp"
         )

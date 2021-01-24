@@ -3,7 +3,10 @@ file_manager_ui <- function(id) {
 
   htmltools::tagList(
     shiny::uiOutput(
-      outputId = ns("select_group")
+      outputId = ns("select_type")
+    ),
+    shiny::uiOutput(
+      outputId = ns("select_object")
     ),
     shiny::fileInput(
       inputId = ns("upload"),
@@ -27,14 +30,29 @@ file_manager_ui <- function(id) {
   )
 }
 
-file_manager_server <- function(id, .values, db, table_name, label) {
+file_manager_server <- function(id, .values, db, settings, label) {
   shiny::moduleServer(
     id,
     function(input, output, session) {
 
       ns <- session$ns
 
-      output$select_group <- shiny::renderUI({
+      if (settings$table_name == "subtype") {
+        type_choices_r <- shiny::reactive({
+          .values$update$type()
+          db_get_types(.values$db)
+        })
+
+        output$select_type <- shiny::renderUI({
+          shiny::selectInput(
+            inputId = ns("select_type"),
+            label = "Typ",
+            choices = type_choices_r()
+          )
+        })
+      }
+
+      output$select_object <- shiny::renderUI({
         shiny::selectInput(
           inputId = ns("select_object"),
           label = label$object_name,
@@ -43,7 +61,12 @@ file_manager_server <- function(id, .values, db, table_name, label) {
       })
 
       choices_r <- shiny::reactive({
-        db$get_objects(.values$db)
+        .values$update[[settings$update_name]]()
+        if (settings$table_name == "subtype") {
+          db_get_subtypes_by_type_id(.values$db, shiny::req(input$select_type))
+        } else {
+          db$get_objects(.values$db)
+        }
       })
 
       object_id_r <- shiny::reactive({
@@ -55,7 +78,7 @@ file_manager_server <- function(id, .values, db, table_name, label) {
       })
 
       path_r <- shiny::reactive(
-        file.path("files", table_name, object_id_r())
+        file.path("files", settings$table_name, object_id_r())
       )
 
       files_r <- shiny::reactive({
@@ -95,7 +118,7 @@ file_manager_server <- function(id, .values, db, table_name, label) {
               return()
             }
 
-            target <- file.path("files", table_name, object_id_r(), name)
+            target <- file.path("files", settings$table_name, object_id_r(), name)
             file.copy(path, target)
 
             short_name <- if (nchar(name) > 25) {
@@ -114,7 +137,7 @@ file_manager_server <- function(id, .values, db, table_name, label) {
       })
 
       download_all_name_r <- shiny::reactive({
-        name <- .values$settings$table_dict[table_name] %_% object_name_r() %>%
+        name <- .values$settings$table_dict[settings$table_name] %_% object_name_r() %>%
           paste0(".pdf")
         stringr::str_replace_all(name, "\\s", "_")
       })
@@ -124,7 +147,7 @@ file_manager_server <- function(id, .values, db, table_name, label) {
         content = function(file) {
           utils::zip(
             zipfile = file,
-            files = file.path("files", table_name, object_id_r()),
+            files = file.path("files", settings$table_name, object_id_r()),
             extras = "-j"
           )
         },

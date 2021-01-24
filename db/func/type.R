@@ -30,13 +30,15 @@ db_add_type <- function(db, type_name) {
 #'
 #' @export
 db_remove_type <- function(db, type_id) {
-  DBI::dbExecute(
+  success <- DBI::dbExecute(
     db,
     "DELETE FROM type WHERE rowid = ?",
     params = list(type_id)
   )
 
   dir_remove("type", type_id)
+
+  success
 }
 
 

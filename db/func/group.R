@@ -30,13 +30,15 @@ db_add_group <- function(db, group_name) {
 #'
 #' @export
 db_remove_group <- function(db, group_id) {
-  DBI::dbExecute(
+  success <- DBI::dbExecute(
     db,
     "DELETE FROM groups WHERE rowid = ?",
     params = list(group_id)
   )
 
   dir_remove("group", group_id)
+
+  success
 }
 
 
