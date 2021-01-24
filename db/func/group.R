@@ -13,6 +13,9 @@ db_add_group <- function(db, group_name) {
   )
 
   DBI::dbAppendTable(db, "groups", entry)
+
+  id <- max(DBI::dbGetQuery(db, "SELECT rowid FROM groups")$rowid)
+  dir_create("group", id)
 }
 
 
@@ -27,11 +30,15 @@ db_add_group <- function(db, group_name) {
 #'
 #' @export
 db_remove_group <- function(db, group_id) {
-  DBI::dbExecute(
+  success <- DBI::dbExecute(
     db,
     "DELETE FROM groups WHERE rowid = ?",
     params = list(group_id)
   )
+
+  dir_remove("group", group_id)
+
+  success
 }
 
 

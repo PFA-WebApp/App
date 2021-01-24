@@ -22,7 +22,8 @@ object_quantity_input_server <- function(id,
                                          .values,
                                          settings,
                                          db,
-                                         label
+                                         label,
+                                         reset_r = shiny::reactive(0)
 ) {
   shiny::moduleServer(
     id,
@@ -65,10 +66,20 @@ object_quantity_input_server <- function(id,
           negative_r()
       })
 
+      shiny::observeEvent(reset_r(), {
+        shiny::updateNumericInput(
+          session = session,
+          inputId = "object_quantity",
+          value = 0
+        )
+      })
+
       return_list <- list(
         error_r = error_r,
         quantity_r = shiny::reactive(input$object_quantity)
       )
+
+      return(return_list)
     }
   )
 }

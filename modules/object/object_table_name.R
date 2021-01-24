@@ -1,9 +1,9 @@
-object_table_name_ui <- function(id, name) {
+object_table_name_ui <- function(id, object_id, name) {
   ns <- shiny::NS(id)
 
   as.character(
     shiny::actionLink(
-      inputId = ns("name"),
+      inputId = ns("name") %_% object_id,
       label = htmltools::div(
         id = ns("label-container"),
         htmltools::div(
@@ -13,8 +13,12 @@ object_table_name_ui <- function(id, name) {
       ),
       class = "primary",
       onclick = glue::glue(
-        'Shiny.setInputValue(\"{inputId}\", this.id + Math.random())',
-        inputId = ns("name")
+        'Shiny.setInputValue(\"{inputId}\", {{
+          object_id: {object_id},
+          nonce: Math.random()
+        }}); console.log("name")',
+        inputId = ns("name"),
+        object_id = object_id
       )
     )
   )
@@ -22,23 +26,54 @@ object_table_name_ui <- function(id, name) {
 
 object_table_name_server <- function(id,
                                      .values,
-                                     object_id,
                                      settings,
                                      db,
                                      label
 ) {
+  required <- list(
+    settings = c(
+      "length_name",
+      "update_name"
+    ),
+    db = "func",
+    func = c(
+      "get_object_name",
+      "has_object_name",
+      "set_object_name"
+    ),
+    label = c(
+      "change_name",
+      "new_name",
+      "object_name_with_article"
+    )
+  )
+
+  check_required(
+    required,
+    settings,
+    db,
+    db$func,
+    label
+  )
+
   shiny::moduleServer(
     id,
     function(input, output, session) {
 
       ns <- session$ns
 
-      old_object_name_r <- shiny::reactive({
-        .values$update[[settings$update_name]]()
-        db$func$get_object_name(.values$db, object_id)
+      object_id_r <- shiny::reactive({
+        input$name$object_id
       })
 
-      shiny::observeEvent(input$name, {
+      old_object_name_r <- shiny::reactive({
+        .values$update[[settings$update_name]]()
+        db$func$get_object_name(.values$db, object_id_r())
+      })
+
+      # observe input$name and not object_id_r, because input$name fires
+      # even if the same object is clicked again
+      shiny::observeEvent(object_id_r(), {
         shiny::showModal(shiny::modalDialog(
           title = label$change_name,
           easyClose = TRUE,
@@ -57,7 +92,7 @@ object_table_name_server <- function(id,
             outputId = ns("confirm_object_name")
           )
         ))
-      })
+      }, priority = -1)
 
       output$wrong_name_length <- shiny::renderUI({
         shiny::validate(
@@ -134,7 +169,7 @@ object_table_name_server <- function(id,
       shiny::observeEvent(input$confirm_object_name, {
         shiny::removeModal()
 
-        success <- db$func$set_object_name(.values$db, object_id, input$object_name)
+        success <- db$func$set_object_name(.values$db, object_id_r(), input$object_name)
 
         if (success) {
           shiny::showNotification(

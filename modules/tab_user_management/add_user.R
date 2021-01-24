@@ -7,6 +7,7 @@ add_user_ui <- function(id) {
     title = "Nutzer hinzufügen",
     solidHeader = TRUE,
     collapsible = TRUE,
+    collapsed = TRUE,
     shiny::textInput(
       inputId = ns("user_name"),
       label = "Benutzername",

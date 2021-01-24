@@ -1,25 +1,25 @@
-subtypes_ui <- function(id) {
+subtypes_ui <- function(id, collapsed) {
   ns <- shiny::NS(id)
 
-  htmltools::tagList(
-    shinydashboard::box(
-      width = NULL,
-      solidHeader = TRUE,
-      status = "primary",
-      title = "Untertypen bearbeiten",
-      shiny::uiOutput(
-        outputId = ns("select_type")
-      ),
-      object_table_ui(
-        id = ns("object_table")
-      ),
-      htmltools::br(),
-      shiny::actionButton(
-        inputId = ns("add_subtype"),
-        label = "Untertyp hinzufügen",
-        icon = shiny::icon("plus"),
-        width = "100%"
-      )
+  shinydashboard::box(
+    width = NULL,
+    solidHeader = TRUE,
+    status = "primary",
+    collapsible = TRUE,
+    collapsed = collapsed,
+    title = "Untertypen bearbeiten",
+    shiny::uiOutput(
+      outputId = ns("select_type")
+    ),
+    object_table_ui(
+      id = ns("object_table")
+    ),
+    htmltools::br(),
+    shiny::actionButton(
+      inputId = ns("add_subtype"),
+      label = "Untertyp hinzufügen",
+      icon = shiny::icon("plus"),
+      width = "100%"
     )
   )
 }
@@ -111,7 +111,7 @@ subtypes_server <- function(id, .values) {
         ))
       })
 
-      add_object_server(
+      add_object_return <- add_object_server(
         id = "add_object",
         .values = .values,
         settings = settings,
@@ -124,7 +124,8 @@ subtypes_server <- function(id, .values) {
         .values = .values,
         settings = settings,
         db = db,
-        label = label
+        label = label,
+        reset_r = add_object_return$on_add_r
       )
     }
   )

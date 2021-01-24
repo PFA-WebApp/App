@@ -58,6 +58,11 @@ sidebar_menu_server <- function(id, .values) {
             icon = shiny::icon("tags")
           ),
           shinydashboard::menuSubItem(
+            text = "Dateiverwaltung",
+            tabName = "file_management",
+            icon = shiny::icon("file-pdf")
+          ),
+          shinydashboard::menuSubItem(
             text = "QR-Code",
             tabName = "qrcode",
             icon = shiny::icon("qrcode")

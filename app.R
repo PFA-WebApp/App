@@ -6,6 +6,8 @@ library(stringr)
 library(qrcode)
 library(purrr)
 
+addResourcePath("files", "./files")
+
 ui_server <- function(source_to_globalenv = FALSE) {
     # If source_to_global_env all sourced functions get added to the global
     # environment which takes some time after the app has stopped
@@ -39,6 +41,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
 
     # UI -----------------------------------------------------------------------
     ui <- htmltools::div(
+        htmltools::includeScript("www/js/fileInputText.js"),
         tags$head(
             # Include custom css styles
             shiny::includeCSS("www/css/styles.css")
@@ -93,12 +96,18 @@ ui_server <- function(source_to_globalenv = FALSE) {
             days = "Tagen",
             weeks = "Wochen"
         )
+        .values$settings$table_dict <- c(
+            "group" = "Gruppe",
+            "type" = "Typ",
+            "subtype" = "Untertyp"
+        )
 
         .values$update$user <- shiny::reactiveVal(0)
         .values$update$group <- shiny::reactiveVal(0)
         .values$update$type <- shiny::reactiveVal(0)
         .values$update$subtype <- shiny::reactiveVal(0)
         .values$update$group_type <- shiny::reactiveVal(0)
+        .values$update$files <- shiny::reactiveVal(0)
 
         # Connect to db
         .values$db <- DBI::dbConnect(RSQLite::SQLite(), "./db/db.sqlite")
