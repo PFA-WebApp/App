@@ -5,13 +5,29 @@ file_manager_ui <- function(id) {
     shiny::uiOutput(
       outputId = ns("select_group")
     ),
+    shiny::fileInput(
+      inputId = ns("upload"),
+      label = "Datei hochladen",
+      multiple = TRUE,
+      accept = "application/pdf",
+      buttonLabel = "Durchsuchen",
+      placeholder = "Keine Datei ausgewählt",
+      width = "100%"
+    ),
     DT::dataTableOutput(
       outputId = ns("files")
+    ),
+    htmltools::br(),
+    shiny::downloadButton(
+      outputId = ns("download_all"),
+      label = "Verzeichnis herunterladen",
+      width = "100%",
+      style = "display: block"
     )
   )
 }
 
-file_manager_server <- function(id, .values) {
+file_manager_server <- function(id, .values, db, table_name, label) {
   shiny::moduleServer(
     id,
     function(input, output, session) {
@@ -21,13 +37,13 @@ file_manager_server <- function(id, .values) {
       output$select_group <- shiny::renderUI({
         shiny::selectInput(
           inputId = ns("select_group"),
-          label = "Gruppe",
+          label = label$object_name,
           choices = choices_r()
         )
       })
 
       choices_r <- shiny::reactive({
-        db_get_groups(.values$db)
+        db$get_objects(.values$db)
       })
 
       object_id_r <- shiny::reactive({
@@ -35,10 +51,11 @@ file_manager_server <- function(id, .values) {
       })
 
       path_r <- shiny::reactive(
-        file.path("files", "group", object_id_r())
+        file.path("files", table_name, object_id_r())
       )
 
       files_r <- shiny::reactive({
+        .values$update$files()
         list.files(
           path = path_r()
         )
@@ -61,6 +78,31 @@ file_manager_server <- function(id, .values) {
           tbl,
           escape = FALSE
         )
+      })
+
+      shiny::observeEvent(input$upload, {
+        purrr::map2(
+          input$upload$name, input$upload$datapath,
+          function(name, path) {
+            target <- file.path("files", table_name, object_id_r(), name)
+
+            file.copy(path, target)
+
+            short_name <- if (nchar(name) > 25) {
+              paste0(substr(name, 1, 22), "...")
+            } else name
+
+            shiny::showNotification(
+              ui = paste0(
+                "Die Datei \"",
+                short_name,
+                "\" wurde erfolgreich hochgeladen."
+              )
+            )
+          }
+        )
+
+        .values$update$files(.values$update$files() + 1)
       })
     }
   )

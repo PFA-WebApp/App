@@ -1,10 +1,10 @@
-add_object_ui <- function(id,
+add_object_ui <- function(...,
+                          id,
                           title,
                           label,
                           placeholder,
                           collapsible = TRUE,
-                          collapsed = TRUE,
-                          ...
+                          collapsed = TRUE
 ) {
   ns <- shiny::NS(id)
 

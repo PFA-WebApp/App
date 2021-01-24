@@ -51,9 +51,10 @@ ui_server <- function(source_to_globalenv = FALSE) {
             id = "container"
         ),
         # Enable shinyjs
-        useShinyjs()
+        useShinyjs(),
         # Extend shinyjs with custom JavaScript
-        # extendShinyjs("www/js/extend_shinyjs.js")
+        # extendShinyjs("www/js/extend_shinyjs.js"),
+        htmltools::includeScript("www/js/fileInputText.js")
     )
 
     # SERVER -------------------------------------------------------------------
@@ -101,6 +102,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$update$type <- shiny::reactiveVal(0)
         .values$update$subtype <- shiny::reactiveVal(0)
         .values$update$group_type <- shiny::reactiveVal(0)
+        .values$update$files <- shiny::reactiveVal(0)
 
         # Connect to db
         .values$db <- DBI::dbConnect(RSQLite::SQLite(), "./db/db.sqlite")

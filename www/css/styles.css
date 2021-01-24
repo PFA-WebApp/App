@@ -22,3 +22,16 @@
 .nav-tabs-custom > .nav-tabs > li.header {
   color: white;
 }
+
+.shiny-download-link {
+  color: white;
+  background-color: rgb(0, 166, 90);
+  border-color: rgb(0, 75, 20);
+}
+
+.shiny-download-link:hover,
+.shiny-download-link:active,
+.shiny-download-link:focus {
+  color: white;
+  background-color: rgb(0, 125, 40);
+}

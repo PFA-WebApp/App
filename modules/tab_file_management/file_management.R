@@ -9,16 +9,22 @@ file_management_ui <- function(id) {
         title = "Gruppen",
         icon = shiny::icon("layer-group"),
         file_manager_ui(
-          id = ns("file_manager")
+          id = ns("file_manager_group")
         )
       ),
       shiny::tabPanel(
         title = "Typen",
-        icon = shiny::icon("tags")
+        icon = shiny::icon("tags"),
+        file_manager_ui(
+          id = ns("file_manager_type")
+        )
       ),
       shiny::tabPanel(
         title = "Untertypen",
-        icon = shiny::icon("tag")
+        icon = shiny::icon("tag"),
+        file_manager_ui(
+          id = ns("file_manager_subtype")
+        )
       )
     )
   )
@@ -32,8 +38,39 @@ file_management_server <- function(id, .values) {
       ns <- session$ns
 
       file_manager_server(
-        id = "file_manager",
-        .values = .values
+        id = "file_manager_group",
+        .values = .values,
+        db = list(
+          get_objects = db_get_groups
+        ),
+        table_name = "group",
+        label = list(
+          object_name = "Gruppe"
+        )
+      )
+
+      file_manager_server(
+        id = "file_manager_type",
+        .values = .values,
+        db = list(
+          get_objects = db_get_types
+        ),
+        table_name = "type",
+        label = list(
+          object_name = "Typ"
+        )
+      )
+
+      file_manager_server(
+        id = "file_manager_subtype",
+        .values = .values,
+        db = list(
+          get_objects = db_get_subtypes
+        ),
+        table_name = "subtype",
+        label = list(
+          object_name = "Untertyp"
+        )
       )
     }
   )

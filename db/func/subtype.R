@@ -17,6 +17,9 @@ db_add_subtype <- function(db, type_id, subtype_name, quantity) {
   )
 
   DBI::dbAppendTable(db, "subtype", entry)
+
+  id <- max(DBI::dbGetQuery(db, "SELECT rowid FROM subtype")$rowid)
+  dir_create("subtype", id)
 }
 
 
@@ -195,6 +198,8 @@ db_remove_subtype <- function(db, subtype_id) {
     "DELETE FROM subtype WHERE rowid = ?",
     params = list(subtype_id)
   )
+
+  dir_remove("subtype", subtype_id)
 }
 
 

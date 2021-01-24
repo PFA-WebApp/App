@@ -13,6 +13,9 @@ db_add_type <- function(db, type_name) {
   )
 
   DBI::dbAppendTable(db, "type", entry)
+
+  id <- max(DBI::dbGetQuery(db, "SELECT rowid FROM type")$rowid)
+  dir_create("type", id)
 }
 
 
@@ -32,6 +35,8 @@ db_remove_type <- function(db, type_id) {
     "DELETE FROM type WHERE rowid = ?",
     params = list(type_id)
   )
+
+  dir_remove("type", type_id)
 }
 
 
