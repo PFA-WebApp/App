@@ -17,12 +17,13 @@ type_ui <- function(id) {
     ),
     shiny::column(
       width = 6,
+      subtypes_ui(
+        id = ns("subtypes"),
+        collapsed = TRUE
+      ),
       show_connections_ui(
         id = ns("show_groups"),
         title = "Gruppen anzeigen"
-      ),
-      subtypes_ui(
-        id = ns("subtypes")
       )
     )
   )

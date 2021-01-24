@@ -1,4 +1,11 @@
-add_object_ui <- function(id, title, label, placeholder, collapsible = TRUE, ...) {
+add_object_ui <- function(id,
+                          title,
+                          label,
+                          placeholder,
+                          collapsible = TRUE,
+                          collapsed = TRUE,
+                          ...
+) {
   ns <- shiny::NS(id)
 
   shinydashboard::box(
@@ -7,6 +14,7 @@ add_object_ui <- function(id, title, label, placeholder, collapsible = TRUE, ...
     title = title,
     solidHeader = TRUE,
     collapsible = collapsible,
+    collapsed = collapsed,
     shiny::textInput(
       inputId = ns("object_name"),
       label = label,

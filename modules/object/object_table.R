@@ -29,7 +29,7 @@ object_table_server <- function(id,
       "show",
       "update_name"
     ),
-    db = "func",
+    db = character(),
     func = character(),
     label = "colnames"
   )

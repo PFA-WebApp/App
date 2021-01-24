@@ -50,6 +50,12 @@ container_ui <- function(id) {
           )
         ),
         shinydashboard::tabItem(
+          tabName = "file_management",
+          file_management_ui(
+            id = ns("file_management")
+          )
+        ),
+        shinydashboard::tabItem(
           tabName = "qrcode",
           qrcode_ui(
             id = ns("qrcode")
@@ -114,6 +120,11 @@ container_server <- function(id, .values) {
 
       type_server(
         id = "type",
+        .values = .values
+      )
+
+      file_management_server(
+        id = "file_management",
         .values = .values
       )
 
