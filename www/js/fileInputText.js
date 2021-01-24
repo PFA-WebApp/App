@@ -1,20 +1,22 @@
 modifyFileInputText = function() {
   $('.shiny-file-input-progress').on("DOMSubtreeModified", function() {
-
-    var target = $('.shiny-file-input-progress').children()[0];
-    if (target.innerHTML === "Upload complete") {
+    target = $('.shiny-file-input-progress').each(function() {
+      target = $(this).children()[0];
+      if (target.innerHTML === "Upload complete") {
         target.innerHTML = 'Hochladen abgeschlossen';
-    }
+      }
+    });
   });
 };
 
 modifyFileInputLabel = function() {
-  $("[for='container-file_management-file_manager_group-upload']").parent().on("DOMSubtreeModified", function() {
-    filesText = $("[for='container-file_management-file_manager_group-upload']").
-    parent().find("input").eq(1).val();
-    newFilesText = filesText.replace("files", "Dateien");
-    $("[for='container-file_management-file_manager_group-upload']").
-    parent().find("input").eq(1).val(newFilesText);
+  $(".shiny-file-input-progress").parent().on("DOMSubtreeModified", function() {
+    label = $(".shiny-file-input-progress");
+    label.each(function() {
+      text = $(this).parent().find("input").eq(1).val();
+      newText = text.replace("files", "Dateien");
+      $(this).parent().find("input").eq(1).val(newText);
+    });
   });
 };
 

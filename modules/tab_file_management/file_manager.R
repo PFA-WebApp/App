@@ -81,24 +81,28 @@ file_manager_server <- function(id, .values, db, table_name, label) {
       })
 
       shiny::observeEvent(input$upload, {
-        purrr::map2(
+        purrr::walk2(
           input$upload$name, input$upload$datapath,
           function(name, path) {
-            target <- file.path("files", table_name, object_id_r(), name)
+            if (!stringr::str_detect(name, "\\.(pdf|PDF|Pdf)$")) {
+              shiny::showNotification(paste0(
+                "Es dürfen nur .pdf-Dateien hochgeladen werden!"
+              ), type = "error")
+              return()
+            }
 
+            target <- file.path("files", table_name, object_id_r(), name)
             file.copy(path, target)
 
             short_name <- if (nchar(name) > 25) {
               paste0(substr(name, 1, 22), "...")
             } else name
 
-            shiny::showNotification(
-              ui = paste0(
-                "Die Datei \"",
-                short_name,
-                "\" wurde erfolgreich hochgeladen."
-              )
-            )
+            shiny::showNotification(paste0(
+              "Die Datei \"",
+              short_name,
+              "\" wurde erfolgreich hochgeladen."
+            ))
           }
         )
 

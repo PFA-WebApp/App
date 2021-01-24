@@ -41,6 +41,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
 
     # UI -----------------------------------------------------------------------
     ui <- htmltools::div(
+        htmltools::includeScript("www/js/fileInputText.js"),
         tags$head(
             # Include custom css styles
             shiny::includeCSS("www/css/styles.css")
@@ -51,10 +52,9 @@ ui_server <- function(source_to_globalenv = FALSE) {
             id = "container"
         ),
         # Enable shinyjs
-        useShinyjs(),
+        useShinyjs()
         # Extend shinyjs with custom JavaScript
-        # extendShinyjs("www/js/extend_shinyjs.js"),
-        htmltools::includeScript("www/js/fileInputText.js")
+        # extendShinyjs("www/js/extend_shinyjs.js")
     )
 
     # SERVER -------------------------------------------------------------------
