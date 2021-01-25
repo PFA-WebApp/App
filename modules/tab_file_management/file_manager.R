@@ -148,7 +148,7 @@ file_manager_server <- function(id, .values, db, settings, label) {
           utils::zip(
             zipfile = file,
             files = file.path("files", settings$table_name, object_id_r()),
-            extras = "-j"
+            extras = "-j -q"
           )
         },
         contentType = "application/zip"
