@@ -21,11 +21,8 @@ file_manager_ui <- function(id) {
       outputId = ns("files")
     ),
     htmltools::br(),
-    shiny::downloadButton(
-      outputId = ns("download_all"),
-      label = "Verzeichnis herunterladen",
-      width = "100%",
-      style = "display: block"
+    shiny::uiOutput(
+      outputId = ns("download_all_button")
     )
   )
 }
@@ -170,6 +167,17 @@ file_manager_server <- function(id, .values, db, settings, label) {
         name <- .values$settings$table_dict[settings$table_name] %_% object_name_r() %>%
           paste0(".pdf")
         stringr::str_replace_all(name, "\\s", "_")
+      })
+
+      output$download_all_button <- shiny::renderUI({
+        if (length(files_r())) {
+          shiny::downloadButton(
+            outputId = ns("download_all"),
+            label = "Verzeichnis herunterladen",
+            width = "100%",
+            style = "display: block"
+          )
+        }
       })
 
       output$download_all <- shiny::downloadHandler(
