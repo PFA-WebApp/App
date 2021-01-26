@@ -52,7 +52,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
             id = "container"
         ),
         # Enable shinyjs
-        useShinyjs()
+        shinyjs::useShinyjs()
         # Extend shinyjs with custom JavaScript
         # extendShinyjs("www/js/extend_shinyjs.js")
     )

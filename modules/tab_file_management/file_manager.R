@@ -21,11 +21,8 @@ file_manager_ui <- function(id) {
       outputId = ns("files")
     ),
     htmltools::br(),
-    shiny::downloadButton(
-      outputId = ns("download_all"),
-      label = "Verzeichnis herunterladen",
-      width = "100%",
-      style = "display: block"
+    shiny::uiOutput(
+      outputId = ns("download_all_button")
     )
   )
 }
@@ -84,7 +81,9 @@ file_manager_server <- function(id, .values, db, settings, label) {
       files_r <- shiny::reactive({
         .values$update$files()
         list.files(
-          path = path_r()
+          path = path_r(),
+          all.files = TRUE,
+          no.. = TRUE
         )
       })
 
@@ -93,17 +92,45 @@ file_manager_server <- function(id, .values, db, settings, label) {
       })
 
       output$files <- DT::renderDataTable({
-        files_ui <- purrr::map2_chr(files_r(), paths_r(), function(name, href) {
-          file_manager_link(name, href)
+        files_ui <- purrr::map2_chr(
+          files_r(), seq_along(files_r()),
+          function(name, index) {
+            file_manager_rename_ui(
+              id = ns("file_manager_rename"),
+              index = index,
+              name = name
+            )
+          }
+        )
+
+        download_ui <- purrr::map_chr(paths_r(), function(href) {
+          file_manager_download_btn(href)
+        })
+
+        remove_ui <- purrr::map_chr(seq_along(files_r()), function(index) {
+          file_manager_remove_ui(
+            id = ns("file_manager_remove"),
+            index = index
+          )
         })
 
         tbl <- tibble::tibble(
-          Datei = files_ui
+          Datei = files_ui,
+          Herunterladen = download_ui,
+          "Löschen" = remove_ui
         )
 
         DT::datatable(
           tbl,
-          escape = FALSE
+          escape = FALSE,
+          options = list(
+            columnDefs = list(
+              list(
+                className = 'dt-center',
+                targets = 2:3
+              )
+            )
+          )
         )
       })
 
@@ -142,16 +169,45 @@ file_manager_server <- function(id, .values, db, settings, label) {
         stringr::str_replace_all(name, "\\s", "_")
       })
 
+      output$download_all_button <- shiny::renderUI({
+        if (length(files_r())) {
+          shiny::downloadButton(
+            outputId = ns("download_all"),
+            label = "Verzeichnis herunterladen",
+            width = "100%",
+            style = "display: block"
+          )
+        }
+      })
+
       output$download_all <- shiny::downloadHandler(
         filename = download_all_name_r,
         content = function(file) {
           utils::zip(
             zipfile = file,
             files = file.path("files", settings$table_name, object_id_r()),
-            extras = "-j"
+            extras = "-j -q"
           )
         },
         contentType = "application/zip"
+      )
+
+      file_manager_rename_server(
+        id = "file_manager_rename",
+        .values = .values,
+        files_r = files_r,
+        paths_r = paths_r,
+        object_id_r = object_id_r,
+        settings = settings
+      )
+
+      file_manager_remove_server(
+        id = "file_manager_remove",
+        .values = .values,
+        files_r = files_r,
+        paths_r = paths_r,
+        object_id = object_id_r,
+        settings = settings
       )
     }
   )

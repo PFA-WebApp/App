@@ -16,7 +16,7 @@ object_table_name_ui <- function(id, object_id, name) {
         'Shiny.setInputValue(\"{inputId}\", {{
           object_id: {object_id},
           nonce: Math.random()
-        }}); console.log("name")',
+        }});',
         inputId = ns("name"),
         object_id = object_id
       )
