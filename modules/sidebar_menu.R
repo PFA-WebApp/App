@@ -30,7 +30,7 @@ sidebar_menu_server <- function(id, .values) {
       # right
       menu_item_list <- list(
         login = shinydashboard::menuItem(
-          text = "Login",
+          text = "Anmeldung",
           tabName = "login",
           icon = shiny::icon("sign-in-alt")
         ),

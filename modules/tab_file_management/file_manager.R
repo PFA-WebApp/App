@@ -110,14 +110,30 @@ file_manager_server <- function(id, .values, db, settings, label) {
           file_manager_download_btn(href)
         })
 
+        remove_ui <- purrr::map_chr(seq_along(files_r()), function(index) {
+          file_manager_remove_ui(
+            id = ns("file_manager_remove"),
+            index = index
+          )
+        })
+
         tbl <- tibble::tibble(
           Datei = files_ui,
-          Herunterladen = download_ui
+          Herunterladen = download_ui,
+          "Löschen" = remove_ui
         )
 
         DT::datatable(
           tbl,
-          escape = FALSE
+          escape = FALSE,
+          options = list(
+            columnDefs = list(
+              list(
+                className = 'dt-center',
+                targets = 2:3
+              )
+            )
+          )
         )
       })
 
@@ -174,6 +190,15 @@ file_manager_server <- function(id, .values, db, settings, label) {
         files_r = files_r,
         paths_r = paths_r,
         object_id_r = object_id_r,
+        settings = settings
+      )
+
+      file_manager_remove_server(
+        id = "file_manager_remove",
+        .values = .values,
+        files_r = files_r,
+        paths_r = paths_r,
+        object_id = object_id_r,
         settings = settings
       )
     }
