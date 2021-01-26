@@ -84,7 +84,9 @@ file_manager_server <- function(id, .values, db, settings, label) {
       files_r <- shiny::reactive({
         .values$update$files()
         list.files(
-          path = path_r()
+          path = path_r(),
+          all.files = TRUE,
+          no.. = TRUE
         )
       })
 
@@ -93,12 +95,24 @@ file_manager_server <- function(id, .values, db, settings, label) {
       })
 
       output$files <- DT::renderDataTable({
-        files_ui <- purrr::map2_chr(files_r(), paths_r(), function(name, href) {
-          file_manager_link(name, href)
+        files_ui <- purrr::map2_chr(
+          files_r(), seq_along(files_r()),
+          function(name, index) {
+            file_manager_rename_ui(
+              id = ns("file_manager_rename"),
+              index = index,
+              name = name
+            )
+          }
+        )
+
+        download_ui <- purrr::map_chr(paths_r(), function(href) {
+          file_manager_download_btn(href)
         })
 
         tbl <- tibble::tibble(
-          Datei = files_ui
+          Datei = files_ui,
+          Herunterladen = download_ui
         )
 
         DT::datatable(
@@ -152,6 +166,15 @@ file_manager_server <- function(id, .values, db, settings, label) {
           )
         },
         contentType = "application/zip"
+      )
+
+      file_manager_rename_server(
+        id = "file_manager_rename",
+        .values = .values,
+        files_r = files_r,
+        paths_r = paths_r,
+        object_id_r = object_id_r,
+        settings = settings
       )
     }
   )
