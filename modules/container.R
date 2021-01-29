@@ -81,15 +81,6 @@ container_server <- function(id, .values) {
 
       ns <- session$ns
 
-      # Register function for updating sidebar from other modules
-      .values$update_sidebar <- function(tabName) {
-        bs4Dash::updateTabItems(
-          session = session,
-          inputId = "sidebar",
-          selected = tabName
-        )
-      }
-
       sidebar_menu_server(
         id = "sidebar_menu",
         .values = .values

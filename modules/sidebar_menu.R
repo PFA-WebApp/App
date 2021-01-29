@@ -28,67 +28,83 @@ sidebar_menu_server <- function(id, .values) {
 
       # List of all possible menu items. Extraction is done according to access
       # right
-      menu_item_list <- list(
-        login = bs4Dash::menuItem(
-          text = "Anmeldung",
-          tabName = "login",
-          icon = shiny::icon("sign-in-alt")
-        ),
-        operate = bs4Dash::menuItem(
-          text = "Ausleihen & Zurückgeben",
-          tabName = "operate",
-          icon = shiny::icon("shipping-fast")
-        ),
-        reporting = bs4Dash::menuItem(
-          text = "Berichtswesen",
-          tabName = "reporting",
-          icon = shiny::icon("chart-line")
-        ),
-        sensor_management = bs4Dash::menuItem(
-          text = "Sensorverwaltung",
-          icon = shiny::icon("temperature-low"),
-          bs4Dash::menuSubItem(
-            text = "Gruppen",
-            tabName = "group",
-            icon = shiny::icon("layer-group")
+      menu_item_list <- function(selected = NULL) {
+        list(
+          login = bs4Dash::menuItem(
+            text = "Anmeldung",
+            tabName = "login",
+            icon = shiny::icon("sign-in-alt")
           ),
-          bs4Dash::menuSubItem(
-            text = "Sensortypen",
-            tabName = "type",
-            icon = shiny::icon("tags")
+          operate = bs4Dash::menuItem(
+            text = "Ausleihen & Zurückgeben",
+            tabName = "operate",
+            icon = shiny::icon("shipping-fast"),
+            selected = selected
           ),
-          bs4Dash::menuSubItem(
-            text = "Dateiverwaltung",
-            tabName = "file_management",
-            icon = shiny::icon("file-pdf")
+          reporting = bs4Dash::menuItem(
+            text = "Berichtswesen",
+            tabName = "reporting",
+            icon = shiny::icon("chart-line")
           ),
-          bs4Dash::menuSubItem(
-            text = "QR-Code",
-            tabName = "qrcode",
-            icon = shiny::icon("qrcode")
+          sensor_management = bs4Dash::menuItem(
+            text = "Sensorverwaltung",
+            icon = shiny::icon("temperature-low"),
+            bs4Dash::menuSubItem(
+              text = "Gruppen",
+              tabName = "group",
+              icon = shiny::icon("layer-group")
+            ),
+            bs4Dash::menuSubItem(
+              text = "Sensortypen",
+              tabName = "type",
+              icon = shiny::icon("tags")
+            ),
+            bs4Dash::menuSubItem(
+              text = "Dateiverwaltung",
+              tabName = "file_management",
+              icon = shiny::icon("file-pdf")
+            ),
+            bs4Dash::menuSubItem(
+              text = "QR-Code",
+              tabName = "qrcode",
+              icon = shiny::icon("qrcode")
+            )
+          ),
+          user_management = bs4Dash::menuItem(
+            text = "Nutzerverwaltung",
+            tabName = "user_management",
+            icon = shiny::icon("user-edit")
+          ),
+          settings = bs4Dash::menuItem(
+            text = "Einstellungen",
+            tabName = "settings",
+            icon = shiny::icon("cog")
           )
-        ),
-        user_management = bs4Dash::menuItem(
-          text = "Nutzerverwaltung",
-          tabName = "user_management",
-          icon = shiny::icon("user-edit")
-        ),
-        settings = bs4Dash::menuItem(
-          text = "Einstellungen",
-          tabName = "settings",
-          icon = shiny::icon("cog")
         )
-      )
+      }
 
       output$menu <- bs4Dash::renderMenu({
         sidebar_menu_r()
       })
 
       sidebar_menu_r <- shiny::reactive({
-        menu_items <- unname(menu_item_list[access_list[[.values$user$status()]]])
+        selected <- if (.values$user$status() %in% c("user", "mod")) TRUE
 
-        bs4Dash::sidebarMenu(.list = menu_items)
+        menu_items <- unname(
+          menu_item_list(selected)[access_list[[.values$user$status()]]]
+        )
+
+        bs4Dash::sidebarMenu(id = ns("sidebar"), .list = menu_items)
       })
+
+      # Register function for updating sidebar from other modules
+      .values$update_sidebar <- function(tabName) {
+        bs4Dash::updateTabItems(
+          session = session,
+          inputId = "sidebar",
+          selected = tabName
+        )
+      }
     }
   )
 }
