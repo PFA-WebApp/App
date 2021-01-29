@@ -48,7 +48,7 @@ login_user_info_server <- function(id, .values) {
 
         current_logged_time <- db_get_user_last_logged(
           db = .values$db,
-          name = .values$user$name()
+          user_id = .values$user$id()
         )
 
         current_logged_time <- lubridate::ymd_hms(current_logged_time)
@@ -109,7 +109,7 @@ login_user_info_server <- function(id, .values) {
       })
 
       times_logged_r <- shiny::reactive({
-        db_get_user_times_logged(.values$db, .values$user$name())
+        db_get_user_times_logged(.values$db, .values$user$id())
       })
 
       output$user_times_logged <- shiny::renderUI({

@@ -33,20 +33,55 @@ db_add_user <- function(db,
 
 
 
-#' Set User Name
+#' Get User ID
 #'
 #' @template db
-#' @param old_user_name Old user name.
-#' @param new_user_name New user name.
+#' @param user_name User name.
 #'
 #' @family user
 #'
 #' @export
-db_set_user_name <- function(db, old_user_name, new_user_name) {
+db_get_user_id <- function(db, user_name) {
+  DBI::dbGetQuery(
+    db,
+    "SELECT rowid FROM user WHERE name = ?",
+    params = list(user_name)
+  )$rowid
+}
+
+
+#' Get User Name
+#'
+#' @template db
+#' @param user_id User ID.
+#'
+#' @family user
+#'
+#' @export
+db_get_user_name <- function(db, user_id) {
+  DBI::dbGetQuery(
+    db,
+    "SELECT name FROM user WHERE rowid = ?",
+    params = list(user_id)
+  )$name
+}
+
+
+
+#' Set User Name
+#'
+#' @template db
+#' @param user_id User ID.
+#' @param user_name User name.
+#'
+#' @family user
+#'
+#' @export
+db_set_user_name <- function(db, user_id, user_name) {
   DBI::dbExecute(
     db,
-    "UPDATE user SET name = ? WHERE name = ?",
-    params = list(new_user_name, old_user_name)
+    "UPDATE user SET name = ? WHERE rowid = ?",
+    params = list(user_name, user_id)
   )
 }
 
@@ -54,16 +89,17 @@ db_set_user_name <- function(db, old_user_name, new_user_name) {
 
 #' Get User Status
 #'
-#' @inheritParams db_add_user
+#' @template db
+#' @param user_id User ID.
 #'
 #' @family user
 #'
 #' @export
-db_get_user_status <- function(db, name) {
+db_get_user_status <- function(db, user_id) {
   DBI::dbGetQuery(
     db,
-    "SELECT status FROM user WHERE name = ?",
-    params = list(name)
+    "SELECT status FROM user WHERE rowid = ?",
+    params = list(user_id)
   )$status
 }
 
@@ -71,13 +107,15 @@ db_get_user_status <- function(db, name) {
 
 #' Set User Status
 #'
-#' @inheritParams db_add_user
+#' @template db
+#' @param user_id User Id.
+#' @param status Status.
 #'
 #' @family user
 #'
 #' @export
-db_set_user_status <- function(db, name, status) {
-  current_status <- db_get_user_status(db, name)
+db_set_user_status <- function(db, user_id, status) {
+  current_status <- db_get_user_status(db, user_id)
   if (status != "admin" && current_status == "admin") {
     n_admins <- DBI::dbGetQuery(
       db,
@@ -90,21 +128,26 @@ db_set_user_status <- function(db, name, status) {
 
   DBI::dbExecute(
     db,
-    "UPDATE user SET status = ? WHERE name = ?",
-    params = list(status, name)
+    "UPDATE user SET status = ? WHERE rowid = ?",
+    params = list(status, user_id)
   )
 }
 
 
-#' Get User Names
+#' Get User Names and IDs
 #'
 #' @template db
 #'
 #' @family user
 #'
 #' @export
-db_get_user_names <- function(db) {
-  DBI::dbGetQuery(db, "SELECT name FROM user")$name
+db_get_users <- function(db) {
+  tbl <- DBI::dbGetQuery(db, "SELECT rowid, name FROM user")
+
+  x <- tbl$rowid
+  names(x) <- tbl$name
+
+  x
 }
 
 
@@ -116,8 +159,8 @@ db_get_user_names <- function(db) {
 #' @family user
 #'
 #' @export
-db_remove_user <- function(db, name) {
-  status <- db_get_user_status(db, name)
+db_remove_user <- function(db, user_id) {
+  status <- db_get_user_status(db, user_id)
 
   if (status == "admin") {
     n_admins <- DBI::dbGetQuery(
@@ -131,8 +174,8 @@ db_remove_user <- function(db, name) {
 
   DBI::dbExecute(
     db,
-    "DELETE FROM user WHERE name = ?",
-    params = list(name)
+    "DELETE FROM user WHERE rowid = ?",
+    params = list(user_id)
   )
 }
 
@@ -145,11 +188,11 @@ db_remove_user <- function(db, name) {
 #' @family user
 #'
 #' @export
-db_get_password <- function(db, name) {
+db_get_password <- function(db, user_id) {
   pwd <- DBI::dbGetQuery(
     db,
-    "SELECT password FROM user WHERE name = ?",
-    params = list(name)
+    "SELECT password FROM user WHERE rowid = ?",
+    params = list(user_id)
   )$password
 }
 
@@ -162,11 +205,11 @@ db_get_password <- function(db, name) {
 #' @family user
 #'
 #' @export
-db_set_password <- function(db, name, password) {
+db_set_password <- function(db, user_id, password) {
   DBI::dbExecute(
     db,
-    "UPDATE user SET password = ? WHERE name = ?",
-    params = list(password, name)
+    "UPDATE user SET password = ? WHERE rowid = ?",
+    params = list(password, user_id)
   )
 }
 
@@ -180,7 +223,7 @@ db_set_password <- function(db, name, password) {
 #'
 #' @export
 db_has_user_name <- function(db, name) {
-  name %in% db_get_user_names(db)
+  name %in% names(db_get_users(db))
 }
 
 
@@ -192,19 +235,19 @@ db_has_user_name <- function(db, name) {
 #' @family user
 #'
 #' @export
-db_log_user_in <- function(db, name) {
+db_log_user_in <- function(db, user_id) {
   DBI::dbExecute(
     db,
-    "UPDATE user SET time_logged = ? WHERE name = ?",
-    params = list(as.character(Sys.time()), name)
+    "UPDATE user SET time_logged = ? WHERE rowid = ?",
+    params = list(as.character(Sys.time()), user_id)
   )
 
-  times_logged <- db_get_user_times_logged(db, name)
+  times_logged <- db_get_user_times_logged(db, user_id)
 
   DBI::dbExecute(
     db,
-    "UPDATE user SET times_logged = ? WHERE name = ?",
-    params = list(times_logged + 1, name)
+    "UPDATE user SET times_logged = ? WHERE rowid = ?",
+    params = list(times_logged + 1, user_id)
   )
 }
 
@@ -217,11 +260,11 @@ db_log_user_in <- function(db, name) {
 #' @family user
 #'
 #' @export
-db_get_user_times_logged <- function(db, name) {
+db_get_user_times_logged <- function(db, user_id) {
   DBI::dbGetQuery(
     db,
-    "SELECT times_logged FROM user WHERE name = ?",
-    params = list(name)
+    "SELECT times_logged FROM user WHERE rowid = ?",
+    params = list(user_id)
   )$times_logged
 }
 
@@ -234,11 +277,11 @@ db_get_user_times_logged <- function(db, name) {
 #' @family user
 #'
 #' @export
-db_get_adding_user <- function(db, name) {
+db_get_adding_user <- function(db, user_id) {
   DBI::dbGetQuery(
     db,
-    "SELECT added_from FROM user WHERE name = ?",
-    params = list(name)
+    "SELECT added_from FROM user WHERE rowid = ?",
+    params = list(user_id)
   )$added_from
 }
 
@@ -251,10 +294,10 @@ db_get_adding_user <- function(db, name) {
 #' @family user
 #'
 #' @export
-db_get_user_last_logged <- function(db, name) {
+db_get_user_last_logged <- function(db, user_id) {
   DBI::dbGetQuery(
     db,
-    "SELECT time_logged FROM user WHERE name = ?",
-    params = list(name)
+    "SELECT time_logged FROM user WHERE rowid = ?",
+    params = list(user_id)
   )$time_logged
 }

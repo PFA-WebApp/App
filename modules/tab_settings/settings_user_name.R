@@ -113,7 +113,7 @@ settings_user_name_server <- function(id, .values) {
       shiny::observeEvent(input$change_user_name, {
         user_pwd <- db_get_password(
           db = .values$db,
-          name = .values$user$name()
+          user_id = .values$user$id()
         )
 
         pwd_correct <- bcrypt::checkpw(input$password, user_pwd)
@@ -135,7 +135,7 @@ settings_user_name_server <- function(id, .values) {
             )
           )
 
-          db_set_user_name(.values$db, .values$user$name(), input$user_name)
+          db_set_user_name(.values$db, .values$user$id(), input$user_name)
           .values$user$name(input$user_name)
           .values$update$user(.values$update$user() + 1)
         }

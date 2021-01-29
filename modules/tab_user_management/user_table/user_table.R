@@ -19,10 +19,19 @@ user_table_server <- function(id, .values) {
 
       ns <- session$ns
 
-      taken_user_names_rvs <- shiny::reactiveValues(
-        change_status = character(),
-        remove = character(),
-        reset_password = character()
+      user_table_change_status_server(
+        id = "user_table_change_status",
+        .values = .values
+      )
+
+      user_table_remove_user_server(
+        id = "user_table_remove_user",
+        .values = .values
+      )
+
+      user_table_reset_password_server(
+        id = "user_table_reset_password",
+        .values = .values
       )
 
       output$user_table <- DT::renderDataTable({
@@ -30,65 +39,24 @@ user_table_server <- function(id, .values) {
 
         tbl <- db_get_table(.values$db, "user")
 
-        tbl$change_status <- purrr::map2_chr(
-          tbl$name, tbl$status, function(user_name, status) {
-            if (!user_name %in% taken_user_names_rvs$change_status) {
-              taken_user_names_rvs$change_status <- c(
-                taken_user_names_rvs$change_status, user_name
-              )
+        tbl$change_status <- purrr::map_chr(tbl$rowid, function(user_id) {
+          user_table_change_status_ui(
+            id = ns("user_table_change_status"),
+            user_id = user_id
+          )
+        })
 
-              user_table_change_status_server(
-                id = "user_table_change_status" %_% user_name,
-                .values = .values,
-                user_name = user_name,
-                status = status
-              )
-            }
+        tbl$remove <- purrr::map_chr(tbl$rowid, function(user_id) {
+          user_table_remove_user_ui(
+            id = ns("user_table_remove_user"),
+            user_id = user_id
+          )
+        })
 
-            user_table_change_status_ui(
-              id = ns("user_table_change_status" %_% user_name)
-            )
-          }
-        )
-
-        tbl$remove <- purrr::pmap_chr(
-          list(tbl$name, tbl$status, tbl$added_from),
-          function(user_name, status, added_from) {
-            if (!user_name %in% taken_user_names_rvs$remove) {
-              taken_user_names_rvs$remove <- c(
-                taken_user_names_rvs$remove, user_name
-              )
-
-              user_table_remove_user_server(
-                id = "user_table_remove_user" %_% user_name,
-                .values = .values,
-                user_name = user_name,
-                status = status,
-                added_from = added_from
-              )
-            }
-
-            user_table_remove_user_ui(
-              id = ns("user_table_remove_user" %_% user_name)
-            )
-          }
-        )
-
-        tbl$reset_password <- purrr::map_chr(tbl$name, function(user_name) {
-          if (!user_name %in% taken_user_names_rvs$reset_password) {
-            taken_user_names_rvs$reset_password <- c(
-              taken_user_names_rvs$reset_password, user_name
-            )
-
-            user_table_reset_password_server(
-              id = "user_table_reset_password" %_% user_name,
-              .values = .values,
-              user_name = user_name
-            )
-          }
-
+        tbl$reset_password <- purrr::map_chr(tbl$rowid, function(user_id) {
           user_table_reset_password_ui(
-            id = ns("user_table_reset_password" %_% user_name)
+            id = ns("user_table_reset_password"),
+            user_id = user_id
           )
         })
 

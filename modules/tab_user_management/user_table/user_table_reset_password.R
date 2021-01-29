@@ -1,4 +1,4 @@
-user_table_reset_password_ui <- function(id) {
+user_table_reset_password_ui <- function(id, user_id) {
   ns <- shiny::NS(id)
 
   as.character(
@@ -8,28 +8,40 @@ user_table_reset_password_ui <- function(id) {
       icon = shiny::icon("eraser"),
       class = "primary",
       onclick = glue::glue(
-        'Shiny.setInputValue(\"{inputId}\", this.id + Math.random())',
-        inputId = ns("reset_password")
+        'Shiny.setInputValue(\"{inputId}\", {{
+          user_id: {user_id},
+          nonce: Math.random()
+        }});',
+        inputId = ns("reset_password"),
+        user_id = user_id
       )
     )
   )
 }
 
-user_table_reset_password_server <- function(id, .values, user_name) {
+user_table_reset_password_server <- function(id, .values) {
   shiny::moduleServer(
     id,
     function(input, output, session) {
 
       ns <- session$ns
 
-      shiny::observeEvent(input$reset_password, {
+      user_id_r <- shiny::reactive({
+        shiny::req(input$reset_password)$user_id
+      })
+
+      user_name_r <- shiny::reactive({
+        db_get_user_name(.values$db, user_id_r())
+      })
+
+      shiny::observeEvent(user_id_r(), {
         shiny::showModal(shiny::modalDialog(
           title = "Passwort zurücksetzen",
           easyClose = TRUE,
           htmltools::div(
             paste0(
               "Bist Du sicher, dass Du das Passwort für \"",
-              user_name,
+              user_name_r(),
               "\" zurücksetzen möchtest?"
             )
           ),
@@ -48,7 +60,7 @@ user_table_reset_password_server <- function(id, .values, user_name) {
         shiny::showNotification(
           ui = paste0(
             "Das Passwort für \"",
-            user_name,
+            user_name_r(),
             "\" wurde erfolgreich auf \"",
             reset_pwd,
             "\" zurückgesetzt."
@@ -57,7 +69,7 @@ user_table_reset_password_server <- function(id, .values, user_name) {
           duration = 5
         )
 
-        db_set_password(.values$db, user_name, bcrypt::hashpw(reset_pwd))
+        db_set_password(.values$db, user_id_r(), bcrypt::hashpw(reset_pwd))
       })
     }
   )

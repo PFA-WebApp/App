@@ -1,4 +1,4 @@
-user_table_change_status_ui <- function(id) {
+user_table_change_status_ui <- function(id, user_id) {
   ns <- shiny::NS(id)
 
   as.character(
@@ -8,22 +8,38 @@ user_table_change_status_ui <- function(id) {
       icon = shiny::icon("edit"),
       class = "primary",
       onclick = glue::glue(
-        'Shiny.setInputValue(\"{inputId}\", this.id + Math.random())',
-        inputId = ns("change_status")
+        'Shiny.setInputValue(\"{inputId}\", {{
+          user_id: {user_id},
+          nonce: Math.random()
+        }});',
+        inputId = ns("change_status"),
+        user_id = user_id
       )
     )
   )
 }
 
-user_table_change_status_server <- function(id, .values, user_name, status) {
+user_table_change_status_server <- function(id, .values) {
   shiny::moduleServer(
     id,
     function(input, output, session) {
 
       ns <- session$ns
 
-      shiny::observeEvent(input$change_status, {
-        if (user_name == .values$user$name()) {
+      user_id_r <- shiny::reactive({
+        shiny::req(input$change_status)$user_id
+      })
+
+      user_name_r <- shiny::reactive({
+        db_get_user_name(.values$db, user_id_r())
+      })
+
+      status_r <- shiny::reactive({
+        db_get_user_status(.values$db, user_id_r())
+      })
+
+      shiny::observeEvent(user_id_r(), {
+        if (user_name_r() == .values$user$name()) {
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
             title = "Zugriff verweigert!",
@@ -50,7 +66,7 @@ user_table_change_status_server <- function(id, .values, user_name, status) {
               Moderator = "mod",
               Benutzer = "user"
             ),
-            selected = status
+            selected = status_r()
           ),
           footer = shiny::actionButton(
             inputId = ns("confirm_status"),
@@ -62,13 +78,13 @@ user_table_change_status_server <- function(id, .values, user_name, status) {
       shiny::observeEvent(input$confirm_status, {
         shiny::removeModal()
 
-        success <- db_set_user_status(.values$db, user_name, input$user_status)
+        success <- db_set_user_status(.values$db, user_id_r(), input$user_status)
 
         if (success) {
           shiny::showNotification(
             ui = paste0(
               "Der Status von Benutzer \"",
-              user_name,
+              user_name_r(),
               "\" wurde erfolgreich auf \"",
               .values$settings$status_dict[input$user_status],
               "\" geändert."
@@ -80,7 +96,7 @@ user_table_change_status_server <- function(id, .values, user_name, status) {
           shiny::showNotification(
             ui = paste0(
               "Der Status von Benutzer \"",
-              user_name,
+              user_name_r(),
               "\" konnte nicht geändert werden."
             ),
             type = "error",
