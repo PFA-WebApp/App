@@ -1,7 +1,7 @@
 sidebar_menu_ui <- function(id) {
   ns <- shiny::NS(id)
 
-  shinydashboard::sidebarMenuOutput(
+  bs4Dash::sidebarMenuOutput(
     outputId = ns("menu")
   )
 }
@@ -29,65 +29,65 @@ sidebar_menu_server <- function(id, .values) {
       # List of all possible menu items. Extraction is done according to access
       # right
       menu_item_list <- list(
-        login = shinydashboard::menuItem(
+        login = bs4Dash::menuItem(
           text = "Anmeldung",
           tabName = "login",
           icon = shiny::icon("sign-in-alt")
         ),
-        operate = shinydashboard::menuItem(
+        operate = bs4Dash::menuItem(
           text = "Ausleihen & Zurückgeben",
           tabName = "operate",
           icon = shiny::icon("shipping-fast")
         ),
-        reporting = shinydashboard::menuItem(
+        reporting = bs4Dash::menuItem(
           text = "Berichtswesen",
           tabName = "reporting",
           icon = shiny::icon("chart-line")
         ),
-        sensor_management = shinydashboard::menuItem(
+        sensor_management = bs4Dash::menuItem(
           text = "Sensorverwaltung",
           icon = shiny::icon("temperature-low"),
-          shinydashboard::menuSubItem(
+          bs4Dash::menuSubItem(
             text = "Gruppen",
             tabName = "group",
             icon = shiny::icon("layer-group")
           ),
-          shinydashboard::menuSubItem(
+          bs4Dash::menuSubItem(
             text = "Sensortypen",
             tabName = "type",
             icon = shiny::icon("tags")
           ),
-          shinydashboard::menuSubItem(
+          bs4Dash::menuSubItem(
             text = "Dateiverwaltung",
             tabName = "file_management",
             icon = shiny::icon("file-pdf")
           ),
-          shinydashboard::menuSubItem(
+          bs4Dash::menuSubItem(
             text = "QR-Code",
             tabName = "qrcode",
             icon = shiny::icon("qrcode")
           )
         ),
-        user_management = shinydashboard::menuItem(
+        user_management = bs4Dash::menuItem(
           text = "Nutzerverwaltung",
           tabName = "user_management",
           icon = shiny::icon("user-edit")
         ),
-        settings = shinydashboard::menuItem(
+        settings = bs4Dash::menuItem(
           text = "Einstellungen",
           tabName = "settings",
           icon = shiny::icon("cog")
         )
       )
 
-      output$menu <- shinydashboard::renderMenu({
+      output$menu <- bs4Dash::renderMenu({
         sidebar_menu_r()
       })
 
       sidebar_menu_r <- shiny::reactive({
         menu_items <- unname(menu_item_list[access_list[[.values$user$status()]]])
 
-        shinydashboard::sidebarMenu(.list = menu_items)
+        bs4Dash::sidebarMenu(.list = menu_items)
       })
     }
   )

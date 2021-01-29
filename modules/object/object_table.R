@@ -1,5 +1,5 @@
 object_table_box_ui <- function(id, title) {
-  shinydashboard::box(
+  bs4Dash::box(
     width = NULL,
     status = "primary",
     title = title,

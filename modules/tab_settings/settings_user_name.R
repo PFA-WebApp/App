@@ -1,7 +1,7 @@
 settings_user_name_ui <- function(id) {
   ns <- shiny::NS(id)
 
-  shinydashboard::box(
+  bs4Dash::box(
     width = NULL,
     solidHeader = TRUE,
     status = "primary",

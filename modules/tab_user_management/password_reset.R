@@ -3,7 +3,7 @@
 password_reset_ui <- function(id) {
   ns <- shiny::NS(id)
 
-  shinydashboard::box(
+  bs4Dash::box(
     width = NULL,
     status = "primary",
     title = "Nutzerpasswort zurücksetzen",

@@ -2,7 +2,8 @@ file_management_ui <- function(id) {
   ns <- shiny::NS(id)
 
   shiny::fluidRow(
-    shinydashboard::tabBox(
+    bs4Dash::tabBox(
+      id = ns("file_tabs"),
       width = 12,
       title = "Dateiverwaltung",
       shiny::tabPanel(

@@ -1,10 +1,5 @@
 library(shiny)
-library(shinydashboard)
-library(shinyjs)
 library(dplyr)
-library(stringr)
-library(qrcode)
-library(purrr)
 
 addResourcePath("files", "./files")
 
@@ -44,7 +39,8 @@ ui_server <- function(source_to_globalenv = FALSE) {
         htmltools::includeScript("www/js/fileInputText.js"),
         tags$head(
             # Include custom css styles
-            shiny::includeCSS("www/css/styles.css")
+            htmltools::includeCSS("www/css/styles.css"),
+            htmltools::includeCSS("www/css/dt-dark.css")
         ),
         # ui_ui generates the UI which is displayed in the content_list,
         # viewer_data and viewer_plot

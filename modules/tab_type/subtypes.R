@@ -1,7 +1,7 @@
 subtypes_ui <- function(id, collapsed) {
   ns <- shiny::NS(id)
 
-  shinydashboard::box(
+  bs4Dash::box(
     width = NULL,
     solidHeader = TRUE,
     status = "primary",

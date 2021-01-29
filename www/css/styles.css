@@ -6,7 +6,7 @@
   color: #3c8dbc;
 }
 
-.main-header .logo {
+.brand-link {
   font-variant: small-caps;
 }
 
@@ -61,4 +61,8 @@
 .return-btn:focus {
   background-color: rgb(185, 40, 20);
   color: white;
+}
+
+.form-group.shiny-input-container {
+  width: 100%;
 }

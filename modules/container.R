@@ -1,67 +1,69 @@
 container_ui <- function(id) {
   ns <- shiny::NS(id)
 
-  shinydashboard::dashboardPage(
-    shinydashboard::dashboardHeader(
-      title = "Sensotheka"
+  bs4Dash::dashboardPage(
+    bs4Dash::dashboardHeader(
+      title = "Sensotheka",
+      status = "primary"
     ),
-    shinydashboard::dashboardSidebar(
+    bs4Dash::dashboardSidebar(
       sidebar_menu_ui(
         id = ns("sidebar_menu")
       ),
-      collapsed = FALSE
+      collapsed = FALSE,
+      skin = "light"
     ),
-    shinydashboard::dashboardBody(
-      shinydashboard::tabItems(
-        shinydashboard::tabItem(
+    bs4Dash::dashboardBody(
+      bs4Dash::tabItems(
+        bs4Dash::tabItem(
           tabName = "login",
           login_ui(
             id = ns("login")
           )
         ),
-        shinydashboard::tabItem(
+        bs4Dash::tabItem(
           tabName = "operate",
           operate_ui(
             id = ns("operate")
           )
         ),
-        shinydashboard::tabItem(
+        bs4Dash::tabItem(
           tabName = "reporting",
           reporting_ui(
             id = ns("reporting")
           )
         ),
-        shinydashboard::tabItem(
+        bs4Dash::tabItem(
           tabName = "user_management",
           user_management_ui(
             id = ns("user_management")
           )
         ),
-        shinydashboard::tabItem(
+        bs4Dash::tabItem(
           tabName = "group",
           group_ui(
             id = ns("group")
           )
         ),
-        shinydashboard::tabItem(
+        bs4Dash::tabItem(
           tabName = "type",
           type_ui(
             id = ns("type")
           )
         ),
-        shinydashboard::tabItem(
+        bs4Dash::tabItem(
           tabName = "file_management",
           file_management_ui(
             id = ns("file_management")
           )
         ),
-        shinydashboard::tabItem(
+        bs4Dash::tabItem(
           tabName = "qrcode",
           qrcode_ui(
             id = ns("qrcode")
           )
         ),
-        shinydashboard::tabItem(
+        bs4Dash::tabItem(
           tabName = "settings",
           settings_ui(
             id = ns("settings")
@@ -81,7 +83,7 @@ container_server <- function(id, .values) {
 
       # Register function for updating sidebar from other modules
       .values$update_sidebar <- function(tabName) {
-        shinydashboard::updateTabItems(
+        bs4Dash::updateTabItems(
           session = session,
           inputId = "sidebar",
           selected = tabName
