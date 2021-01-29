@@ -73,7 +73,7 @@ object_table_quantity_server <- function(id,
           object_quantity_input_ui(
             id = ns("object_quantity_input"),
             old_quantity = old_quantity_r(),
-            label = label
+            label = label$new_quantity
           ),
           footer = shiny::uiOutput(
             outputId = ns("confirm_object_quantity")
@@ -135,10 +135,7 @@ object_table_quantity_server <- function(id,
 
       quantity_return <- object_quantity_input_server(
         id = "object_quantity_input",
-        .values = .values,
-        settings = settings,
-        db = db,
-        label = label
+        .values = .values
       )
     }
   )

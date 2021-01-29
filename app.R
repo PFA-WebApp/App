@@ -75,9 +75,9 @@ ui_server <- function(source_to_globalenv = FALSE) {
         # store a trigger for each instance
         .values$trigger_list <- list()
 
-        .values$user$id <- shiny::reactiveVal(0)
-        .values$user$status <- shiny::reactiveVal("not_logged")
-        .values$user$name <- shiny::reactiveVal("")
+        .values$user$id <- shiny::reactiveVal(1)
+        .values$user$status <- shiny::reactiveVal("admin")
+        .values$user$name <- shiny::reactiveVal("Admin")
         .values$user$last_logged <- shiny::reactiveVal("2011-11-11 11:11:11")
 
         .values$settings$password$length <- list(min = 4, max = 16)

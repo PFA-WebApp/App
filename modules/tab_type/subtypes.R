@@ -122,9 +122,6 @@ subtypes_server <- function(id, .values) {
       quantity_return <- object_quantity_input_server(
         id = "object_quantity_input",
         .values = .values,
-        settings = settings,
-        db = db,
-        label = label,
         reset_r = add_object_return$on_add_r
       )
     }
