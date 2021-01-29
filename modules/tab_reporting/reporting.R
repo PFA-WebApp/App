@@ -4,7 +4,7 @@ reporting_ui <- function(id) {
   shiny::fluidRow(
     shiny::column(
       width = 6,
-      shinydashboard::box(
+      bs4Dash::box(
         width = NULL,
         solidHeader = TRUE,
         status = "primary",

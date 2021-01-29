@@ -145,9 +145,9 @@ db_has_type_id <- function(db, type_id) {
 #'
 #' @export
 db_get_types <- function(db) {
-  tbl <- DBI::dbGetQuery(db, "SELECT rowid AS type_id, type_name FROM type")
+  tbl <- DBI::dbGetQuery(db, "SELECT rowid, type_name FROM type ORDER BY type_name ASC")
 
-  x <- tbl$type_id
+  x <- tbl$rowid
   names(x) <- tbl$type_name
 
   x

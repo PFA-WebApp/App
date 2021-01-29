@@ -3,7 +3,7 @@
 password_reset_ui <- function(id) {
   ns <- shiny::NS(id)
 
-  shinydashboard::box(
+  bs4Dash::box(
     width = NULL,
     status = "primary",
     title = "Nutzerpasswort zurücksetzen",
@@ -26,18 +26,22 @@ password_reset_server <- function(id, .values) {
 
       ns <- session$ns
 
-      user_name_choices_r <- shiny::reactive({
+      user_choices_r <- shiny::reactive({
         .values$update$user()
 
-        sort(db_get_user_names(.values$db))
+        db_get_users(.values$db)
       })
 
       output$user_name <- shiny::renderUI({
         shiny::selectInput(
-          inputId = ns("user_name"),
+          inputId = ns("user_id"),
           label = "Benutzername",
-          choices = user_name_choices_r()
+          choices = user_choices_r()
         )
+      })
+
+      user_name_r <- shiny::reactive({
+        db_get_user_name(.values$db, input$user_id)
       })
 
       shiny::observeEvent(input$start_reset, {
@@ -47,7 +51,7 @@ password_reset_server <- function(id, .values) {
           htmltools::div(
             paste0(
               "Bist Du sicher, dass Du das Passwort für \"",
-              input$user_name,
+              user_name_r(),
               "\" zurücksetzen möchtest?"
             )
           ),
@@ -66,7 +70,7 @@ password_reset_server <- function(id, .values) {
         shiny::showNotification(
           ui = paste0(
             "Das Passwort für \"",
-            input$user_name,
+            user_name_r(),
             "\" wurde erfolgreich auf \"",
             reset_pwd,
             "\" zurückgesetzt."
@@ -75,7 +79,7 @@ password_reset_server <- function(id, .values) {
           duration = NULL
         )
 
-        db_set_password(.values$db, input$user_name, bcrypt::hashpw(reset_pwd))
+        db_set_password(.values$db, input$user_id, bcrypt::hashpw(reset_pwd))
       })
 
     }

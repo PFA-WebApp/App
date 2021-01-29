@@ -6,7 +6,7 @@
   color: #3c8dbc;
 }
 
-.main-header .logo {
+.brand-link {
   font-variant: small-caps;
 }
 
@@ -23,15 +23,46 @@
   color: white;
 }
 
-.shiny-download-link {
+.shiny-download-link, .dark-mode .shiny-download-link {
   color: white;
   background-color: rgb(0, 166, 90);
   border-color: rgb(0, 75, 20);
 }
 
-.shiny-download-link:hover,
-.shiny-download-link:active,
-.shiny-download-link:focus {
+.shiny-download-link:hover, .dark-mode .shiny-download-link:hover
+.shiny-download-link:active, .dark-mode .shiny-download-link:active
+.shiny-download-link:focus, .dark-mode .shiny-download-link:focus {
   color: white;
   background-color: rgb(0, 125, 40);
+}
+
+.borrow-btn, .dark-mode .borrow-btn {
+  color: white;
+  background-color: rgb(0, 166, 90);
+  border-color: rgb(0, 75, 20);
+  margin-bottom: 10px;
+}
+
+.borrow-btn:hover, .dark-mode .borrow-btn:hover
+.borrow-btn:active, .dark-mode .borrow-btn:active
+.borrow-btn:focus, .dark-mode .borrow-btn:focus {
+  background-color: rgb(0, 125, 40);
+  color: white;
+}
+
+.return-btn, .dark-mode .return-btn {
+  color: white;
+  background-color: rgb(221, 75, 57);
+  border-color: rgb(100, 50, 30);
+}
+
+.return-btn:hover, .dark-mode .return-btn:hover,
+.return-btn:active, .dark-mode .return-btn:active,
+.return-btn:focus, .dark-mode .return-btn:focus {
+  background-color: rgb(185, 40, 20);
+  color: white;
+}
+
+.form-group.shiny-input-container {
+  width: 100%;
 }

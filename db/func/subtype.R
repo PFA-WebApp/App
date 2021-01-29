@@ -113,7 +113,7 @@ db_set_subtype_quantity <- function(db, subtype_id, quantity) {
 db_get_subtypes_by_type_id <- function(db, type_id) {
   tbl <- DBI::dbGetQuery(
     db,
-    "SELECT rowid, subtype_name FROM subtype WHERE type_id = ?",
+    "SELECT rowid, subtype_name FROM subtype WHERE type_id = ? ORDER BY subtype_name ASC",
     params = list(type_id)
   )
 
@@ -153,7 +153,7 @@ db_get_type_id_by_subtype_id <- function(db, subtype_id) {
 db_get_subtypes <- function(db) {
   tbl <- DBI::dbGetQuery(
     db,
-    "SELECT rowid, subtype_name FROM subtype"
+    "SELECT rowid, subtype_name FROM subtype ORDER BY subtype_name ASC"
   )
 
   x <- tbl$rowid

@@ -154,7 +154,7 @@ create_group_type_table <- function(db) {
 #' @export
 create_circulation_table <- function(db) {
   tbl <- tibble::tibble(
-    name = character(),
+    user_id = character(),
     type_id = integer(),
     subtype_id = integer(),
     quantity = integer(),

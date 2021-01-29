@@ -1,4 +1,4 @@
-user_table_remove_user_ui <- function(id) {
+user_table_remove_user_ui <- function(id, user_id) {
   ns <- shiny::NS(id)
 
   as.character(
@@ -8,18 +8,19 @@ user_table_remove_user_ui <- function(id) {
       icon = shiny::icon("user-minus"),
       class = "primary",
       onclick = glue::glue(
-        'Shiny.setInputValue(\"{inputId}\", this.id + Math.random())',
-        inputId = ns("remove")
+        'Shiny.setInputValue(\"{inputId}\", {{
+          user_id: {user_id},
+          nonce: Math.random()
+        }});',
+        inputId = ns("remove"),
+        user_id = user_id
       )
     )
   )
 }
 
 user_table_remove_user_server <- function(id,
-                                            .values,
-                                            user_name,
-                                            status,
-                                            added_from
+                                          .values
 ) {
   shiny::moduleServer(
     id,
@@ -27,11 +28,23 @@ user_table_remove_user_server <- function(id,
 
       ns <- session$ns
 
-      shiny::observeEvent(input$remove, {
+      user_id_r <- shiny::reactive({
+        shiny::req(input$remove)$user_id
+      })
+
+      user_name_r <- shiny::reactive({
+        db_get_user_name(.values$db, user_id_r())
+      })
+
+      added_from_r <- shiny::reactive({
+        db_get_adding_user(.values$db, user_id_r())
+      })
+
+      shiny::observeEvent(user_id_r(), {
         # Check that moderators can only remove users they added themselves
         if (
           .values$user$status() == "mod" &&
-          (status != "user" || added_from != .values$user$name())
+          (status != "user" || added_from_r() != .values$user$name())
         ) {
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
@@ -40,9 +53,9 @@ user_table_remove_user_server <- function(id,
               paste0(
                 "Moderatoren dürfen nur Benutzer löschen, die sie selbst
                 hinzugefügt haben. \"",
-                user_name,
+                user_name_r(),
                 "\" wurde von \"",
-                added_from,
+                added_from_r(),
                 "\" hinzugefügt."
               )
             ),
@@ -57,7 +70,7 @@ user_table_remove_user_server <- function(id,
 
 
         # Check that admins can't remove themselves
-        if (user_name == .values$user$name()) {
+        if (user_name_r() == .values$user$name()) {
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
             title = "Zugriff verweigert!",
@@ -79,7 +92,7 @@ user_table_remove_user_server <- function(id,
           htmltools::div(
             paste0(
               "Bist du sicher, dass du den Benutzer \"",
-              user_name,
+              user_name_r(),
               "\" löschen möchtest?"
             )
           ),
@@ -93,13 +106,13 @@ user_table_remove_user_server <- function(id,
       shiny::observeEvent(input$confirm_remove, {
         shiny::removeModal()
 
-        success <- db_remove_user(.values$db, user_name)
+        success <- db_remove_user(.values$db, user_id_r())
 
         if (success) {
           shiny::showNotification(
             ui = paste0(
               "Der Benutzer \"",
-              user_name,
+              user_name_r(),
               "\" wurde erfolgreich gelöscht."
             ),
             type = "warning",
@@ -109,7 +122,7 @@ user_table_remove_user_server <- function(id,
           shiny::showNotification(
             ui = paste0(
               "Der Benutzer \"",
-              user_name,
+              user_name_r(),
               "\" konnte nicht gelöscht werden."
             ),
             type = "error",

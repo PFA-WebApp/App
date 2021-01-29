@@ -4,7 +4,7 @@ object_quantity_input_ui <- function(id, old_quantity, label) {
   htmltools::tagList(
     shiny::numericInput(
       inputId = ns("object_quantity"),
-      label = label$new_quantity,
+      label = label,
       value = old_quantity,
       min = 0,
       step = 1
@@ -20,9 +20,6 @@ object_quantity_input_ui <- function(id, old_quantity, label) {
 
 object_quantity_input_server <- function(id,
                                          .values,
-                                         settings,
-                                         db,
-                                         label,
                                          reset_r = shiny::reactive(0)
 ) {
   shiny::moduleServer(
@@ -72,7 +69,7 @@ object_quantity_input_server <- function(id,
           inputId = "object_quantity",
           value = 0
         )
-      })
+      }, ignoreInit = TRUE)
 
       return_list <- list(
         error_r = error_r,

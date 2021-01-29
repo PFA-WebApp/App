@@ -8,7 +8,7 @@ add_object_ui <- function(...,
 ) {
   ns <- shiny::NS(id)
 
-  shinydashboard::box(
+  bs4Dash::box(
     width = NULL,
     status = "primary",
     title = title,

@@ -4,7 +4,7 @@ login_ui <- function(id) {
   shiny::fluidRow(
     shiny::column(
       width = 6,
-      shinydashboard::box(
+      bs4Dash::box(
         width = NULL,
         status = "primary",
         title = "Anmeldung",
@@ -59,18 +59,23 @@ login_server <- function(id, .values) {
       })
 
       shiny::observeEvent(input$user_login, {
+        user_id <- db_get_user_id(.values$db, input$user_name)
+
         user_pwd <- db_get_password(
           db = .values$db,
-          name = input$user_name
+          user_id = user_id
         )
 
         pwd_correct <- bcrypt::checkpw(input$user_password, user_pwd)
 
         if (pwd_correct) {
-          .values$user$status(db_get_user_status(.values$db, input$user_name))
+          .values$user$id(user_id)
           .values$user$name(input$user_name)
-          .values$user$last_logged(db_get_user_last_logged(.values$db, input$user_name))
-          db_log_user_in(.values$db, input$user_name)
+          .values$user$status(db_get_user_status(.values$db, .values$user$id()))
+          .values$user$last_logged(
+            db_get_user_last_logged(.values$db, .values$user$id())
+          )
+          db_log_user_in(.values$db, .values$user$id())
           .values$update$user(.values$update$user() + 1)
 
           shiny::showNotification(
@@ -102,6 +107,7 @@ login_server <- function(id, .values) {
       })
 
       shiny::observeEvent(input$user_logout, {
+        .values$user$id(0)
         .values$user$status("not_logged")
         .values$user$name("")
         .values$user$last_logged("")
@@ -116,7 +122,7 @@ login_server <- function(id, .values) {
       user_name_choices_r <- shiny::reactive({
         .values$update$user()
 
-        sort(db_get_user_names(.values$db))
+        names(db_get_users(.values$db))
       })
 
 

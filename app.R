@@ -1,10 +1,5 @@
 library(shiny)
-library(shinydashboard)
-library(shinyjs)
 library(dplyr)
-library(stringr)
-library(qrcode)
-library(purrr)
 
 addResourcePath("files", "./files")
 
@@ -44,7 +39,8 @@ ui_server <- function(source_to_globalenv = FALSE) {
         htmltools::includeScript("www/js/fileInputText.js"),
         tags$head(
             # Include custom css styles
-            shiny::includeCSS("www/css/styles.css")
+            htmltools::includeCSS("www/css/styles.css"),
+            htmltools::includeCSS("www/css/dt-dark.css")
         ),
         # ui_ui generates the UI which is displayed in the content_list,
         # viewer_data and viewer_plot
@@ -75,8 +71,9 @@ ui_server <- function(source_to_globalenv = FALSE) {
         # store a trigger for each instance
         .values$trigger_list <- list()
 
-        .values$user$status <- shiny::reactiveVal("not_logged")
-        .values$user$name <- shiny::reactiveVal("")
+        .values$user$id <- shiny::reactiveVal(1)
+        .values$user$status <- shiny::reactiveVal("admin")
+        .values$user$name <- shiny::reactiveVal("Admin")
         .values$user$last_logged <- shiny::reactiveVal("2011-11-11 11:11:11")
 
         .values$settings$password$length <- list(min = 4, max = 16)
