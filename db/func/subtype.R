@@ -62,7 +62,7 @@ db_get_subtype_name <- function(db, subtype_id) {
 
 
 
-#' Get Subtype Quantity
+#' Get Subtype Max Quantity
 #'
 #' @template db
 #' @template id
@@ -71,7 +71,7 @@ db_get_subtype_name <- function(db, subtype_id) {
 #' @family subtype
 #'
 #' @export
-db_get_subtype_quantity <- function(db, subtype_id) {
+db_get_subtype_max_quantity <- function(db, subtype_id) {
   DBI::dbGetQuery(
     db,
     "SELECT quantity FROM subtype WHERE rowid = ?",
@@ -91,7 +91,7 @@ db_get_subtype_quantity <- function(db, subtype_id) {
 #' @family subtype
 #'
 #' @export
-db_set_subtype_quantity <- function(db, subtype_id, quantity) {
+db_set_subtype_max_quantity <- function(db, subtype_id, quantity) {
   DBI::dbExecute(
     db,
     "UPDATE subtype SET quantity = ? WHERE rowid = ?",
@@ -252,4 +252,55 @@ db_has_subtype_id <- function(db, subtype_id) {
 #' @export
 db_has_subtype_name <- function(db, subtype_name) {
   subtype_name %in% names(db_get_subtypes(db))
+}
+
+
+
+#' Get Borrowed Quantity
+#'
+#' @template db
+#'
+#' @family circulation
+#'
+#' @export
+db_get_borrowed_quantity <- function(db, subtype_id) {
+  db_get_subtype_max_quantity(db, subtype_id) -
+    db_get_subtype_available_quantity(db, subtype_id)
+}
+
+
+
+
+#' Get Available Quantity
+#'
+#' @template db
+#'
+#' @family circulation
+#'
+#' @export
+db_get_subtype_available_quantity <- function(db, subtype_id) {
+  DBI::dbGetQuery(
+    db,
+    "SELECT available_quantity FROM subtype WHERE rowid = ?",
+    params = list(subtype_id)
+  )$available_quantity
+}
+
+
+
+#' Get Borrowed Quantity From User
+#'
+#' @template db
+#'
+#' @family circulation
+#'
+#' @export
+db_get_borrowed_quantity_by_user_id <- function(db, user_id, subtype_id) {
+  borrowed <- DBI::dbGetQuery(
+    db,
+    "SELECT SUM(quantity) AS borrowed FROM circulation WHERE user_id = ? AND subtype_id = ?",
+    params = list(user_id, subtype_id)
+  )$borrowed
+
+  if (is.na(borrowed)) 0 else borrowed
 }

@@ -48,11 +48,11 @@ subtypes_server <- function(id, .values) {
           add_object_allowed = function(db, name) !quantity_return$error_r(),
           filter_table = function(db) db_get_subtypes_by_type_id(db, input$type),
           get_object_name = db_get_subtype_name,
-          get_object_quantity = db_get_subtype_quantity,
+          get_object_quantity = db_get_subtype_max_quantity,
           has_object_id = db_has_subtype_id,
           has_object_name = db_has_subtype_name,
           set_object_name = db_set_subtype_name,
-          set_object_quantity = db_set_subtype_quantity,
+          set_object_quantity = db_set_subtype_max_quantity,
           remove_object = db_remove_subtype,
           remobe_object_allowed = remove_subtype_allowed
         )
