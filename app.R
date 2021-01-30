@@ -71,7 +71,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
         # store a trigger for each instance
         .values$trigger_list <- list()
 
-        .values$user$id <- shiny::reactiveVal(1)
+        .values$user$id <- shiny::reactiveVal(1L)
         .values$user$status <- shiny::reactiveVal("admin")
         .values$user$name <- shiny::reactiveVal("Admin")
         .values$user$last_logged <- shiny::reactiveVal("2011-11-11 11:11:11")
@@ -105,6 +105,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$update$subtype <- shiny::reactiveVal(0)
         .values$update$group_type <- shiny::reactiveVal(0)
         .values$update$files <- shiny::reactiveVal(0)
+        .values$update$circulation <- shiny::reactiveVal(0)
 
         # Connect to db
         .values$db <- DBI::dbConnect(RSQLite::SQLite(), "./db/db.sqlite")
@@ -117,6 +118,10 @@ ui_server <- function(source_to_globalenv = FALSE) {
             id = "container",
             .values = .values
         )
+
+        shiny::observeEvent(.values$user$id(), {
+            print(.values$user$id())
+        })
 
         session$onSessionEnded(function() {
             DBI::dbDisconnect(.values$db)
