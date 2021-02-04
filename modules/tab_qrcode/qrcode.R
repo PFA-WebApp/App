@@ -41,10 +41,11 @@ qrcode_server <- function(id, .values) {
       })
 
       link_r <- shiny::reactive({
-        "code" %_% shiny::req(input$type)
+        paste("http://127.0.0.1:1234/?type=", shiny::req(input$type))
       })
 
       output$qrcode <- shiny::renderPlot({
+        print(link_r())
         qrcode::qrcode_gen(link_r())
       })
     }

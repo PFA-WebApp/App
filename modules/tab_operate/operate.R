@@ -89,7 +89,8 @@ operate_server <- function(id, .values) {
         shiny::selectInput(
           inputId = ns("type"),
           label = "Typ",
-          choices = types_r()
+          choices = types_r(),
+          selected = .values$query$type()
         )
       })
 
