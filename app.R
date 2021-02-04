@@ -119,10 +119,6 @@ ui_server <- function(source_to_globalenv = FALSE) {
             .values = .values
         )
 
-        shiny::observeEvent(.values$user$id(), {
-            print(.values$user$id())
-        })
-
         session$onSessionEnded(function() {
             DBI::dbDisconnect(.values$db)
         })

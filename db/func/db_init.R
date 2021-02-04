@@ -109,8 +109,7 @@ create_subtype_table <- function(db) {
   tbl <- tibble::tibble(
     type_id = integer(),
     subtype_name = character(),
-    quantity = integer(),
-    available_quantity = integer()
+    quantity = integer()
   )
 
   DBI::dbCreateTable(db, "subtype", tbl)
