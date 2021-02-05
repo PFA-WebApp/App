@@ -1,3 +1,9 @@
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .shiny-output-error-PFA {
   color: red;
 }
@@ -65,4 +71,15 @@
 
 .form-group.shiny-input-container {
   width: 100%;
+}
+
+.bg-lightgray {
+  background-color: rgb(233, 236, 239);
+}
+
+.bordered {
+  padding: 5px;
+  border-radius: 7.1px;
+  border: 1px solid rgb(206, 212, 218);
+  margin-bottom: 16px;
 }
