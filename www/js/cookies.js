@@ -5,7 +5,7 @@ shinyjs.getCookie = function(params) {
 
 shinyjs.setCookie = function(params) {
   Cookies.set(params.cookie, params.value, {
-    expires: 1/1440,
+    expires: 1/24,
     sameSite: 'strict'
   });
   Shiny.setInputValue(params.id, params.value);

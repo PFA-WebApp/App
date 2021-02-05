@@ -49,6 +49,10 @@ qrcode_server <- function(id, .values) {
         )
       })
 
+      type_name_r <- shiny::reactive({
+        db_get_type_name(.values$db, shiny::req(input$type))
+      })
+
       output$base_url <- shiny::renderUI({
         shiny::textInput(
           inputId = ns("base_url"),
@@ -77,6 +81,11 @@ qrcode_server <- function(id, .values) {
             href = link_r(),
             link_r()
           ),
+          shiny::downloadButton(
+            outputId = ns("pdf"),
+            label = NULL,
+            icon = shiny::icon("file-pdf")
+          ),
           rclipboard::rclipButton(
             inputId = ns("clip"),
             label = NULL,
@@ -85,6 +94,26 @@ qrcode_server <- function(id, .values) {
           )
         )
       })
+
+      file_name_r <- shiny::reactive({
+        paste0(Sys.Date(), "_QR_", type_name_r(), ".pdf")
+      })
+
+      output$pdf <- shiny::downloadHandler(
+        filename = file_name_r,
+        content = function(file) {
+          Cairo::Cairo(
+            file = file,
+            type = "pdf",
+            units = "mm",
+            width = width_r(),
+            height = height_r()
+          )
+          qrcode::qrcode_gen(link_r())
+          dev.off()
+        },
+        contentType = "application/pdf"
+      )
     }
   )
 }
