@@ -46,7 +46,7 @@ login_user_info_server <- function(id, .values) {
         .values$update$user()
         timer_r()
 
-        current_logged_time <- db_get_user_last_logged(
+        current_logged_time <- db_get_user_time_logged(
           db = .values$db,
           user_id = .values$user$id()
         )

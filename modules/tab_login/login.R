@@ -118,10 +118,17 @@ login_server <- function(id, .values) {
       })
 
       shiny::observeEvent(input$user_logout, {
-        .values$user$id(0)
+        db_log_user_out(.values$db, .values$user$id())
+
+        .values$user$id(0L)
         .values$user$status("not_logged")
         .values$user$name("")
         .values$user$last_logged("")
+
+        js$rmCookie(
+          cookie = "user_id",
+          id = ns("cookie_user_id")
+        )
 
         shiny::showNotification(
           ui = "Du hast Dich erfolgreich abgemeldet. Bis zum nächsten Mal.",
@@ -159,7 +166,7 @@ login_server <- function(id, .values) {
           .values$user$name(user_name)
           .values$user$status(db_get_user_status(.values$db, user_id))
           .values$user$last_logged(
-            db_get_user_last_logged(.values$db, user_id)
+            db_get_user_last_logged(.values$db, .values$user$id())
           )
         }
       })

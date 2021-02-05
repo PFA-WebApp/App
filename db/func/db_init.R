@@ -81,7 +81,8 @@ create_user_table <- function(db) {
     password = character(),
     added_from = character(),
     time_added = character(),
-    time_logged = character(),
+    time_current_logged = character(),
+    time_previous_logged = character(),
     times_logged = integer()
   )
 

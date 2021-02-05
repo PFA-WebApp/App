@@ -24,7 +24,8 @@ db_add_user <- function(db,
     password = password,
     added_from = added_from,
     time_added = as.character(Sys.time()),
-    time_logged = as.character(Sys.time()),
+    time_current_logged = as.character(Sys.time()),
+    time_previous_logged = as.character(Sys.time()),
     times_logged = 0
   )
 
@@ -238,7 +239,7 @@ db_has_user_name <- function(db, name) {
 db_log_user_in <- function(db, user_id) {
   DBI::dbExecute(
     db,
-    "UPDATE user SET time_logged = ? WHERE rowid = ?",
+    "UPDATE user SET time_current_logged = ? WHERE rowid = ?",
     params = list(as.character(Sys.time()), user_id)
   )
 
@@ -248,6 +249,23 @@ db_log_user_in <- function(db, user_id) {
     db,
     "UPDATE user SET times_logged = ? WHERE rowid = ?",
     params = list(times_logged + 1, user_id)
+  )
+}
+
+
+
+#' Log User Out
+#'
+#' @inheritParams db_add_user
+#'
+#' @family user
+#'
+#' @export
+db_log_user_out <- function(db, user_id) {
+  DBI::dbExecute(
+    db,
+    "UPDATE user SET time_previous_logged = time_current_logged WHERE rowid = ?",
+    params = list(user_id)
   )
 }
 
@@ -287,6 +305,23 @@ db_get_adding_user <- function(db, user_id) {
 
 
 
+#' Get Time When User Logged
+#'
+#' @inheritParams db_add_user
+#'
+#' @family user
+#'
+#' @export
+db_get_user_time_logged <- function(db, user_id) {
+  DBI::dbGetQuery(
+    db,
+    "SELECT time_current_logged FROM user WHERE rowid = ?",
+    params = list(user_id)
+  )$time_current_logged
+}
+
+
+
 #' Get Time When User Last Logged
 #'
 #' @inheritParams db_add_user
@@ -297,7 +332,7 @@ db_get_adding_user <- function(db, user_id) {
 db_get_user_last_logged <- function(db, user_id) {
   DBI::dbGetQuery(
     db,
-    "SELECT time_logged FROM user WHERE rowid = ?",
+    "SELECT time_previous_logged FROM user WHERE rowid = ?",
     params = list(user_id)
-  )$time_logged
+  )$time_previous_logged
 }
