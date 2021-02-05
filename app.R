@@ -1,7 +1,11 @@
 library(shiny)
+library(shinyjs)
 library(dplyr)
+library(qrcode)
 
 addResourcePath("files", "./files")
+
+options(shiny.port = 1234)
 
 ui_server <- function(source_to_globalenv = FALSE) {
     # If source_to_global_env all sourced functions get added to the global
@@ -40,7 +44,10 @@ ui_server <- function(source_to_globalenv = FALSE) {
         tags$head(
             # Include custom css styles
             htmltools::includeCSS("www/css/styles.css"),
-            htmltools::includeCSS("www/css/dt-dark.css")
+            htmltools::includeCSS("www/css/dt-dark.css"),
+            htmltools::tags$script(
+                src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"
+            )
         ),
         # ui_ui generates the UI which is displayed in the content_list,
         # viewer_data and viewer_plot
@@ -48,9 +55,12 @@ ui_server <- function(source_to_globalenv = FALSE) {
             id = "container"
         ),
         # Enable shinyjs
-        shinyjs::useShinyjs()
+        shinyjs::useShinyjs(),
         # Extend shinyjs with custom JavaScript
-        # extendShinyjs("www/js/extend_shinyjs.js")
+        shinyjs::extendShinyjs(
+            "js/cookies.js",
+            functions = c("getCookie", "setCookie", "rmCookie")
+        )
     )
 
     # SERVER -------------------------------------------------------------------
@@ -71,9 +81,9 @@ ui_server <- function(source_to_globalenv = FALSE) {
         # store a trigger for each instance
         .values$trigger_list <- list()
 
-        .values$user$id <- shiny::reactiveVal(1L)
-        .values$user$status <- shiny::reactiveVal("admin")
-        .values$user$name <- shiny::reactiveVal("Admin")
+        .values$user$id <- shiny::reactiveVal(0L)
+        .values$user$status <- shiny::reactiveVal("not_logged")
+        .values$user$name <- shiny::reactiveVal("")
         .values$user$last_logged <- shiny::reactiveVal("2011-11-11 11:11:11")
 
         .values$settings$password$length <- list(min = 4, max = 16)
@@ -107,6 +117,8 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$update$files <- shiny::reactiveVal(0)
         .values$update$circulation <- shiny::reactiveVal(0)
 
+        .values$query$type <- shiny::reactiveVal(NULL)
+
         # Connect to db
         .values$db <- DBI::dbConnect(RSQLite::SQLite(), "./db/db.sqlite")
 
@@ -118,10 +130,6 @@ ui_server <- function(source_to_globalenv = FALSE) {
             id = "container",
             .values = .values
         )
-
-        shiny::observeEvent(.values$user$id(), {
-            print(.values$user$id())
-        })
 
         session$onSessionEnded(function() {
             DBI::dbDisconnect(.values$db)

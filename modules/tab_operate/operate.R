@@ -10,6 +10,9 @@ operate_ui <- function(id) {
         status = "primary",
         title = "Ausleihen & Zurückgeben",
         shiny::uiOutput(
+          outputId = ns("user"),
+        ),
+        shiny::uiOutput(
           outputId = ns("type")
         ),
         shiny::uiOutput(
@@ -49,6 +52,34 @@ operate_server <- function(id, .values) {
 
       ns <- session$ns
 
+      user_r <- shiny::reactive({
+        .values$update$user()
+        db_get_users(.values$db)
+      })
+
+      output$user <- shiny::renderUI({
+        if (.values$user$status() == "admin") {
+          shiny::selectInput(
+            inputId = ns("user"),
+            label = "Ausführender Nutzer",
+            choices = user_r(),
+            selected = .values$user$id()
+          )
+        }
+      })
+
+      user_id_r <- shiny::reactive({
+        if (.values$user$status() == "admin") {
+          input$user
+        } else {
+          .values$user$id()
+        }
+      })
+
+      user_name_r <- shiny::reactive({
+        db_get_user_name(.values$db, user_id_r())
+      })
+
       types_r <- shiny::reactive({
         .values$update$type()
         db_get_types(.values$db)
@@ -58,7 +89,8 @@ operate_server <- function(id, .values) {
         shiny::selectInput(
           inputId = ns("type"),
           label = "Typ",
-          choices = types_r()
+          choices = types_r(),
+          selected = .values$query$type()
         )
       })
 
@@ -101,6 +133,13 @@ operate_server <- function(id, .values) {
         shiny::modalDialog(
           title = if (borrow) "Ausleihen" else "Zurückgeben",
           easyClose = TRUE,
+          shinyjs::disabled(
+            shiny::textInput(
+              inputId = "undefined",
+              label = "Nutzer",
+              value = user_name_r()
+            )
+          ),
           shinyjs::disabled(
             shiny::textInput(
               inputId = "undefined",
@@ -179,12 +218,25 @@ operate_server <- function(id, .values) {
 
         db_add_circulation(
           db = .values$db,
-          user_id = .values$user$id(),
+          user_id = user_id_r(),
           subtype_id = input$subtype,
           quantity = quantity_return$quantity_r()
         )
 
         .values$update$circulation(.values$update$circulation() + 1)
+
+        shiny::showNotification(
+          ui = operate_notification_text(
+            borrow = TRUE,
+            status = .values$user$status(),
+            user_name = user_name_r(),
+            quantity = quantity_return$quantity_r(),
+            type_name = type_name_r(),
+            subtype_name = subtype_name_r()
+          ),
+          duration = 5,
+          type = "warning"
+        )
       })
 
       shiny::observeEvent(input$confirm_return, {
@@ -192,12 +244,25 @@ operate_server <- function(id, .values) {
 
         db_add_circulation(
           db = .values$db,
-          user_id = .values$user$id(),
+          user_id = user_id_r(),
           subtype_id = input$subtype,
           quantity = -quantity_return$quantity_r()
         )
 
         .values$update$circulation(.values$update$circulation() + 1)
+
+        shiny::showNotification(
+          ui = operate_notification_text(
+            borrow = FALSE,
+            status = .values$user$status(),
+            user_name = user_name_r(),
+            quantity = quantity_return$quantity_r(),
+            type_name = type_name_r(),
+            subtype_name = subtype_name_r()
+          ),
+          duration = 5,
+          type = "warning"
+        )
       })
 
       max_r <- shiny::reactive({
@@ -249,4 +314,35 @@ operate_server <- function(id, .values) {
       )
     }
   )
+}
+
+operate_notification_text <- function(borrow,
+                                      status,
+                                      user_name,
+                                      quantity,
+                                      type_name,
+                                      subtype_name
+) {
+  verb <- if (borrow) "ausgeliehen." else "zurückgegeben."
+
+  if (status == "admin") {
+    paste(
+      "Du hast für",
+      user_name,
+      quantity,
+      type_name,
+      ":",
+      subtype_name,
+      verb
+    )
+  } else {
+    paste(
+      "Du hast",
+      quantity,
+      type_name,
+      ":",
+      subtype_name,
+      verb
+    )
+  }
 }

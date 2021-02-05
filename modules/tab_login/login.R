@@ -78,6 +78,17 @@ login_server <- function(id, .values) {
           db_log_user_in(.values$db, .values$user$id())
           .values$update$user(.values$update$user() + 1)
 
+          type <- suppressWarnings(as.numeric(shiny::getQueryString()$type))
+          if (length(type) && is.numeric(type) && !is.na(type)) {
+            .values$query$type(type)
+          }
+
+          js$setCookie(
+            cookie = "user_id",
+            value = user_id,
+            id = ns("cookie_user_id")
+          )
+
           shiny::showNotification(
             ui = "Du hast Dich erfolgreich angemeldet.",
             type = "default",
@@ -107,10 +118,17 @@ login_server <- function(id, .values) {
       })
 
       shiny::observeEvent(input$user_logout, {
-        .values$user$id(0)
+        db_log_user_out(.values$db, .values$user$id())
+
+        .values$user$id(0L)
         .values$user$status("not_logged")
         .values$user$name("")
         .values$user$last_logged("")
+
+        js$rmCookie(
+          cookie = "user_id",
+          id = ns("cookie_user_id")
+        )
 
         shiny::showNotification(
           ui = "Du hast Dich erfolgreich abgemeldet. Bis zum nächsten Mal.",
@@ -131,6 +149,27 @@ login_server <- function(id, .values) {
         id = "login_user_info",
         .values = .values
       )
+
+      shiny::observeEvent(TRUE, {
+        js$getCookie(
+          cookie = "user_id",
+          id = ns("cookie_user_id")
+        )
+      }, once = TRUE)
+
+      shiny::observeEvent(input$cookie_user_id, {
+        if (is.null(input$cookie_user_id)) return()
+        if (.values$user$id() != input$cookie_user_id) {
+          user_id <- input$cookie_user_id
+          .values$user$id(user_id)
+          user_name <- db_get_user_name(.values$db, user_id)
+          .values$user$name(user_name)
+          .values$user$status(db_get_user_status(.values$db, user_id))
+          .values$user$last_logged(
+            db_get_user_last_logged(.values$db, .values$user$id())
+          )
+        }
+      })
     }
   )
 }

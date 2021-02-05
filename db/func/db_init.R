@@ -81,7 +81,8 @@ create_user_table <- function(db) {
     password = character(),
     added_from = character(),
     time_added = character(),
-    time_logged = character(),
+    time_current_logged = character(),
+    time_previous_logged = character(),
     times_logged = integer()
   )
 
@@ -109,8 +110,7 @@ create_subtype_table <- function(db) {
   tbl <- tibble::tibble(
     type_id = integer(),
     subtype_name = character(),
-    quantity = integer(),
-    available_quantity = integer()
+    quantity = integer()
   )
 
   DBI::dbCreateTable(db, "subtype", tbl)
