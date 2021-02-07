@@ -5,13 +5,14 @@ shinyjs.getCookie = function(params) {
 
 shinyjs.setCookie = function(params) {
   Cookies.set(params.cookie, params.value, {
-    expires: 1/24,
     sameSite: 'strict'
   });
   Shiny.setInputValue(params.id, params.value);
 };
 
 shinyjs.rmCookie = function(params) {
-  Cookies.remove(params.cookie);
+  Cookies.remove(params.cookie, {
+    sameSite: 'strict'
+  });
   Shiny.setInputValue(params.id, undefined);
 };

@@ -54,6 +54,8 @@ ui_server <- function(source_to_globalenv = FALSE) {
         container_ui(
             id = "container"
         ),
+        # Enable rclipboard
+        rclipboard::rclipboardSetup(),
         # Enable shinyjs
         shinyjs::useShinyjs(),
         # Extend shinyjs with custom JavaScript
