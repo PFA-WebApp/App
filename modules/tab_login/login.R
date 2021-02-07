@@ -84,9 +84,9 @@ login_server <- function(id, .values) {
           }
 
           js$setCookie(
-            cookie = "user_id",
-            value = user_id,
-            id = ns("cookie_user_id")
+            cookie = "user",
+            value = db_get_hash(.values$db, user_id),
+            id = ns("cookie_user_hash")
           )
 
           shiny::showNotification(
@@ -126,8 +126,8 @@ login_server <- function(id, .values) {
         .values$user$last_logged("")
 
         js$rmCookie(
-          cookie = "user_id",
-          id = ns("cookie_user_id")
+          cookie = "user",
+          id = ns("cookie_user_hash")
         )
 
         shiny::showNotification(
@@ -152,15 +152,15 @@ login_server <- function(id, .values) {
 
       shiny::observeEvent(TRUE, {
         js$getCookie(
-          cookie = "user_id",
-          id = ns("cookie_user_id")
+          cookie = "user",
+          id = ns("cookie_user_hash")
         )
       }, once = TRUE)
 
-      shiny::observeEvent(input$cookie_user_id, {
-        if (is.null(input$cookie_user_id)) return()
-        if (.values$user$id() != input$cookie_user_id) {
-          user_id <- input$cookie_user_id
+      shiny::observeEvent(input$cookie_user_hash, {
+        if (is.null(input$cookie_user_hash)) return()
+        user_id <- db_get_user_id_by_hash(.values$db, input$cookie_user_hash)
+        if (.values$user$id() != user_id) {
           .values$user$id(user_id)
           user_name <- db_get_user_name(.values$db, user_id)
           .values$user$name(user_name)

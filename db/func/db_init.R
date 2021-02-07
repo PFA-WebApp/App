@@ -76,6 +76,7 @@ db_init <- function(path = "db/db.sqlite") {
 #' @export
 create_user_table <- function(db) {
   tbl <- tibble::tibble(
+    hash = character(),
     name = character(),
     status = character(),
     password = character(),
