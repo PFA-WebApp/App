@@ -1,51 +1,46 @@
 qrcode_ui <- function(id) {
   ns <- shiny::NS(id)
 
-  shiny::fluidRow(
-    shiny::column(
-      width = 6,
-      bs4Dash::box(
-        width = NULL,
-        status = "success",
-        title = "QR-Code generieren",
-        solidHeader = TRUE,
-        shiny::uiOutput(
-          outputId = ns("type")
-        ),
-        shiny::uiOutput(
-          outputId = ns("base_url")
-        ),
-        htmltools::div(
-          class = "bordered",
-          shiny::plotOutput(
-            outputId = ns("qrcode")
-          )
-        ),
-        shiny::fluidRow(
-          shiny::column(
-            width = 6,
-            object_quantity_input_ui(
-              id = ns("width"),
-              old_quantity = 210,
-              label = "Breite (in mm)"
-            )
-          ),
-          shiny::column(
-            width = 6,
-            object_quantity_input_ui(
-              id = ns("height"),
-              old_quantity = 297,
-              label = "Höhe (in mm)"
-            )
-          )
-        ),
-        shiny::uiOutput(
-          outputId = ns("download_area")
-        ),
-        shiny::uiOutput(
-          outputId = ns("link")
+  bs4Dash::box(
+    width = 12,
+    status = "success",
+    title = "QR-Code generieren",
+    solidHeader = TRUE,
+    shiny::uiOutput(
+      outputId = ns("type")
+    ),
+    shiny::uiOutput(
+      outputId = ns("base_url")
+    ),
+    htmltools::div(
+      class = "bordered",
+      shiny::plotOutput(
+        outputId = ns("qrcode")
+      )
+    ),
+    shiny::fluidRow(
+      shiny::column(
+        width = 6,
+        object_quantity_input_ui(
+          id = ns("width"),
+          old_quantity = 210,
+          label = "Breite (in mm)"
+        )
+      ),
+      shiny::column(
+        width = 6,
+        object_quantity_input_ui(
+          id = ns("height"),
+          old_quantity = 297,
+          label = "Höhe (in mm)"
         )
       )
+    ),
+    shiny::uiOutput(
+      outputId = ns("download_area")
+    ),
+    shiny::uiOutput(
+      outputId = ns("link")
     )
   )
 }
@@ -196,7 +191,7 @@ qrcode_server <- function(id, .values) {
         .values = .values,
         min_r = min_r,
         min_message_r = shiny::reactive({
-          "Die minimale Seitenbreite muss mindestens 1 mm betragen."
+          "Die minimale Seitenbreite muss mindestens 1 mm betragen.\n\n"
         })
       )
 
@@ -205,7 +200,7 @@ qrcode_server <- function(id, .values) {
         .values = .values,
         min_r = min_r,
         min_message_r = shiny::reactive({
-          "Die minimale Seitenhöhe muss mindestens 1 mm betragen."
+          "Die minimale Seitenhöhe muss mindestens 1 mm betragen.\n\n"
         })
       )
     }
