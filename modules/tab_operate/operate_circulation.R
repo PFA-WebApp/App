@@ -40,7 +40,7 @@ operate_circulation_ui <- function(id) {
   )
 }
 
-operate_circulation_server <- function(id, .values) {
+operate_circulation_server <- function(id, .values, trigger_type_id_r) {
   shiny::moduleServer(
     id,
     function(input, output, session) {
@@ -86,6 +86,13 @@ operate_circulation_server <- function(id, .values) {
           label = "Typ",
           choices = types_r(),
           selected = .values$query$type()
+        )
+      })
+
+      shiny::observeEvent(trigger_type_id_r(), {
+        shiny::updateSelectInput(
+          inputId = "type",
+          selected = trigger_type_id_r()
         )
       })
 

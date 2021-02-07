@@ -23,10 +23,11 @@ operate_server <- function(id, .values) {
 
       circulation_return <- operate_circulation_server(
         id = "operate_circulation",
-        .values = .values
+        .values = .values,
+        trigger_type_id_r = operate_groups_return$type_id_r
       )
 
-      operate_groups_server(
+      operate_groups_return <- operate_groups_server(
         id = "operate_groups",
         .values = .values,
         type_id_r = circulation_return$type_id_r

@@ -97,28 +97,28 @@ ul {
   list-style: none;
 }
 
-.group-badges {
+.st-badges {
   justify-content: flex-start;
   flex-wrap: wrap;
   padding: 0 0 6px 6px;
 }
 
-.group-badges::after {
+.st-badges::after {
   content: '';
   flex-grow: 1000000000;
 }
 
-.group-badges > .bordered {
+.st-badges > .bordered {
   margin-bottom: 0;
 }
 
-.group-badge {
+.st-badge {
   white-space: nowrap;
   margin: 6px 6px 0 0;
   text-align: center;
   flex-grow: 1;
 }
 
-.dark-mode .group-badge {
+.dark-mode .st-badge {
   background-color: rgb(55, 59, 80);
 }
