@@ -9,6 +9,9 @@ operate_ui <- function(id) {
       ),
       operate_groups_ui(
         id = ns("operate_groups")
+      ),
+      operate_files_ui(
+        id = ns("operate_files")
       )
     )
   )
@@ -31,6 +34,13 @@ operate_server <- function(id, .values) {
         id = "operate_groups",
         .values = .values,
         type_id_r = circulation_return$type_id_r
+      )
+
+      operate_files_server(
+        id = "operate_files",
+        .values = .values,
+        type_id_r = circulation_return$type_id_r,
+        subtype_id_r = circulation_return$subtype_id_r
       )
     }
   )

@@ -117,6 +117,10 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
         )
       })
 
+      subtype_id_r <- shiny::reactive({
+        shiny::req(input$subtype)
+      })
+
       subtype_name_r <- shiny::reactive({
         names(subtypes_r())[subtypes_r() == shiny::req(input$subtype)]
       })
@@ -320,7 +324,8 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
       )
 
       return_list <- list(
-        type_id_r = type_id_r
+        type_id_r = type_id_r,
+        subtype_id_r = subtype_id_r
       )
 
       return(return_list)
