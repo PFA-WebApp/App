@@ -1,6 +1,6 @@
 options(
   DT.options = list(
-    pageLength = 5,
+    pageLength = 10,
     language = list(
       url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/German.json'
     ),

@@ -2,8 +2,28 @@ container_ui <- function(id) {
   ns <- shiny::NS(id)
 
   bs4Dash::dashboardPage(
+    freshTheme = fresh::create_theme(
+      fresh::bs4dash_vars(
+        sidebar_dark_bg = "#343a40",
+        sidebar_light_bg = "#343a40",
+        sidebar_dark_color = "#C2C7D0",
+        sidebar_light_color = "#C2C7D0",
+        sidebar_light_hover_color = "#C2C7D0",
+        sidebar_dark_hover_color = "#C2C7D0",
+        sidebar_light_hover_bg = "hsla(100, 100%, 100%, 0.1)",
+        sidebar_light_submenu_color = "#C2C7D0",
+        sidebar_light_submenu_bg = "transparent",
+        sidebar_light_submenu_hover_color = "#C2C7D0",
+        sidebar_light_submenu_hover_bg = "hsla(100, 100%, 100%, 0.1)",
+        sidebar_light_submenu_active_color = "#343a40",
+        sidebar_light_submenu_active_bg = "hsla(100, 100%, 100%, 0.9)"
+      )
+    ),
     bs4Dash::dashboardHeader(
-      title = "Sensotheka",
+      title = bs4Dash::dashboardBrand(
+        title = "Sensotheka",
+        image = "img/sensotheka.png"
+      ),
       status = "primary"
     ),
     bs4Dash::dashboardSidebar(

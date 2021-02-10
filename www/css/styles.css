@@ -43,29 +43,29 @@
   background-color: rgb(0, 125, 40);
 }
 
-.borrow-btn, .dark-mode .borrow-btn {
+button.borrow-btn, .dark-mode .borrow-btn {
   color: white;
   background-color: rgb(0, 166, 90);
   border-color: rgb(0, 75, 20);
   margin-bottom: 10px;
 }
 
-.borrow-btn:hover, .dark-mode .borrow-btn:hover
-.borrow-btn:active, .dark-mode .borrow-btn:active
-.borrow-btn:focus, .dark-mode .borrow-btn:focus {
+button.borrow-btn:hover, .dark-mode .borrow-btn:hover
+button.borrow-btn:active, .dark-mode .borrow-btn:active
+button.borrow-btn:focus, .dark-mode .borrow-btn:focus {
   background-color: rgb(0, 125, 40);
   color: white;
 }
 
-.return-btn, .dark-mode .return-btn {
+button.return-btn, .dark-mode .return-btn {
   color: white;
   background-color: rgb(221, 75, 57);
   border-color: rgb(100, 50, 30);
 }
 
-.return-btn:hover, .dark-mode .return-btn:hover,
-.return-btn:active, .dark-mode .return-btn:active,
-.return-btn:focus, .dark-mode .return-btn:focus {
+button.return-btn:hover, .dark-mode .return-btn:hover,
+button.return-btn:active, .dark-mode .return-btn:active,
+button.return-btn:focus, .dark-mode .return-btn:focus {
   background-color: rgb(185, 40, 20);
   color: white;
 }
@@ -121,4 +121,17 @@ ul {
 
 .dark-mode .st-badge {
   background-color: rgb(55, 59, 80);
+}
+
+.brand-link > .brand-image{
+  box-shadow: unset !important;
+  opacity: 1 !important;
+}
+
+.brand-link > .brand-text {
+  color: white;
+}
+
+.brand-link {
+  border-bottom: 1px solid rgb(75, 84, 92) !important;
 }

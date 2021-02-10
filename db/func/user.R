@@ -18,6 +18,7 @@ db_add_user <- function(db,
                         added_from = "Admin"
 ) {
   entry <- tibble::tibble(
+    hash = bcrypt::hashpw(name),
     name = name,
     status = status,
     # Hashed password
@@ -190,7 +191,7 @@ db_remove_user <- function(db, user_id) {
 #'
 #' @export
 db_get_password <- function(db, user_id) {
-  pwd <- DBI::dbGetQuery(
+  DBI::dbGetQuery(
     db,
     "SELECT password FROM user WHERE rowid = ?",
     params = list(user_id)
@@ -335,4 +336,38 @@ db_get_user_last_logged <- function(db, user_id) {
     "SELECT time_previous_logged FROM user WHERE rowid = ?",
     params = list(user_id)
   )$time_previous_logged
+}
+
+
+
+#' Get User Hash
+#'
+#' @inheritParams db_add_user
+#'
+#' @family user
+#'
+#' @export
+db_get_hash <- function(db, user_id) {
+  DBI::dbGetQuery(
+    db,
+    "SELECT hash FROM user WHERE rowid = ?",
+    params = list(user_id)
+  )$hash
+}
+
+
+
+#' Get User ID by Hash
+#'
+#' @inheritParams db_add_user
+#'
+#' @family user
+#'
+#' @export
+db_get_user_id_by_hash <- function(db, hash) {
+  DBI::dbGetQuery(
+    db,
+    "SELECT rowid FROM user WHERE hash = ?",
+    params = list(hash)
+  )$rowid
 }
