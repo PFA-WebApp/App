@@ -36,14 +36,17 @@ operate_file_manager_server <- function(id,
         )
       })
 
+      href_r <- shiny::reactive({
+        file.path(path_r(), files_r())
+      })
+
       output$files <- DT::renderDataTable({
         files_ui <- purrr::map2_chr(
-          files_r(), seq_along(files_r()),
-          function(name, index) {
-            operate_file_manager_link_ui(
-              id = ns("operate_file_manager_link"),
-              index = index,
-              name = name
+          files_r(), href_r(),
+          function(name, href) {
+            operate_file_manager_link(
+              name = name,
+              href = href
             )
           }
         )
@@ -68,11 +71,6 @@ operate_file_manager_server <- function(id,
           )
         }
       })
-
-      operate_file_manager_link_server(
-        id = "operate_file_manager_link",
-        .values = .values
-      )
     }
   )
 }
