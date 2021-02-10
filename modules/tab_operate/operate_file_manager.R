@@ -14,8 +14,10 @@ operate_file_manager_ui <- function(id) {
 
 operate_file_manager_server <- function(id,
                                         .values,
+                                        db,
                                         settings,
-                                        object_id_r
+                                        label,
+                                        object_ids_r
 ) {
   shiny::moduleServer(
     id,
@@ -23,17 +25,50 @@ operate_file_manager_server <- function(id,
 
       ns <- session$ns
 
+      object_names_r <- shiny::reactive({
+        db$get_object_name(.values$db, object_ids_r())
+      })
+
       path_r <- shiny::reactive(
-        file.path("files", settings$table_name, object_id_r())
+        # returns a vector of paths if length(object_ids_r()) > 1
+        file.path("files", settings$table_name, object_ids_r())
       )
 
-      files_r <- shiny::reactive({
+      files_table_r <- shiny::reactive({
         .values$update$files()
-        list.files(
-          path = path_r(),
-          all.files = TRUE,
-          no.. = TRUE
-        )
+
+        tbls <- if (length(object_ids_r())) {
+          purrr::map2(path_r(), object_names_r(), function(path, name) {
+            files <- list.files(
+              path = path_r(),
+              all.files = TRUE,
+              no.. = TRUE
+            )
+
+            if (length(files)) {
+              tibble::tibble(
+                file = files,
+                name = name
+              )
+            } else {
+              tibble::tibble(
+                file = character(),
+                name = character()
+              )
+            }
+          })
+        } else {
+          tibble::tibble(
+            file = character(),
+            name = character()
+          )
+        }
+
+        dplyr::bind_rows(tbls)
+      })
+
+      files_r <- shiny::reactive({
+        files_table_r()$file
       })
 
       href_r <- shiny::reactive({
@@ -54,6 +89,11 @@ operate_file_manager_server <- function(id,
         tbl <- tibble::tibble(
           Datei = files_ui
         )
+
+        # Add object_name_information (multiple groups)
+        if (length(object_ids_r()) > 1) {
+          tbl[[label$object_name]] <- files_table_r()$name
+        }
 
         DT::datatable(
           tbl,
