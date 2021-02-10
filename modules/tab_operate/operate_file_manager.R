@@ -37,10 +37,15 @@ operate_file_manager_server <- function(id,
       files_table_r <- shiny::reactive({
         .values$update$files()
 
+        empty_tbl <- tibble::tibble(
+          file = character(),
+          name = character()
+        )
+
         tbls <- if (length(object_ids_r())) {
           purrr::map2(path_r(), object_names_r(), function(path, name) {
             files <- list.files(
-              path = path_r(),
+              path = path,
               all.files = TRUE,
               no.. = TRUE
             )
@@ -51,17 +56,11 @@ operate_file_manager_server <- function(id,
                 name = name
               )
             } else {
-              tibble::tibble(
-                file = character(),
-                name = character()
-              )
+              empty_tbl
             }
           })
         } else {
-          tibble::tibble(
-            file = character(),
-            name = character()
-          )
+          empty_tbl
         }
 
         dplyr::bind_rows(tbls)
