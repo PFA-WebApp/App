@@ -16,6 +16,13 @@
       "Repository": "CRAN",
       "Hash": "8f9ce74c6417d61f0782cbae5fd2b7b0"
     },
+    "Cairo": {
+      "Package": "Cairo",
+      "Version": "1.5-12.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "5f09ea90a07218b11c6430b7ca71fee7"
+    },
     "DBI": {
       "Package": "DBI",
       "Version": "1.1.0",
@@ -124,14 +131,14 @@
     "bs4Dash": {
       "Package": "bs4Dash",
       "Version": "2.0.0.9000",
-      "Source": "Local",
-      "RemoteType": "local",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
       "RemoteUsername": "RinteRface",
       "RemoteRepo": "bs4Dash",
       "RemoteRef": "master",
       "RemoteSha": "5d4e4be0b28b6e8ab35dbb2165964e4d7a89c0f6",
-      "RemoteHost": "api.github.com",
-      "Hash": "c308f8a4eb9844b1c00c843e720e3192"
+      "Hash": "8533635cda0156dbf87dd8d2d5bc1e44"
     },
     "bslib": {
       "Package": "bslib",
@@ -423,11 +430,11 @@
       "Version": "1.6.0.9000",
       "Source": "GitHub",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
       "RemoteUsername": "rstudio",
       "RemoteRepo": "shiny",
       "RemoteRef": "master",
       "RemoteSha": "d165cc6e8efe879cc26f3b4ec72b7416917b8492",
+      "RemoteHost": "api.github.com",
       "Hash": "d3a8a2df8702ea4e4065bdebda3c8aba"
     },
     "shinyjs": {
