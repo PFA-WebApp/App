@@ -78,7 +78,7 @@ db_get_type_name <- function(db, type_id) {
     db,
     "SELECT type_name FROM type WHERE rowid = ?",
     params = list(type_id)
-  )
+  )$type_name
 }
 
 

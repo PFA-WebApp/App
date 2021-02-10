@@ -81,7 +81,7 @@ db_get_group_name <- function(db, group_id) {
     db,
     "SELECT group_name FROM groups WHERE rowid = ?",
     params = list(group_id)
-  )
+  )$group_name
 }
 
 
