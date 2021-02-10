@@ -8,7 +8,7 @@ reporting_ui <- function(id) {
         width = NULL,
         solidHeader = TRUE,
         status = "primary",
-        title = "Berichtswesen"
+        title = "Ausleihübersicht"
       )
     )
   )

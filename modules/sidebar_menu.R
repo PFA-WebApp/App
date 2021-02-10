@@ -23,7 +23,7 @@ sidebar_menu_server <- function(id, .values) {
         mod = c(
           "login", "operate", "reporting", "user_management", "settings"
         ),
-        user = c("login", "operate", "settings")
+        user = c("login", "operate", "reporting", "settings")
       )
 
       # List of all possible menu items. Extraction is done according to access
@@ -42,7 +42,7 @@ sidebar_menu_server <- function(id, .values) {
             selected = selected
           ),
           reporting = bs4Dash::menuItem(
-            text = "Berichtswesen",
+            text = "Ausleihübersicht",
             tabName = "reporting",
             icon = shiny::icon("chart-line")
           ),
