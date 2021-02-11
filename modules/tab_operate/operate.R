@@ -39,8 +39,7 @@ operate_server <- function(id, .values) {
       operate_files_server(
         id = "operate_files",
         .values = .values,
-        type_id_r = circulation_return$type_id_r,
-        subtype_id_r = circulation_return$subtype_id_r
+        type_id_r = circulation_return$type_id_r
       )
     }
   )

@@ -102,7 +102,7 @@ subtypes_server <- function(id, .values) {
             object_quantity_input_ui(
               id = ns("object_quantity_input"),
               old_quantity = 0,
-              label = label
+              label = "Menge"
             )
           ),
           footer = shiny::modalButton(
