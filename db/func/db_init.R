@@ -84,7 +84,8 @@ create_user_table <- function(db) {
     time_added = character(),
     time_current_logged = character(),
     time_previous_logged = character(),
-    times_logged = integer()
+    times_logged = integer(),
+    removed = integer()
   )
 
   DBI::dbCreateTable(db, "user", tbl)
@@ -100,7 +101,7 @@ populate_user_table <- function(db) {
   user_password <- purrr::map_chr(user_password, ~ bcrypt::hashpw(.))
 
   purrr::pwalk(list(user_name, user_status, user_password), function(name, status, password) {
-    db_add_user(db, name, status, password)
+    db_add_user(db, name, status, password, added_from = 1)
   })
 }
 
