@@ -23,8 +23,7 @@ container_ui <- function(id) {
       title = bs4Dash::dashboardBrand(
         title = "Sensotheka",
         image = "img/sensotheka.png"
-      ),
-      status = "primary"
+      )
     ),
     bs4Dash::dashboardSidebar(
       sidebar_menu_ui(
