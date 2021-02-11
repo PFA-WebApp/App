@@ -25,6 +25,7 @@ operate_groups_server <- function(id, .values, type_id_r) {
       ns <- session$ns
 
       groups_r <- shiny::reactive({
+        .values$update$group_type()
         db_get_groups_by_type(.values$db, type_id_r())
       })
 

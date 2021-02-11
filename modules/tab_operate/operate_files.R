@@ -49,10 +49,12 @@ operate_files_server <- function(id,
       ns <- session$ns
 
       group_ids_r <- shiny::reactive({
+        .values$update$group_type()
         db_get_groups_by_type(.values$db, type_id_r())
       })
 
       subtype_ids_r <- shiny::reactive({
+        .values$update$subtype()
         db_get_subtypes_by_type_id(.values$db, type_id_r())
       })
 
