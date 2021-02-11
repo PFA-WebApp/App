@@ -36,7 +36,7 @@ db_get_borrowed_quantity <- function(db, subtype_id) {
     params = list(subtype_id)
   )$borrowed
 
-  if (is.na(borrowed)) 0 else borrowed
+  ifelse(is.na(borrowed), 0, borrowed)
 }
 
 
@@ -71,7 +71,7 @@ db_get_borrowed_quantity_by_user_id <- function(db, user_id, subtype_id) {
     params = list(user_id, subtype_id)
   )$borrowed
 
-  if (is.na(borrowed)) 0 else borrowed
+  ifelse(is.na(borrowed), 0, borrowed)
 }
 
 
@@ -138,4 +138,23 @@ borrow_summary <- function(tbl, group_by) {
       .groups = "drop"
     ) %>%
     dplyr::filter(quantity > 0)
+}
+
+
+
+#' Get Available Summary
+#'
+#' @template db
+#'
+#' @family circulation
+#'
+#' @export
+db_get_available_summary <- function(db, type_id) {
+  subtype_ids <- db_get_subtypes_by_type_id(db, type_id)
+
+  tibble::tibble(
+    subtype_id = subtype_ids,
+    quantity = db_get_available_quantity(db, subtype_ids),
+    max_quantity = db_get_subtype_max_quantity(db, subtype_ids)
+  )
 }

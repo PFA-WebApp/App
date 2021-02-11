@@ -42,7 +42,7 @@ sidebar_menu_server <- function(id, .values) {
             selected = selected
           ),
           reporting = bs4Dash::menuItem(
-            text = "Ausleihübersicht",
+            text = "Bestandsinformation",
             tabName = "reporting",
             icon = shiny::icon("chart-line")
           ),

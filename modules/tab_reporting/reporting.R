@@ -1,8 +1,14 @@
 reporting_ui <- function(id) {
   ns <- shiny::NS(id)
 
-  shiny::uiOutput(
-    outputId = ns("ui")
+  shiny::fluidRow(
+    shiny::uiOutput(
+      outputId = ns("borrow"),
+      container = function(...) shiny::column(width = 12, ...)
+    ),
+    reporting_available_ui(
+      id = ns("reporting_available")
+    )
   )
 }
 
@@ -13,49 +19,45 @@ reporting_server <- function(id, .values) {
 
       ns <- session$ns
 
-      output$ui <- shiny::renderUI({
+      output$borrow <- shiny::renderUI({
         if (.values$user$status() == "admin") {
-          shiny::fluidRow(
-            bs4Dash::tabBox(
-              id = ns("tabs"),
-              width = 12,
-              title = "Ausleihübersicht",
-              shiny::tabPanel(
-                title = "Nach Nutzer",
-                reporting_user_ui(
-                  id = ns("reporting_user")
-                )
-              ),
-              shiny::tabPanel(
-                title = "Nach Untertyp",
-                reporting_subtype_ui(
-                  id = ns("reporting_subtype")
-                )
-              ),
-              shiny::tabPanel(
-                title = "Gesamt",
-                reporting_all_ui(
-                  id = ns("reporting_all")
-                )
-              ),
-              shiny::tabPanel(
-                title = "Transaktionen",
-                reporting_transaction_ui(
-                  id = ns("reporting_transaction")
-                )
+          bs4Dash::tabBox(
+            id = ns("tabs"),
+            width = NULL,
+            title = "Ausleihübersicht",
+            shiny::tabPanel(
+              title = "Nach Nutzer",
+              reporting_user_ui(
+                id = ns("reporting_user")
+              )
+            ),
+            shiny::tabPanel(
+              title = "Nach Untertyp",
+              reporting_subtype_ui(
+                id = ns("reporting_subtype")
+              )
+            ),
+            shiny::tabPanel(
+              title = "Gesamt",
+              reporting_all_ui(
+                id = ns("reporting_all")
+              )
+            ),
+            shiny::tabPanel(
+              title = "Transaktionen",
+              reporting_transaction_ui(
+                id = ns("reporting_transaction")
               )
             )
           )
         } else {
-          shiny::fluidRow(
-            bs4Dash::box(
-              width = 12,
-              solidHeader = TRUE,
-              status = "primary",
-              title = "Ausleihübersicht",
-              reporting_user_ui(
-                id = ns("reporting_user")
-              )
+          bs4Dash::box(
+            width = NULL,
+            solidHeader = TRUE,
+            status = "primary",
+            title = "Ausleihübersicht",
+            reporting_user_ui(
+              id = ns("reporting_user")
             )
           )
         }
@@ -78,6 +80,11 @@ reporting_server <- function(id, .values) {
 
       reporting_transaction_server(
         id = "reporting_transaction",
+        .values = .values
+      )
+
+      reporting_available_server(
+        id = "reporting_available",
         .values = .values
       )
     }
