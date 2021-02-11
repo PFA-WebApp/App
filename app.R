@@ -88,11 +88,11 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$user$name <- shiny::reactiveVal("")
         .values$user$last_logged <- shiny::reactiveVal("2011-11-11 11:11:11")
 
-        .values$settings$password$length <- list(min = 4, max = 16)
-        .values$settings$user_name$length <- list(min = 4, max = 16)
-        .values$settings$group_name$length <- list(min = 4, max = 16)
-        .values$settings$type_name$length <- list(min = 4, max = 16)
-        .values$settings$subtype_name$length <- list(min = 4, max = 16)
+        .values$settings$password$length <- list(min = 4, max = 32)
+        .values$settings$user_name$length <- list(min = 4, max = 32)
+        .values$settings$group_name$length <- list(min = 4, max = 32)
+        .values$settings$type_name$length <- list(min = 4, max = 32)
+        .values$settings$subtype_name$length <- list(min = 4, max = 32)
         .values$settings$status_dict <- c(
             admin = "Administrator",
             mod = "Moderator",

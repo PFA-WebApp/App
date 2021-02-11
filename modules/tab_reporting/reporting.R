@@ -2,12 +2,12 @@ reporting_ui <- function(id) {
   ns <- shiny::NS(id)
 
   shiny::fluidRow(
+    reporting_available_ui(
+      id = ns("reporting_available")
+    ),
     shiny::uiOutput(
       outputId = ns("borrow"),
       container = function(...) shiny::column(width = 12, ...)
-    ),
-    reporting_available_ui(
-      id = ns("reporting_available")
     )
   )
 }
@@ -26,9 +26,9 @@ reporting_server <- function(id, .values) {
             width = NULL,
             title = "Ausleihübersicht",
             shiny::tabPanel(
-              title = "Nach Nutzer",
-              reporting_user_ui(
-                id = ns("reporting_user")
+              title = "Gesamt",
+              reporting_all_ui(
+                id = ns("reporting_all")
               )
             ),
             shiny::tabPanel(
@@ -38,9 +38,9 @@ reporting_server <- function(id, .values) {
               )
             ),
             shiny::tabPanel(
-              title = "Gesamt",
-              reporting_all_ui(
-                id = ns("reporting_all")
+              title = "Nach Nutzer",
+              reporting_user_ui(
+                id = ns("reporting_user")
               )
             ),
             shiny::tabPanel(

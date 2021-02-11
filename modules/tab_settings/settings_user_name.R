@@ -111,6 +111,11 @@ settings_user_name_server <- function(id, .values) {
       })
 
       shiny::observeEvent(input$change_user_name, {
+        shiny::updateTextInput(
+          inputId = "password",
+          value = ""
+        )
+
         user_pwd <- db_get_password(
           db = .values$db,
           user_id = .values$user$id()

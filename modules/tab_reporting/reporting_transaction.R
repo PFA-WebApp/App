@@ -25,7 +25,8 @@ reporting_transaction_server <- function(id, .values) {
             type_id = db_get_type_id_by_subtype_id(.values$db, subtype_id),
             user_name = db_get_user_name(.values$db, user_id),
             type_name = db_get_type_name(.values$db, type_id),
-            subtype_name = db_get_subtype_name(.values$db, subtype_id)
+            subtype_name = db_get_subtype_name(.values$db, subtype_id),
+            quantity = -quantity
           ) %>%
           dplyr::select(
             Nutzer = user_name, Typ = type_name, Untertyp = subtype_name,

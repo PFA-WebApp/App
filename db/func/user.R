@@ -27,7 +27,8 @@ db_add_user <- function(db,
     time_added = as.character(Sys.time()),
     time_current_logged = as.character(Sys.time()),
     time_previous_logged = as.character(Sys.time()),
-    times_logged = 0
+    times_logged = 0,
+    removed = 0
   )
 
   DBI::dbAppendTable(db, "user", entry)
@@ -143,8 +144,12 @@ db_set_user_status <- function(db, user_id, status) {
 #' @family user
 #'
 #' @export
-db_get_users <- function(db) {
-  tbl <- DBI::dbGetQuery(db, "SELECT rowid, name FROM user")
+db_get_users <- function(db, removed = FALSE) {
+  tbl <- if (removed) {
+    DBI::dbGetQuery(db, "SELECT rowid, name FROM user")
+  } else {
+    DBI::dbGetQuery(db, "SELECT rowid, name FROM user WHERE removed = 0")
+  }
 
   x <- tbl$rowid
   names(x) <- tbl$name
@@ -176,7 +181,7 @@ db_remove_user <- function(db, user_id) {
 
   DBI::dbExecute(
     db,
-    "DELETE FROM user WHERE rowid = ?",
+    "UPDATE user SET removed = 1 WHERE rowid = ?",
     params = list(user_id)
   )
 }
@@ -225,7 +230,7 @@ db_set_password <- function(db, user_id, password) {
 #'
 #' @export
 db_has_user_name <- function(db, name) {
-  name %in% names(db_get_users(db))
+  name %in% names(db_get_users(db, removed = TRUE))
 }
 
 

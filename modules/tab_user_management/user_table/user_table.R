@@ -37,7 +37,8 @@ user_table_server <- function(id, .values) {
       output$user_table <- DT::renderDataTable({
         .values$update$user()
 
-        tbl <- db_get_table(.values$db, "user")
+        tbl <- db_get_table(.values$db, "user") %>%
+          dplyr::filter(removed == 0)
 
         tbl$change_status <- purrr::map_chr(tbl$rowid, function(user_id) {
           user_table_change_status_ui(

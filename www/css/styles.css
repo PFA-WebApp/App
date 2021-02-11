@@ -135,3 +135,12 @@ ul {
 .brand-link {
   border-bottom: 1px solid rgb(75, 84, 92) !important;
 }
+
+.dark-mode .form-control:disabled {
+  background-color: rgb(55, 59, 80);
+}
+
+.dark-mode .form-control:focus {
+  background-color: rgb(52, 58, 64);
+  color: white;
+}
