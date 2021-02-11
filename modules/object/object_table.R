@@ -95,6 +95,8 @@ object_table_server <- function(id,
 
         tbl <- db_get_table(.values$db, db$table)
 
+        tbl <- tbl[order(tbl[[2]]),]
+
         if (!is.null(db$func$filter_table)) {
           tbl <- dplyr::filter(
             tbl,
@@ -153,25 +155,30 @@ object_table_server <- function(id,
         }
 
         tbl <- tbl[settings$show]
+        tbl$id <- seq_len(nrow(tbl))
+        tbl <- dplyr::relocate(tbl, id)
 
         targets <- which(settings$show != "name")
 
-        tbl <- tbl[rev(seq_len(nrow(tbl))), , drop = FALSE]
-
-        stopifnot(length(tbl) == length(label$colnames))
+        stopifnot(length(tbl) == length(label$colnames) + 1)
 
         DT::datatable(
           data = tbl,
           options = list(
             columnDefs = list(
               list(
-                className = 'dt-center',
+                className = "dt-center",
                 targets = targets
+              ),
+              list(
+                className = "dt-left",
+                targets = 0
               )
             )
           ),
           escape = FALSE,
-          colnames = label$colnames
+          colnames = c("", label$colnames),
+          rownames = FALSE
         )
       })
     }

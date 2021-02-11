@@ -15,7 +15,7 @@ db_add_user <- function(db,
                         name,
                         status = c("admin", "mod", "user"),
                         password,
-                        added_from = "Admin"
+                        added_from
 ) {
   entry <- tibble::tibble(
     hash = bcrypt::hashpw(name),

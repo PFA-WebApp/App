@@ -37,7 +37,13 @@ user_table_remove_user_server <- function(id,
       })
 
       added_from_r <- shiny::reactive({
-        db_get_adding_user(.values$db, user_id_r())
+        user_id <- db_get_adding_user(.values$db, user_id_r())
+      })
+
+      added_from_name_r <- shiny::reactive({
+        .values$update$user()
+        user_id <- added_from_r()
+        db_get_user_name(.values$db, user_id)
       })
 
       shiny::observeEvent(user_id_r(), {
@@ -45,8 +51,7 @@ user_table_remove_user_server <- function(id,
 
         # Check that moderators can only remove users they added themselves
         if (
-          status == "mod" &&
-          (status != "user" || added_from_r() != .values$user$name())
+          status == "mod" && added_from_r() != .values$user$id()
         ) {
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
@@ -57,7 +62,7 @@ user_table_remove_user_server <- function(id,
                 hinzugefügt haben. \"",
                 user_name_r(),
                 "\" wurde von \"",
-                added_from_r(),
+                added_from_name_r(),
                 "\" hinzugefügt."
               )
             ),
