@@ -40,7 +40,8 @@ show_connections_server <- function(id, .values, settings, db, label) {
         .values$update$group_type()
         connections <- db$func$get_connections(.values$db, input$object)
 
-        tbl <- tibble(connections = names(connections))
+        tbl <- tibble(connections = names(connections)) %>%
+          dplyr::arrange(connections)
 
         DT::datatable(
           tbl,

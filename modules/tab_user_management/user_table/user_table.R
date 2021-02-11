@@ -62,9 +62,8 @@ user_table_server <- function(id, .values) {
 
         tbl <- tbl %>%
           dplyr::select(name, status, change_status, remove, reset_password) %>%
-          dplyr::mutate(status = .values$settings$status_dict[status])
-
-        tbl <- tbl[rev(seq_len(nrow(tbl))), , drop = FALSE]
+          dplyr::mutate(status = .values$settings$status_dict[status]) %>%
+          dplyr::arrange(name)
 
         tbl <- tbl[, col_names_by_status_r()]
 
