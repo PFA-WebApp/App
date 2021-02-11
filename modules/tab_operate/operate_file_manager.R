@@ -38,6 +38,7 @@ operate_file_manager_server <- function(id,
         .values$update$files()
 
         empty_tbl <- tibble::tibble(
+          path = character(),
           file = character(),
           name = character()
         )
@@ -52,6 +53,7 @@ operate_file_manager_server <- function(id,
 
             if (length(files)) {
               tibble::tibble(
+                path = path,
                 file = files,
                 name = name
               )
@@ -71,7 +73,8 @@ operate_file_manager_server <- function(id,
       })
 
       href_r <- shiny::reactive({
-        file.path(path_r(), files_r())
+        tbl <- files_table_r()
+        file.path(tbl$path, tbl$file)
       })
 
       output$files <- DT::renderDataTable({
@@ -110,6 +113,12 @@ operate_file_manager_server <- function(id,
           )
         }
       })
+
+      return_list <- list(
+        files_r = files_r
+      )
+
+      return(return_list)
     }
   )
 }

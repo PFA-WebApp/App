@@ -115,7 +115,7 @@ login_user_info_server <- function(id, .values) {
       output$user_times_logged <- shiny::renderUI({
         if (is_logged_r()) {
           bs4Dash::infoBox(
-            title = "Anzahl Besuche",
+            title = "Besuche",
             value = htmltools::div(
               class = "relative",
               times_logged_r()
