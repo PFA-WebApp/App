@@ -133,9 +133,24 @@ object_table_quantity_server <- function(id,
         )
       })
 
+      min_r <- shiny::reactive({
+        .values$update$circulation()
+        .values$update$subtype()
+        db_get_borrowed_quantity(.values$db, object_id_r())
+      })
+
       quantity_return <- object_quantity_input_server(
         id = "object_quantity_input",
-        .values = .values
+        .values = .values,
+        min_r = min_r,
+        min_message_r = shiny::reactive({
+          paste0(
+            "Die Menge eines Untertyps muss",
+            "mindestens der ausgeliehenen Menge (",
+            min_r(),
+            ") entsprechen."
+          )
+        })
       )
     }
   )

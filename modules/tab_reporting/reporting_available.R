@@ -47,7 +47,7 @@ reporting_available_server <- function(id, .values) {
           ) %>%
           dplyr::select(
             Untertyp = subtype_name,
-            Ausgeliehen = quantity,
+            "Verfügbar" = quantity,
             "Maximal verfügbar" = max_quantity
           )
       })
