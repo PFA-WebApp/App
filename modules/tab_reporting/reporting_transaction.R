@@ -36,6 +36,13 @@ reporting_transaction_server <- function(id, .values) {
       output$table <- DT::renderDataTable({
         DT::datatable(
           formatted_transaction_table_r()
+        ) %>%
+        DT::formatStyle(
+          columns = "Menge",
+          color = DT::styleInterval(
+            cuts = 0,
+            values = c("rgb(221, 75, 57)", "rgb(0, 166, 90)")
+          )
         )
       })
     }

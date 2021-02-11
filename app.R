@@ -5,7 +5,7 @@ library(qrcode)
 
 addResourcePath("files", "./files")
 
-options(shiny.port = 1234)
+options(shiny.port = 1235)
 
 ui_server <- function(source_to_globalenv = FALSE) {
     # If source_to_global_env all sourced functions get added to the global

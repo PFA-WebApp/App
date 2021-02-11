@@ -95,6 +95,7 @@ object_table_server <- function(id,
 
         tbl <- db_get_table(.values$db, db$table)
 
+        # order by name column
         tbl <- tbl[order(tbl[[2]]),]
 
         if (!is.null(db$func$filter_table)) {

@@ -85,7 +85,7 @@ db_get_borrowed_quantity_by_user_id <- function(db, user_id, subtype_id) {
 db_get_borrow_summary <- function(db) {
   DBI::dbGetQuery(
     db,
-    "SELECT subtype_id, quantity FROM circulation"
+    "SELECT subtype_id, quantity, time FROM circulation"
   ) %>%
     borrow_summary(sym("subtype_id"))
 }
@@ -102,7 +102,7 @@ db_get_borrow_summary <- function(db) {
 db_get_borrow_summary_by_user_id <- function(db, user_id) {
   DBI::dbGetQuery(
     db,
-    "SELECT subtype_id, quantity FROM circulation WHERE user_id = ?",
+    "SELECT subtype_id, quantity, time FROM circulation WHERE user_id = ?",
     params = list(user_id)
   ) %>%
     borrow_summary(sym("subtype_id"))
@@ -120,7 +120,7 @@ db_get_borrow_summary_by_user_id <- function(db, user_id) {
 db_get_borrow_summary_by_subtype_id <- function(db, subtype_id) {
   DBI::dbGetQuery(
     db,
-    "SELECT user_id, quantity FROM circulation WHERE subtype_id = ?",
+    "SELECT user_id, quantity, time FROM circulation WHERE subtype_id = ?",
     params = list(subtype_id)
   ) %>%
     borrow_summary(sym("user_id"))
@@ -132,6 +132,10 @@ db_get_borrow_summary_by_subtype_id <- function(db, subtype_id) {
 borrow_summary <- function(tbl, group_by) {
   tbl %>%
     dplyr::group_by(!!group_by) %>%
-    dplyr::summarise(quantity = sum(quantity), .groups = "drop") %>%
+    dplyr::summarise(
+      quantity = sum(quantity),
+      time = suppressWarnings(max(time, na.rm = TRUE)),
+      .groups = "drop"
+    ) %>%
     dplyr::filter(quantity > 0)
 }

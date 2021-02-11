@@ -38,7 +38,8 @@ reporting_table_server <- function(id, .values, settings, object_id_r = NULL) {
             ) %>%
             dplyr::arrange(type_name, subtype_name) %>%
             dplyr::select(
-              Typ = type_name, Untertyp = subtype_name, Menge = quantity
+              Typ = type_name, Untertyp = subtype_name, Menge = quantity,
+              `Zuletzt ausgeliehen` = time
             )
         } else {
           borrow_summary_r() %>%
@@ -47,7 +48,7 @@ reporting_table_server <- function(id, .values, settings, object_id_r = NULL) {
             ) %>%
             dplyr::arrange(user_name) %>%
             dplyr::select(
-              Name = user_name, Menge = quantity
+              Name = user_name, Menge = quantity, `Zuletzt ausgeliehen` = time
             )
         }
       })

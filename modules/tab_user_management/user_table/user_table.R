@@ -70,10 +70,6 @@ user_table_server <- function(id, .values) {
         DT::datatable(
           data = tbl,
           options = list(
-            language = list(
-              url = '//cdn.datatables.net/plug-ins/1.10.11/i18n/German.json'
-            ),
-            pageLength = 6,
             columnDefs = list(
               list(
                 className = 'dt-center',
