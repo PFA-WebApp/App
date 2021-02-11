@@ -41,9 +41,11 @@ user_table_remove_user_server <- function(id,
       })
 
       shiny::observeEvent(user_id_r(), {
+        status <- .values$user$status()
+
         # Check that moderators can only remove users they added themselves
         if (
-          .values$user$status() == "mod" &&
+          status == "mod" &&
           (status != "user" || added_from_r() != .values$user$name())
         ) {
           shiny::showModal(shiny::modalDialog(

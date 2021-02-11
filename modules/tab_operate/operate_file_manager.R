@@ -17,6 +17,7 @@ operate_file_manager_server <- function(id,
                                         db,
                                         settings,
                                         label,
+                                        type_id_r,
                                         object_ids_r
 ) {
   shiny::moduleServer(
@@ -25,7 +26,13 @@ operate_file_manager_server <- function(id,
 
       ns <- session$ns
 
+      type_name_r <- shiny::reactive({
+        .values$update$type()
+        db_get_type_name(.values$db, type_id_r())
+      })
+
       object_names_r <- shiny::reactive({
+        .values$update[[settings$table_name]]()
         db$get_object_name(.values$db, object_ids_r())
       })
 
@@ -112,6 +119,25 @@ operate_file_manager_server <- function(id,
             style = "display: block"
           )
         }
+      })
+
+      output$download_all <- shiny::downloadHandler(
+        filename = download_all_name_r,
+        content = function(file) {
+          utils::zip(
+            zipfile = file,
+            files = href_r(),
+            extras = "-j -q"
+          )
+        },
+        contentType = "application/zip"
+      )
+
+      download_all_name_r <- shiny::reactive({
+        name <- type_name_r() %_%
+          .values$settings$table_dict[settings$table_name] %>%
+          paste0(".zip")
+        stringr::str_replace_all(name, "\\s", "_")
       })
 
       return_list <- list(

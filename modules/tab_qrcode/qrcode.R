@@ -67,6 +67,7 @@ qrcode_server <- function(id, .values) {
       })
 
       type_name_r <- shiny::reactive({
+        .values$update$type()
         db_get_type_name(.values$db, shiny::req(input$type))
       })
 

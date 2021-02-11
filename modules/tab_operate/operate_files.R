@@ -89,7 +89,8 @@ operate_files_server <- function(id,
         label = list(
           object_name = "Gruppe"
         ),
-        object_ids_r = group_ids_r
+        object_ids_r = group_ids_r,
+        type_id_r = type_id_r
       )
 
       type_files_return <- operate_file_manager_server(
@@ -102,6 +103,7 @@ operate_files_server <- function(id,
         label = list(
           object_name = "Typ"
         ),
+        type_id_r = type_id_r,
         object_ids_r = type_id_r
       )
 
@@ -115,6 +117,7 @@ operate_files_server <- function(id,
         label = list(
           object_name = "Untertyp"
         ),
+        type_id_r = type_id_r,
         object_ids_r = subtype_ids_r
       )
     }
