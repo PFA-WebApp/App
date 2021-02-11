@@ -3,6 +3,10 @@ container_ui <- function(id) {
 
   bs4Dash::dashboardPage(
     freshTheme = fresh::create_theme(
+      fresh::bs4dash_status(
+        light = "#0073b7",
+        dark = "#0073b7"
+      ),
       fresh::bs4dash_vars(
         sidebar_dark_bg = "#343a40",
         sidebar_light_bg = "#343a40",

@@ -39,7 +39,10 @@ reporting_server <- function(id, .values) {
                 )
               ),
               shiny::tabPanel(
-                title = "Transaktionen"
+                title = "Transaktionen",
+                reporting_transaction_ui(
+                  id = ns("reporting_transaction")
+                )
               )
             )
           )
@@ -70,6 +73,11 @@ reporting_server <- function(id, .values) {
 
       reporting_all_server(
         id = "reporting_all",
+        .values = .values
+      )
+
+      reporting_transaction_server(
+        id = "reporting_transaction",
         .values = .values
       )
     }
