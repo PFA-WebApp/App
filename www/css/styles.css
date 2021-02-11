@@ -43,29 +43,29 @@ a.shiny-download-link:focus, .dark-mode .shiny-download-link:focus {
   background-color: rgb(0, 125, 40);
 }
 
-button.borrow-btn, .dark-mode .borrow-btn {
+button.borrow-btn, .dark-mode button.borrow-btn {
   color: white;
   background-color: rgb(0, 166, 90);
   border-color: rgb(0, 75, 20);
   margin-bottom: 10px;
 }
 
-button.borrow-btn:hover, .dark-mode .borrow-btn:hover
-button.borrow-btn:active, .dark-mode .borrow-btn:active
-button.borrow-btn:focus, .dark-mode .borrow-btn:focus {
+button.borrow-btn:hover, .dark-mode button.borrow-btn:hover
+button.borrow-btn:active, .dark-mode button.borrow-btn:active
+button.borrow-btn:focus, .dark-mode button.borrow-btn:focus {
   background-color: rgb(0, 125, 40);
   color: white;
 }
 
-button.return-btn, .dark-mode .return-btn {
+button.return-btn, .dark-mode button.return-btn {
   color: white;
   background-color: rgb(221, 75, 57);
   border-color: rgb(100, 50, 30);
 }
 
-button.return-btn:hover, .dark-mode .return-btn:hover,
-button.return-btn:active, .dark-mode .return-btn:active,
-button.return-btn:focus, .dark-mode .return-btn:focus {
+button.return-btn:hover, .dark-mode button.return-btn:hover,
+button.return-btn:active, .dark-mode button.return-btn:active,
+button.return-btn:focus, .dark-mode button.return-btn:focus {
   background-color: rgb(185, 40, 20);
   color: white;
 }
