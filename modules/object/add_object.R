@@ -8,7 +8,9 @@ add_object_ui <- function(...,
 ) {
   ns <- shiny::NS(id)
 
-  bs4Dash::box(
+  if (!collapsible) collapsed <- FALSE
+
+  ui <- bs4Dash::box(
     width = NULL,
     status = "primary",
     title = title,
