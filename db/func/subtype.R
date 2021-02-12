@@ -82,7 +82,7 @@ db_get_subtype_max_quantity <- function(db, subtype_id) {
 
 
 
-#' Set Available Quantity of Subtype
+#' Set Max Quantity of Subtype
 #'
 #' @template db
 #' @template id
@@ -99,6 +99,26 @@ db_set_subtype_max_quantity <- function(db, subtype_id, quantity) {
     params = list(quantity, subtype_id)
   )
 }
+
+
+
+#' Increment / Decrement Max Quantity of Subtype
+#'
+#' @template db
+#' @template id
+#' @templateVar key subtype
+#'
+#' @family subtype
+#'
+#' @export
+db_change_subtype_max_quantity <- function(db, subtype_id, amount) {
+  DBI::dbExecute(
+    db,
+    "UPDATE subtype SET quantity = quantity + ? WHERE rowid = ?",
+    params = list(amount, subtype_id)
+  )
+}
+
 
 
 

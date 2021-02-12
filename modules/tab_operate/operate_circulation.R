@@ -35,6 +35,12 @@ operate_circulation_ui <- function(id) {
           width = "100%",
           class = "return-btn"
         )
+      ),
+      shiny::column(
+        width = 6,
+        shiny::uiOutput(
+          outputId = ns("write_off_button")
+        )
       )
     )
   )
@@ -125,41 +131,60 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
         names(subtypes_r())[subtypes_r() == shiny::req(input$subtype)]
       })
 
+      output$write_off_button <- shiny::renderUI({
+        if (.values$user$status() == "admin") {
+          shiny::actionButton(
+            inputId = ns("write_off"),
+            label = "Abschreiben",
+            icon = shiny::icon("balance-scale-right"),
+            width = "100%",
+            class = "write-off-btn"
+          )
+        }
+      })
+
       shiny::observeEvent(input$borrow, {
-        borrow_rv(TRUE)
+        operate_rv(1)
         shiny::showModal(modal_dialog_r())
       })
 
       shiny::observeEvent(input$return, {
-        borrow_rv(FALSE)
+        operate_rv(2)
         shiny::showModal(modal_dialog_r())
       })
 
-      borrow_rv <- shiny::reactiveVal(NULL)
+      shiny::observeEvent(input$write_off, {
+        operate_rv(3)
+        shiny::showModal(modal_dialog_r())
+      })
+
+      operate_rv <- shiny::reactiveVal(1)
 
       modal_dialog_r <- shiny::reactive({
-        borrow <- borrow_rv()
+        operate_index <- operate_rv()
+
+        title <- c("Ausleihen", "Zurückgeben", "Abschreiben")
 
         shiny::modalDialog(
-          title = if (borrow) "Ausleihen" else "Zurückgeben",
+          title = title[operate_index],
           easyClose = TRUE,
           shinyjs::disabled(
             shiny::textInput(
-              inputId = "undefined",
+              inputId = "disabled",
               label = "Nutzer",
               value = user_name_r()
             )
           ),
           shinyjs::disabled(
             shiny::textInput(
-              inputId = "undefined",
+              inputId = "disabled",
               label = "Typ",
               value = type_name_r()
             )
           ),
           shinyjs::disabled(
             shiny::textInput(
-              inputId = "undefined",
+              inputId = "disabled",
               label = "Untertyp",
               value = subtype_name_r()
             )
@@ -167,7 +192,12 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
           object_quantity_input_ui(
             id = ns("object_quantity_input"),
             old_quantity = 1,
-            label = if (borrow) borrow_label_r() else return_label_r()
+            label = switch(
+              operate_index,
+              "1" = borrow_label_r(),
+              "2" = return_label_r(),
+              "3" = write_off_label_r()
+            )
           ),
           footer = shiny::uiOutput(
             outputId = ns("footer"),
@@ -177,9 +207,15 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
       })
 
       output$footer <- shiny::renderUI({
-        borrow <- borrow_rv()
-        footer <- if (borrow) borrow_footer_r() else return_footer_r()
+        footer <- switch(
+          operate_rv(),
+          "1" = borrow_footer_r(),
+          "2" = return_footer_r(),
+          "3" = write_off_footer_r()
+        )
+
         if (error_r()) footer <- shinyjs::disabled(footer)
+
         footer
       })
 
@@ -188,18 +224,24 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
       })
 
       borrow_label_r <- shiny::reactive({
-        paste0(
-          "Menge (",
-          max_borrow_r(),
-          " verfügbar)"
+        glue::glue(
+          "Menge ({quantity} verfügbar)",
+          quantity = max_borrow_r()
         )
       })
 
       return_label_r <- shiny::reactive({
-        paste0(
-          "Menge (",
-          max_return_r(),
-          " ausgeliehen)"
+        glue::glue(
+          "Menge ({quantity} ausgeliehen)",
+          quantity = max_return_r()
+        )
+      })
+
+      write_off_label_r <- shiny::reactive({
+        glue::glue(
+          "Menge ({available} verfügbar, {borrowed} insgesamt ausgeliehen)",
+          available = max_borrow_r(),
+          borrowed = max_borrowed_r()
         )
       })
 
@@ -223,6 +265,16 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
         )
       })
 
+      write_off_footer_r <- shiny::reactive({
+        shiny::actionButton(
+          inputId = ns("confirm_write_off"),
+          label = "Abschreiben bestätigen",
+          icon = shiny::icon("balance-scale-right"),
+          class = "write-off-btn",
+          width = "100%"
+        )
+      })
+
       shiny::observeEvent(input$confirm_borrow, {
         shiny::removeModal()
 
@@ -237,7 +289,7 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
 
         shiny::showNotification(
           ui = operate_notification_text(
-            borrow = TRUE,
+            operation = operate_rv(),
             status = .values$user$status(),
             user_name = user_name_r(),
             quantity = quantity_return$quantity_r(),
@@ -256,14 +308,39 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
           db = .values$db,
           user_id = user_id_r(),
           subtype_id = input$subtype,
-          quantity = -quantity_return$quantity_r()
+          quantity = -1 * quantity_return$quantity_r()
         )
 
         .values$update$circulation(.values$update$circulation() + 1)
 
         shiny::showNotification(
           ui = operate_notification_text(
-            borrow = FALSE,
+            operation = operate_rv(),
+            status = .values$user$status(),
+            user_name = user_name_r(),
+            quantity = quantity_return$quantity_r(),
+            type_name = type_name_r(),
+            subtype_name = subtype_name_r()
+          ),
+          duration = 5,
+          type = "warning"
+        )
+      })
+
+      shiny::observeEvent(input$confirm_write_off, {
+        shiny::removeModal()
+
+        db_change_subtype_max_quantity(
+          .values$db,
+          subtype_id = input$subtype,
+          amount = -1 * quantity_return$quantity_r()
+        )
+
+        .values$update$subtype(.values$update$subtype() + 1)
+
+        shiny::showNotification(
+          ui = operate_notification_text(
+            operation = operate_rv(),
             status = .values$user$status(),
             user_name = user_name_r(),
             quantity = quantity_return$quantity_r(),
@@ -276,9 +353,15 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
       })
 
       max_r <- shiny::reactive({
-        if (borrow_rv()) max_borrow_r() else max_return_r()
+        switch(
+          operate_rv(),
+          "1" = max_borrow_r(),
+          "2" = max_return_r(),
+          "3" = max_borrow_r()
+        )
       })
 
+      # Available quantity
       max_borrow_r <- shiny::reactive({
         .values$update$subtype()
         .values$update$circulation()
@@ -288,6 +371,7 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
         )
       })
 
+      # Borrowed quantity by user
       max_return_r <- shiny::reactive({
         .values$update$subtype()
         .values$update$circulation()
@@ -298,20 +382,41 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
         )
       })
 
+      # Total borrowed quantity
+      max_borrowed_r <- shiny::reactive({
+        .values$update$subtype()
+        .values$update$circulation()
+        db_get_borrowed_quantity(
+          db = .values$db,
+          subtype_id = input$subtype
+        )
+      })
+
+      operate_verb_r <- shiny::reactive({
+        get_operation_verb(operate_rv())
+      })
+
       max_message_r <- shiny::reactive({
-        if (borrow_rv()) {
-          "Du kannst nicht mehr Einheiten ausleihen als verfügbar sind!\n\n"
-        } else {
-          "Du kannst nicht mehr Einheiten zurückgeben als Du ausgeliehen hast!\n\n"
-        }
+        context <- c(
+          "als verfügbar sind!\n\n",
+          "als Du ausgeliehen hast!\n\n",
+          "als verfügbar sind!\n\n"
+        )
+
+        paste(
+          "Du kannst nicht mehr Einheiten",
+          operate_verb_r(),
+          context[operate_rv()]
+        )
       })
 
       min_message_r <- shiny::reactive({
-        if (borrow_rv()) {
-          "Du musst mindestens eine Einheit ausleihen!"
-        } else {
-          "Du musst mindestens eine Einheit zurückgeben!"
-        }
+        switch(
+          operate_rv(),
+          "1" = "Du musst mindestens eine Einheit ausleihen!",
+          "2" = "Du musst mindestens eine Einheit zurückgeben!",
+          "3" = "Du musst mindestens eine Einheit abschreiben!"
+        )
       })
 
       quantity_return <- object_quantity_input_server(
@@ -333,16 +438,18 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
   )
 }
 
-operate_notification_text <- function(borrow,
+
+
+operate_notification_text <- function(operation,
                                       status,
                                       user_name,
                                       quantity,
                                       type_name,
                                       subtype_name
 ) {
-  verb <- if (borrow) "ausgeliehen." else "zurückgegeben."
+  verb <- get_operation_verb(operation, participle = TRUE)
 
-  if (status == "admin") {
+  if (status == "admin" && operation != 3) {
     paste(
       "Du hast für",
       user_name,
@@ -362,4 +469,16 @@ operate_notification_text <- function(borrow,
       verb
     )
   }
+}
+
+
+
+get_operation_verb <- function(operation, participle = FALSE) {
+  stopifnot(operation %in% 1:3)
+  verb <- if (participle) {
+    c("ausgeliehen", "zurückgegeben", "abgeschrieben")
+  } else {
+    c("ausleihen", "zurückgeben", "abschreiben")
+  }
+  verb[operation]
 }
