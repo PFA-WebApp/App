@@ -9,7 +9,8 @@
 #' @export
 db_add_group <- function(db, group_name) {
   entry <- tibble::tibble(
-    group_name = group_name
+    group_name = group_name,
+    removed = 0
   )
 
   DBI::dbAppendTable(db, "groups", entry)
@@ -32,7 +33,7 @@ db_add_group <- function(db, group_name) {
 db_remove_group <- function(db, group_id) {
   success <- DBI::dbExecute(
     db,
-    "DELETE FROM groups WHERE rowid = ?",
+    "UPDATE groups SET removed = 1 WHERE rowid = ?",
     params = list(group_id)
   )
 
@@ -127,8 +128,15 @@ db_has_group_id <- function(db, group_id) {
 #' @family group
 #'
 #' @export
-db_get_groups <- function(db) {
-  tbl <- DBI::dbGetQuery(db, "SELECT rowid AS group_id, group_name FROM groups")
+db_get_groups <- function(db, include_removed = FALSE) {
+  tbl <- if (include_removed) {
+    DBI::dbGetQuery(db, "SELECT rowid AS group_id, group_name FROM groups")
+  } else {
+    DBI::dbGetQuery(
+      db,
+      "SELECT rowid AS group_id, group_name FROM groups WHERE removed = 0"
+    )
+  }
 
   x <- tbl$group_id
   names(x) <- tbl$group_name

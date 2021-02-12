@@ -9,7 +9,8 @@
 #' @export
 db_add_type <- function(db, type_name) {
   entry <- tibble::tibble(
-    type_name = type_name
+    type_name = type_name,
+    removed = 0
   )
 
   DBI::dbAppendTable(db, "type", entry)
@@ -32,7 +33,7 @@ db_add_type <- function(db, type_name) {
 db_remove_type <- function(db, type_id) {
   success <- DBI::dbExecute(
     db,
-    "DELETE FROM type WHERE rowid = ?",
+    "UPDATE type SET removed = 1 WHERE rowid = ?",
     params = list(type_id)
   )
 
@@ -144,8 +145,21 @@ db_has_type_id <- function(db, type_id) {
 #' @family type
 #'
 #' @export
-db_get_types <- function(db) {
-  tbl <- DBI::dbGetQuery(db, "SELECT rowid, type_name FROM type ORDER BY type_name ASC")
+db_get_types <- function(db, include_removed = FALSE) {
+  tbl <- if (include_removed) {
+    DBI::dbGetQuery(
+      db,
+      "SELECT rowid, type_name FROM type ORDER BY type_name ASC"
+    )
+  } else {
+    DBI::dbGetQuery(
+      db,
+      "
+      SELECT rowid, type_name FROM type WHERE removed = 0
+      ORDER BY type_name ASC
+      "
+    )
+  }
 
   x <- tbl$rowid
   names(x) <- tbl$type_name

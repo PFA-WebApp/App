@@ -13,7 +13,8 @@ db_add_subtype <- function(db, type_id, subtype_name, quantity) {
   entry <- tibble::tibble(
     type_id = type_id,
     subtype_name = subtype_name,
-    quantity = quantity
+    quantity = quantity,
+    removed = 0
   )
 
   DBI::dbAppendTable(db, "subtype", entry)
@@ -150,11 +151,21 @@ db_get_type_id_by_subtype_id <- function(db, subtype_id) {
 #' @family subtype
 #'
 #' @export
-db_get_subtypes <- function(db) {
-  tbl <- DBI::dbGetQuery(
-    db,
-    "SELECT rowid, subtype_name FROM subtype ORDER BY subtype_name ASC"
-  )
+db_get_subtypes <- function(db, include_removed = FALSE) {
+  tbl <- if (include_removed) {
+    DBI::dbGetQuery(
+      db,
+      "SELECT rowid, subtype_name FROM subtype ORDER BY subtype_name ASC"
+    )
+  } else {
+    DBI::dbGetQuery(
+      db,
+      "
+      SELECT rowid, subtype_name FROM subtype WHERE removed = 0
+      ORDER BY subtype_name ASC
+      "
+    )
+  }
 
   x <- tbl$rowid
   names(x) <- tbl$subtype_name
@@ -195,7 +206,7 @@ db_get_subtype_table_by_type_id <- function(db, type_id) {
 db_remove_subtype <- function(db, subtype_id) {
   success <- DBI::dbExecute(
     db,
-    "DELETE FROM subtype WHERE rowid = ?",
+    "UPDATE subtype SET removed = 1 WHERE rowid = ?",
     params = list(subtype_id)
   )
 
@@ -219,7 +230,7 @@ db_remove_subtype <- function(db, subtype_id) {
 db_remove_subtypes_by_type_id <- function(db, type_id) {
   DBI::dbExecute(
     db,
-    "DELETE FROM subtype WHERE type_id = ?",
+    "UPDATE subtype SET removed = 1 WHERE type_id = ?",
     params = list(type_id)
   )
 }

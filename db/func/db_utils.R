@@ -19,7 +19,7 @@ db_length <- function(db, name) {
 #' @template name
 #'
 #' @export
-db_get_table <- function(db, name) {
+db_get_table <- function(db, name, include_removed = FALSE) {
   fields <- c("rowid", DBI::dbListFields(db, name))
 
   query <- paste(
@@ -28,6 +28,13 @@ db_get_table <- function(db, name) {
     "FROM",
     name
   )
+
+  if (!include_removed && name %in% c("user", "groups", "type", "subtype")) {
+    query <- paste(
+      query,
+      "WHERE removed = 0"
+    )
+  }
 
   DBI::dbGetQuery(
     db,

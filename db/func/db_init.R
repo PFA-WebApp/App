@@ -112,7 +112,8 @@ create_subtype_table <- function(db) {
   tbl <- tibble::tibble(
     type_id = integer(),
     subtype_name = character(),
-    quantity = integer()
+    quantity = integer(),
+    removed = integer()
   )
 
   DBI::dbCreateTable(db, "subtype", tbl)
@@ -123,7 +124,8 @@ create_subtype_table <- function(db) {
 #' @export
 create_type_table <- function(db) {
   tbl <- tibble::tibble(
-    type_name = character()
+    type_name = character(),
+    removed = integer()
   )
 
   DBI::dbCreateTable(db, "type", tbl)
@@ -134,7 +136,8 @@ create_type_table <- function(db) {
 #' @export
 create_group_table <- function(db) {
   tbl <- tibble::tibble(
-    group_name = character()
+    group_name = character(),
+    removed = integer()
   )
 
   DBI::dbCreateTable(db, "groups", tbl)
