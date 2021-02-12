@@ -293,7 +293,7 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
         .values$update$circulation()
         db_get_borrowed_quantity_by_user_id(
           db = .values$db,
-          user_id = .values$user$id(),
+          user_id = user_id_r(),
           subtype_id = input$subtype
         )
       })
