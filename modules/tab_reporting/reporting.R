@@ -19,48 +19,51 @@ reporting_server <- function(id, .values) {
 
       ns <- session$ns
 
+      tab_panels <- list(
+        all = shiny::tabPanel(
+          title = "Gesamt",
+          reporting_all_ui(
+            id = ns("reporting_all")
+          )
+        ),
+        subtype = shiny::tabPanel(
+          title = "Nach Untertyp",
+          reporting_subtype_ui(
+            id = ns("reporting_subtype")
+          )
+        ),
+        user = shiny::tabPanel(
+          title = "Nach Nutzer",
+          reporting_user_ui(
+            id = ns("reporting_user")
+          )
+        ),
+        transaction = shiny::tabPanel(
+          title = "Transaktionen",
+          reporting_transaction_ui(
+            id = ns("reporting_transaction")
+          )
+        )
+      )
+
+      tab_panel_dict <- list(
+        admin = c("all", "subtype", "user", "transaction"),
+        mod = c("user", "transaction"),
+        user = c("user", "transaction")
+      )
+
       output$borrow <- shiny::renderUI({
-        if (.values$user$status() == "admin") {
-          bs4Dash::tabBox(
-            id = ns("tabs"),
-            width = NULL,
-            title = "Ausleihübersicht",
-            shiny::tabPanel(
-              title = "Gesamt",
-              reporting_all_ui(
-                id = ns("reporting_all")
-              )
+        do.call(
+          bs4Dash::tabBox,
+          c(
+            list(
+              id = ns("tabs"),
+              width = NULL,
+              title = "Ausleihübersicht"
             ),
-            shiny::tabPanel(
-              title = "Nach Untertyp",
-              reporting_subtype_ui(
-                id = ns("reporting_subtype")
-              )
-            ),
-            shiny::tabPanel(
-              title = "Nach Nutzer",
-              reporting_user_ui(
-                id = ns("reporting_user")
-              )
-            ),
-            shiny::tabPanel(
-              title = "Transaktionen",
-              reporting_transaction_ui(
-                id = ns("reporting_transaction")
-              )
-            )
+            unname(tab_panels[tab_panel_dict[[.values$user$status()]]])
           )
-        } else {
-          bs4Dash::box(
-            width = NULL,
-            solidHeader = TRUE,
-            status = "primary",
-            title = "Ausleihübersicht",
-            reporting_user_ui(
-              id = ns("reporting_user")
-            )
-          )
-        }
+        )
       })
 
       reporting_user_server(

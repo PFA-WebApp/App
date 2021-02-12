@@ -19,7 +19,13 @@ reporting_transaction_server <- function(id, .values) {
       })
 
       formatted_transaction_table_r <- shiny::reactive({
-        transaction_table_r() %>%
+        tbl <- transaction_table_r()
+
+        if (.values$user$status() != "admin") {
+          tbl <- dplyr::filter(tbl, user_id == .values$user$id())
+        }
+
+        tbl <- tbl %>%
           dplyr::arrange(desc(time)) %>%
           dplyr::mutate(
             type_id = db_get_type_id_by_subtype_id(.values$db, subtype_id),
@@ -32,6 +38,12 @@ reporting_transaction_server <- function(id, .values) {
             Nutzer = user_name, Typ = type_name, Untertyp = subtype_name,
             Datum = time, Menge = quantity
           )
+
+        if (.values$user$status() != "admin") {
+          tbl <- dplyr::select(tbl, -Nutzer)
+        }
+
+        tbl
       })
 
       output$table <- DT::renderDataTable({
