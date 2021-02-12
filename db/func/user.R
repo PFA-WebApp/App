@@ -144,8 +144,8 @@ db_set_user_status <- function(db, user_id, status) {
 #' @family user
 #'
 #' @export
-db_get_users <- function(db, removed = FALSE) {
-  tbl <- if (removed) {
+db_get_users <- function(db, include_removed = FALSE) {
+  tbl <- if (include_removed) {
     DBI::dbGetQuery(db, "SELECT rowid, name FROM user")
   } else {
     DBI::dbGetQuery(db, "SELECT rowid, name FROM user WHERE removed = 0")

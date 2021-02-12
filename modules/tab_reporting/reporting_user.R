@@ -20,21 +20,22 @@ reporting_user_server <- function(id, .values) {
 
       user_choices_r <- shiny::reactive({
         .values$update$user()
-        db_get_users(.values$db)
+        db_get_users(.values$db, include_removed = TRUE)
       })
 
       output$select_user <- shiny::renderUI({
-        if (.values$user$status() == "admin") {
+        if (.values$user$status() == "admin" || TRUE) {
           shiny::selectInput(
             inputId = ns("user"),
             label = "Nutzer",
-            choices = user_choices_r()
+            choices = user_choices_r(),
+            selected = .values$user$id()
           )
         }
       })
 
       user_id_r <- shiny::reactive({
-        if (.values$user$status() == "admin") {
+        if (.values$user$status() == "admin" || TRUE) {
           input$user
         } else {
           .values$user$id()
