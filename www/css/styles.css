@@ -144,3 +144,7 @@ ul {
   background-color: rgb(52, 58, 64);
   color: white;
 }
+
+ul[data-tabsetid] .nav-link.active:hover {
+  color: white;
+}
