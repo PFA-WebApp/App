@@ -101,7 +101,7 @@ populate_user_table <- function(db) {
   user_password <- purrr::map_chr(user_password, ~ bcrypt::hashpw(.))
 
   purrr::pwalk(list(user_name, user_status, user_password), function(name, status, password) {
-    db_add_user(db, name, status, password, added_from = 1)
+    db_add_user(db, name, status, password, added_from = 1L)
   })
 }
 

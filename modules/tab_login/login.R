@@ -159,7 +159,11 @@ login_server <- function(id, .values) {
 
       shiny::observeEvent(input$cookie_user_hash, {
         if (is.null(input$cookie_user_hash)) return()
+
         user_id <- db_get_user_id_by_hash(.values$db, input$cookie_user_hash)
+        # hash exists but is invalid (for example after reinitialisiton of database)
+        if (!length(user_id)) return()
+
         if (.values$user$id() != user_id) {
           .values$user$id(user_id)
           user_name <- db_get_user_name(.values$db, user_id)
