@@ -24,11 +24,13 @@ reporting_user_server <- function(id, .values) {
       })
 
       output$select_user <- shiny::renderUI({
-        shiny::selectInput(
-          inputId = ns("user"),
-          label = "Nutzer",
-          choices = user_choices_r()
-        )
+        if (.values$user$status() == "admin") {
+          shiny::selectInput(
+            inputId = ns("user"),
+            label = "Nutzer",
+            choices = user_choices_r()
+          )
+        }
       })
 
       user_id_r <- shiny::reactive({
