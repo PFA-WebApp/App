@@ -95,6 +95,14 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
         )
       })
 
+      # Otherwise input$type might be NULL even though choices are displayed
+      # Reproduce: after app start go to later tab and then to operate tab
+      shiny::outputOptions(
+        x = output,
+        name = "type",
+        suspendWhenHidden = FALSE
+      )
+
       shiny::observeEvent(trigger_type_id_r(), {
         shiny::updateSelectInput(
           inputId = "type",
