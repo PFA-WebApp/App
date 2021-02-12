@@ -95,7 +95,7 @@ create_user_table <- function(db) {
 
 #' @export
 populate_user_table <- function(db) {
-  user_name <- c("Admin", "Moderator", "Benutzer")
+  user_name <- c("Armin Admin", "Modesta Moderator", "Bernd Benutzer")
   user_status <- c("admin", "mod", "user")
   user_password <- c("admin", "mod", "user")
   user_password <- purrr::map_chr(user_password, ~ bcrypt::hashpw(.))
