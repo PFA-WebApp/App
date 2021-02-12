@@ -150,7 +150,8 @@ qrcode_server <- function(id, .values) {
             shiny::column(
               width = 8,
               shiny::uiOutput(
-                outputId = ns("download_button")
+                outputId = ns("download_button"),
+                style = "margin-bottom: 16px;"
               )
             )
           )
