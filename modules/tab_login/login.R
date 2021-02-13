@@ -19,6 +19,19 @@ login_ui <- function(id) {
       login_user_info_ui(
         id = ns("login_user_info")
       )
+    ),
+    shiny::column(
+      width = 6,
+      bs4Dash::box(
+        width = NULL,
+        status = "primary",
+        solidHeader = TRUE,
+        title = "Passwörter",
+        htmltools::p(
+          "Diese Tabelle ist nur in der hier gehosteten Testversion eingefügt"
+        ),
+        DT::dataTableOutput(outputId = ns("password_tbl"))
+      )
     )
   )
 }
@@ -173,6 +186,16 @@ login_server <- function(id, .values) {
             db_get_user_last_logged(.values$db, .values$user$id())
           )
         }
+      })
+
+      output$password_tbl <- DT::renderDataTable({
+        password_tbl <- tibble::tibble(
+          Name = c("Armin Admin", "Modesta Moderator", "Bernd Benutzer"),
+          Passwort = c("admin", "mod", "user")
+        )
+
+
+        DT::datatable(password_tbl)
       })
     }
   )
