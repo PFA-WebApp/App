@@ -6,7 +6,10 @@ settings_ui <- function(id) {
       width = 6,
       settings_user_name_ui(
         id = ns("settings_user_name")
-      ),
+      )
+    ),
+    shiny::column(
+      width = 6,
       settings_password_ui(
         id = ns("settings_password")
       )

@@ -151,7 +151,7 @@ ul {
   border-bottom: 1px solid rgb(75, 84, 92) !important;
 }
 
-.dark-mode .form-control:disabled {
+.dark-mode .disabled input.form-control:disabled {
   background-color: rgb(55, 59, 80);
 }
 

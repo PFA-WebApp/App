@@ -4,7 +4,7 @@ settings_password_ui <- function(id) {
   bs4Dash::box(
     width = NULL,
     solidHeader = TRUE,
-    status = "danger",
+    status = "primary",
     title = "Passwort ändern",
     shiny::passwordInput(
       inputId = ns("user_password_1"),
