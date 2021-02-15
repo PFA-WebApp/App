@@ -54,7 +54,7 @@ subtypes_server <- function(id, .values) {
           set_object_name = db_set_subtype_name,
           set_object_quantity = db_set_subtype_max_quantity,
           remove_object = db_remove_subtype,
-          remobe_object_allowed = remove_subtype_allowed
+          remove_object_allowed = remove_subtype_allowed
         )
       )
 

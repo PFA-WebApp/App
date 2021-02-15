@@ -98,7 +98,7 @@ db_get_type_name <- function(db, type_id) {
 db_get_type_id <- function(db, type_name) {
   DBI::dbGetQuery(
     db,
-    "SELECT rowid FROM type WHERE type_name = ?",
+    "SELECT rowid FROM type WHERE type_name = ? AND removed = 0",
     params = list(type_name)
   )$rowid
 }

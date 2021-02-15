@@ -90,8 +90,8 @@ object_table_remove_object_server <- function(id,
         if (!db$func$has_object_id(.values$db, object_id_r())) return()
 
         # Check that removal is allowed
-        if (!is.null(db$func$remove_allowed)) {
-          if (!db$func$remove_allowed(.values$db, object_id_r())) return()
+        if (!is.null(db$func$remove_object_allowed)) {
+          if (!db$func$remove_object_allowed(.values$db, object_id_r())) return()
         }
 
         success <- db$func$remove_object(.values$db, object_id_r())
