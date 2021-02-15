@@ -35,6 +35,23 @@ user_table_reset_password_server <- function(id, .values) {
       })
 
       shiny::observeEvent(user_id_r(), {
+        if (.values$yaml$showcase && user_id_r() %in% 1:3) {
+          shiny::showModal(shiny::modalDialog(
+            title = "Zugriff verweigert!",
+            easyClose = TRUE,
+            htmltools::div(
+              "Das Passwort der Standardnutzer kann in der Testversion nicht
+              zurückgesetzt werden."
+            ),
+            footer = shiny::modalButton(
+              label = NULL,
+              icon = shiny::icon("window-close")
+            )
+          ))
+
+          return()
+        }
+
         shiny::showModal(shiny::modalDialog(
           title = "Passwort zurücksetzen",
           easyClose = TRUE,

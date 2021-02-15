@@ -22,15 +22,9 @@ login_ui <- function(id) {
     ),
     shiny::column(
       width = 6,
-      bs4Dash::box(
-        width = NULL,
-        status = "primary",
-        solidHeader = TRUE,
-        title = "Passwörter",
-        htmltools::p(
-          "Diese Tabelle ist nur in der hier gehosteten Testversion eingefügt"
-        ),
-        DT::dataTableOutput(outputId = ns("password_tbl"))
+      # Only included in showcase mode
+      shiny::uiOutput(
+        outputId = ns("password_tbl_container")
       )
     )
   )
@@ -185,6 +179,22 @@ login_server <- function(id, .values) {
           .values$user$last_logged(
             db_get_user_last_logged(.values$db, .values$user$id())
           )
+        }
+      })
+
+      output$password_tbl_container <- shiny::renderUI({
+        if (.values$yaml$showcase) {
+          bs4Dash::box(
+            width = NULL,
+            status = "primary",
+            solidHeader = TRUE,
+            title = "Passwörter",
+            htmltools::p(
+              "Diese Tabelle ist nur in der Testversion sichtbar"
+            ),
+            DT::dataTableOutput(outputId = ns("password_tbl"))
+          )
+
         }
       })
 

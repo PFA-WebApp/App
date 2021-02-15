@@ -3,8 +3,19 @@ library(shinyjs)
 library(dplyr)
 library(qrcode)
 
-addResourcePath("files", "./files")
+# app.yml stores settings that may differ between execution environments
+app_yml <- "./app.yml"
+if (!file.exists(app_yml)) {
+    x <- list(
+        # In showcase mode passwords for default users are shown. Furthermore
+        # default users may neither be modified nor removed
+        showcase = TRUE
+    )
 
+    yaml::write_yaml(x, app_yml)
+}
+
+addResourcePath("files", "./files")
 options(shiny.port = 1234)
 
 ui_server <- function(source_to_globalenv = FALSE) {
@@ -123,6 +134,9 @@ ui_server <- function(source_to_globalenv = FALSE) {
 
         # Connect to db
         .values$db <- DBI::dbConnect(RSQLite::SQLite(), "./db/db.sqlite")
+
+        # Store app.yml contents
+        .values$yaml <- yaml::read_yaml(app_yml)
 
         # Use regex
         # RSQLite::initRegExp(.values$db)

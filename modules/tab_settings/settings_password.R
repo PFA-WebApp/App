@@ -102,12 +102,6 @@ settings_password_server <- function(id, .values) {
       })
 
       shiny::observeEvent(input$change_password, {
-        shiny::showNotification(
-          ui = "Dein Passwort wurde erfolgreich geändert.",
-          type = "warning",
-          duration = 5
-        )
-
         shiny::updateTextInput(
           session = session,
           inputId = "user_password_1",
@@ -118,6 +112,23 @@ settings_password_server <- function(id, .values) {
           session = session,
           inputId = "user_password_2",
           value = ""
+        )
+
+        if (.values$yaml$showcase && .values$user$id() %in% 1:3) {
+          shiny::showNotification(
+            ui = "Das Passwort der Standardnutzer kann in der Testversion nicht
+            geändert werden.",
+            type = "error",
+            duration = 5
+          )
+
+          return()
+        }
+
+        shiny::showNotification(
+          ui = "Dein Passwort wurde erfolgreich geändert.",
+          type = "warning",
+          duration = 5
         )
 
         db_set_password(

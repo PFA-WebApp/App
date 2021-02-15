@@ -47,6 +47,24 @@ user_table_remove_user_server <- function(id,
       })
 
       shiny::observeEvent(user_id_r(), {
+        # In showcase mode default users must not be removed
+        if (.values$yaml$showcase && user_id_r() %in% 1:3) {
+          shiny::showModal(shiny::modalDialog(
+            easyClose = TRUE,
+            title = "Zugriff verweigert!",
+            htmltools::div(
+              "Die Standardnutzer können in der Testversion nicht entfernt
+              werden."
+            ),
+            footer = shiny::modalButton(
+              label = NULL,
+              icon = shiny::icon("window-close")
+            )
+          ))
+
+          return()
+        }
+
         status <- .values$user$status()
 
         # Check that moderators can only remove users they added themselves

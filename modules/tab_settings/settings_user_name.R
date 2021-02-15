@@ -116,6 +116,17 @@ settings_user_name_server <- function(id, .values) {
           value = ""
         )
 
+        if (.values$yaml$showcase && .values$user$id() %in% 1:3) {
+          shiny::showNotification(
+            ui = "Der Benutzername der Standardnutzer kann in der Testversion
+            nicht geändert werden.",
+            type = "error",
+            duration = 3
+          )
+
+          return()
+        }
+
         user_pwd <- db_get_password(
           db = .values$db,
           user_id = .values$user$id()
