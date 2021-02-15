@@ -163,3 +163,15 @@ ul {
 ul[data-tabsetid] .nav-link.active:hover {
   color: white;
 }
+
+.github-link {
+  margin-right: 10px;
+}
+
+.fa-github {
+  color: black;
+}
+
+.dark-mode .fa-github {
+  color: white;
+}

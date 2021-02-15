@@ -22,7 +22,19 @@ container_ui <- function(id) {
     bs4Dash::dashboardHeader(
       title = bs4Dash::dashboardBrand(
         title = "Sensotheka",
-        image = "img/sensotheka.png"
+        image = "img/sensotheka.png",
+        href = "https://github.com/PFA-WebApp/App"
+      ),
+      rightUi = htmltools::tagList(
+        htmltools::tags$li(
+          # Fake dropdown
+          class = "dropdown",
+          htmltools::a(
+            class = "github-link",
+            href = "https://github.com/PFA-WebApp/App",
+            shiny::icon("github")
+          )
+        )
       )
     ),
     bs4Dash::dashboardSidebar(
