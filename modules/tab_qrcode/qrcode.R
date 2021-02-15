@@ -75,7 +75,7 @@ qrcode_server <- function(id, .values) {
         shiny::textInput(
           inputId = ns("base_url"),
           label = "Serverdomäne",
-          value = "http://127.0.0.1:1234"
+          value = .values$yaml$url
         )
       })
 

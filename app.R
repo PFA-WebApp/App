@@ -9,7 +9,8 @@ if (!file.exists(app_yml)) {
     x <- list(
         # In showcase mode passwords for default users are shown. Furthermore
         # default users may neither be modified nor removed
-        showcase = TRUE
+        showcase = TRUE,
+        url = "http://127.0.0.1:1234"
     )
 
     yaml::write_yaml(x, app_yml)

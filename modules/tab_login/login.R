@@ -179,6 +179,11 @@ login_server <- function(id, .values) {
           .values$user$last_logged(
             db_get_user_last_logged(.values$db, .values$user$id())
           )
+
+          type <- suppressWarnings(as.numeric(shiny::getQueryString()$type))
+          if (length(type) && is.numeric(type) && !is.na(type)) {
+            .values$query$type(type)
+          }
         }
       })
 

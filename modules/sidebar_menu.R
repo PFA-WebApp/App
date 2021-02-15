@@ -49,6 +49,7 @@ sidebar_menu_server <- function(id, .values) {
           sensor_management = bs4Dash::menuItem(
             text = "Sensorverwaltung",
             icon = shiny::icon("temperature-low"),
+            startExpanded = TRUE,
             bs4Dash::menuSubItem(
               text = "Gruppen",
               tabName = "group",

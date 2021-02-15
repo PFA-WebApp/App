@@ -61,6 +61,7 @@ button.return-btn, .dark-mode button.return-btn {
   color: white;
   background-color: rgb(221, 75, 57);
   border-color: rgb(100, 50, 30);
+  margin-bottom: 10px;
 }
 
 button.return-btn:hover, .dark-mode button.return-btn:hover,
@@ -74,6 +75,7 @@ button.write-off-btn, .dark-mode button.write-off-btn {
   color: white;
   background-color: rgb(255, 133, 27);
   border-color: rgb(200, 95, 0);
+  margin-bottom: 10px;
 }
 
 button.write-off-btn:hover, .dark-mode button.write-off-btn:hover,

@@ -230,7 +230,7 @@ db_set_password <- function(db, user_id, password) {
 #'
 #' @export
 db_has_user_name <- function(db, name) {
-  name %in% names(db_get_users(db, include_removed = TRUE))
+  name %in% names(db_get_users(db))
 }
 
 

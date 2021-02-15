@@ -15,33 +15,8 @@ operate_circulation_ui <- function(id) {
     shiny::uiOutput(
       outputId = ns("subtype")
     ),
-    shiny::fluidRow(
-      shiny::column(
-        width = 6,
-        shiny::actionButton(
-          inputId = ns("borrow"),
-          label = "Ausleihen",
-          icon = shiny::icon("sign-out-alt"),
-          width = "100%",
-          class = "borrow-btn"
-        )
-      ),
-      shiny::column(
-        width = 6,
-        shiny::actionButton(
-          inputId = ns("return"),
-          label = "Zurückgeben",
-          icon = shiny::icon("sign-in-alt"),
-          width = "100%",
-          class = "return-btn"
-        )
-      ),
-      shiny::column(
-        width = 6,
-        shiny::uiOutput(
-          outputId = ns("write_off_button")
-        )
-      )
+    shiny::uiOutput(
+      outputId = ns("buttons")
     )
   )
 }
@@ -139,14 +114,62 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
         names(subtypes_r())[subtypes_r() == shiny::req(input$subtype)]
       })
 
-      output$write_off_button <- shiny::renderUI({
+      output$buttons <- shiny::renderUI({
         if (.values$user$status() == "admin") {
-          shiny::actionButton(
-            inputId = ns("write_off"),
-            label = "Abschreiben",
-            icon = shiny::icon("balance-scale-right"),
-            width = "100%",
-            class = "write-off-btn"
+          shiny::fluidRow(
+            shiny::column(
+              width = 4,
+              shiny::actionButton(
+                inputId = ns("borrow"),
+                label = "Ausleihen",
+                icon = shiny::icon("sign-out-alt"),
+                width = "100%",
+                class = "borrow-btn"
+              )
+            ),
+            shiny::column(
+              width = 4,
+              shiny::actionButton(
+                inputId = ns("write_off"),
+                label = "Abschreiben",
+                icon = shiny::icon("balance-scale-right"),
+                width = "100%",
+                class = "write-off-btn"
+              )
+            ),
+            shiny::column(
+              width = 4,
+              shiny::actionButton(
+                inputId = ns("return"),
+                label = "Zurückgeben",
+                icon = shiny::icon("sign-in-alt"),
+                width = "100%",
+                class = "return-btn"
+              )
+            )
+          )
+        } else {
+          shiny::fluidRow(
+            shiny::column(
+              width = 6,
+              shiny::actionButton(
+                inputId = ns("borrow"),
+                label = "Ausleihen",
+                icon = shiny::icon("sign-out-alt"),
+                width = "100%",
+                class = "borrow-btn"
+              )
+            ),
+            shiny::column(
+              width = 6,
+              shiny::actionButton(
+                inputId = ns("return"),
+                label = "Zurückgeben",
+                icon = shiny::icon("sign-in-alt"),
+                width = "100%",
+                class = "return-btn"
+              )
+            )
           )
         }
       })
