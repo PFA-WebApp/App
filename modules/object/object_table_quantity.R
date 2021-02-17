@@ -117,6 +117,18 @@ object_table_quantity_server <- function(id,
             type = "warning",
             duration = 5
           )
+
+          amount <- quantity_return$quantity_r() - old_quantity_r()
+
+          db_add_circulation(
+            db = .values$db,
+            user_id = .values$user$id(),
+            subtype_id = object_id_r(),
+            quantity = amount,
+            op_type = 2
+          )
+
+          .values$update$circulation(.values$update$circulation() + 1)
         } else {
           shiny::showNotification(
             ui = paste0(

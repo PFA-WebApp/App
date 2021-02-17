@@ -2,21 +2,58 @@
 #'
 #' @template db
 #'
+#' @param op_type 1: Borrow and Return. 2: Write-off and other quantity changes
+#'
 #' @family circulation
 #'
 #' @export
-db_add_circulation <- function(db, user_id, subtype_id, quantity) {
+db_add_circulation <- function(db, user_id, subtype_id, quantity, op_type) {
+  stopifnot(op_type %in% 1:2)
+
   entry <- tibble::tibble(
     user_id = user_id,
     subtype_id = subtype_id,
     quantity = quantity,
-    time = as.character(Sys.time())
+    time = as.character(Sys.time()),
+    op_type = op_type
   )
 
   DBI::dbAppendTable(
     db,
     "circulation",
     entry
+  )
+}
+
+
+
+#' Get Circulation Table
+#'
+#' @template db
+#'
+#' @family circulation
+#'
+#' @export
+db_get_circulation_table <- function(db) {
+  DBI::dbGetQuery(
+    db,
+    "
+    SELECT
+      circulation.rowid AS rowid,
+      circulation.user_id AS user_id,
+      circulation.subtype_id AS subtype_id,
+      circulation.quantity AS quantity,
+      circulation.time AS time,
+      circulation.op_type AS op_type,
+      user.removed AS user_removed,
+      user.name AS user_name,
+      subtype.subtype_name AS subtype_name,
+      type.type_name AS type_name
+    FROM circulation
+    INNER JOIN user ON circulation.user_id = user.rowid
+    INNER JOIN subtype ON circulation.subtype_id = subtype.rowid
+    INNER JOIN type ON subtype.type_id = type.rowid
+    "
   )
 }
 
@@ -32,7 +69,8 @@ db_add_circulation <- function(db, user_id, subtype_id, quantity) {
 db_get_borrowed_quantity <- function(db, subtype_id) {
   borrowed <- DBI::dbGetQuery(
     db,
-    "SELECT SUM(quantity) AS borrowed FROM circulation WHERE subtype_id = ?",
+    "SELECT SUM(quantity) AS borrowed FROM circulation
+    WHERE subtype_id = ? AND op_type = 1",
     params = list(subtype_id)
   )$borrowed
 
@@ -67,7 +105,8 @@ db_get_available_quantity <- function(db, subtype_id) {
 db_get_borrowed_quantity_by_user_id <- function(db, user_id, subtype_id) {
   borrowed <- DBI::dbGetQuery(
     db,
-    "SELECT SUM(quantity) AS borrowed FROM circulation WHERE user_id = ? AND subtype_id = ?",
+    "SELECT SUM(quantity) AS borrowed FROM circulation
+    WHERE user_id = ? AND subtype_id = ? AND op_type = 1",
     params = list(user_id, subtype_id)
   )$borrowed
 
@@ -86,7 +125,8 @@ db_get_borrowed_quantity_by_user_id <- function(db, user_id, subtype_id) {
 db_get_total_borrowed_quantity_by_user_id <- function(db, user_id) {
   borrowed <- DBI::dbGetQuery(
     db,
-    "SELECT SUM(quantity) AS borrowed FROM circulation WHERE user_id = ?",
+    "SELECT SUM(quantity) AS borrowed FROM circulation
+    WHERE user_id = ? AND op_type = 1",
     params = list(user_id)
   )$borrowed
 
@@ -105,7 +145,7 @@ db_get_total_borrowed_quantity_by_user_id <- function(db, user_id) {
 db_get_borrow_summary <- function(db) {
   DBI::dbGetQuery(
     db,
-    "SELECT subtype_id, quantity, time FROM circulation"
+    "SELECT subtype_id, quantity, time FROM circulation WHERE op_type = 1"
   ) %>%
     borrow_summary(sym("subtype_id"))
 }
@@ -122,7 +162,8 @@ db_get_borrow_summary <- function(db) {
 db_get_borrow_summary_by_user_id <- function(db, user_id) {
   DBI::dbGetQuery(
     db,
-    "SELECT subtype_id, quantity, time FROM circulation WHERE user_id = ?",
+    "SELECT subtype_id, quantity, time FROM circulation
+    WHERE user_id = ? AND op_type = 1",
     params = list(user_id)
   ) %>%
     borrow_summary(sym("subtype_id"))
@@ -140,7 +181,8 @@ db_get_borrow_summary_by_user_id <- function(db, user_id) {
 db_get_borrow_summary_by_subtype_id <- function(db, subtype_id) {
   DBI::dbGetQuery(
     db,
-    "SELECT user_id, quantity, time FROM circulation WHERE subtype_id = ?",
+    "SELECT user_id, quantity, time FROM circulation
+    WHERE subtype_id = ? AND op_type = 1",
     params = list(subtype_id)
   ) %>%
     borrow_summary(sym("user_id"))

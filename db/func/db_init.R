@@ -163,7 +163,8 @@ create_circulation_table <- function(db) {
     user_id = integer(),
     subtype_id = integer(),
     quantity = integer(),
-    time = character()
+    time = character(),
+    op_type = integer()
   )
 
   DBI::dbCreateTable(db, "circulation", tbl)

@@ -313,7 +313,8 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
           db = .values$db,
           user_id = user_id_r(),
           subtype_id = input$subtype,
-          quantity = quantity_return$quantity_r()
+          quantity = quantity_return$quantity_r(),
+          op_type = 1L
         )
 
         .values$update$circulation(.values$update$circulation() + 1)
@@ -339,7 +340,8 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
           db = .values$db,
           user_id = user_id_r(),
           subtype_id = input$subtype,
-          quantity = -1 * quantity_return$quantity_r()
+          quantity = -1 * quantity_return$quantity_r(),
+          op_type = 1L
         )
 
         .values$update$circulation(.values$update$circulation() + 1)
@@ -361,13 +363,25 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
       shiny::observeEvent(input$confirm_write_off, {
         shiny::removeModal()
 
+        amount <- -1 * quantity_return$quantity_r()
+
         db_change_subtype_max_quantity(
           .values$db,
           subtype_id = input$subtype,
-          amount = -1 * quantity_return$quantity_r()
+          amount = amount
         )
 
         .values$update$subtype(.values$update$subtype() + 1)
+
+        db_add_circulation(
+          db = .values$db,
+          user_id = user_id_r(),
+          subtype_id = input$subtype,
+          quantity = amount,
+          op_type = 2
+        )
+
+        .values$update$circulation(.values$update$circulation() + 1)
 
         shiny::showNotification(
           ui = operate_notification_text(

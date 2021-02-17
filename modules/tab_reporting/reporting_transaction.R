@@ -15,7 +15,7 @@ reporting_transaction_server <- function(id, .values) {
 
       transaction_table_r <- shiny::reactive({
         .values$update$circulation()
-        db_get_table(.values$db, "circulation")
+        db_get_circulation_table(.values$db)
       })
 
       formatted_transaction_table_r <- shiny::reactive({
@@ -28,15 +28,15 @@ reporting_transaction_server <- function(id, .values) {
         tbl <- tbl %>%
           dplyr::arrange(desc(time)) %>%
           dplyr::mutate(
-            type_id = db_get_type_id_by_subtype_id(.values$db, subtype_id),
-            user_name = db_get_user_name(.values$db, user_id),
-            type_name = db_get_type_name(.values$db, type_id),
-            subtype_name = db_get_subtype_name(.values$db, subtype_id),
+            user_name = dplyr::case_when(
+              as.logical(user_removed) ~ paste(user_name, "-", user_id, "(gelöscht)"),
+              TRUE ~ user_name
+            ),
             quantity = -quantity
           ) %>%
           dplyr::select(
             Nutzer = user_name, Typ = type_name, Untertyp = subtype_name,
-            Datum = time, Menge = quantity
+            Datum = time, Menge = quantity, Entfernt = user_removed
           )
 
         if (.values$user$status() != "admin") {
@@ -48,13 +48,27 @@ reporting_transaction_server <- function(id, .values) {
 
       output$table <- DT::renderDataTable({
         DT::datatable(
-          formatted_transaction_table_r()
-        ) %>%
-        DT::formatStyle(
+          formatted_transaction_table_r(),
+          options = list(
+            columnDefs = list(
+              list(
+                targets = 6,
+                visible = FALSE
+              )
+            )
+          )
+        ) %>%  DT::formatStyle(
           columns = "Menge",
           color = DT::styleInterval(
             cuts = 0,
             values = c("rgb(221, 75, 57)", "rgb(0, 166, 90)")
+          )
+        ) %>% DT::formatStyle(
+          columns = "Nutzer",
+          valueColumns = "Entfernt",
+          color = DT::styleInterval(
+            cuts = 0,
+            values = c("inherit", "rgb(221, 75, 57)")
           )
         )
       })
