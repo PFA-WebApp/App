@@ -99,6 +99,10 @@ subtypes_server <- function(id, .values) {
       shiny::observeEvent(input$add_subtype, {
         shiny::showModal(shiny::modalDialog(
           easyClose = TRUE,
+          title = shiny::modalButton(
+            label = NULL,
+            icon = shiny::icon("window-close")
+          ),
           add_object_ui(
             id = ns("add_object"),
             title = "Untertyp hinzufügen",
@@ -111,9 +115,7 @@ subtypes_server <- function(id, .values) {
               label = "Menge"
             )
           ),
-          footer = shiny::modalButton(
-            label = "Abbrechen"
-          )
+          footer = NULL
         ))
       })
 

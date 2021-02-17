@@ -51,15 +51,18 @@ user_table_remove_user_server <- function(id,
         if (.values$yaml$showcase && user_id_r() %in% 1:3) {
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
-            title = "Zugriff verweigert!",
+            title = htmltools::tagList(
+              "Zugriff verweigert!",
+              shiny::modalButton(
+                label = NULL,
+                icon = shiny::icon("window-close")
+              )
+            ),
             htmltools::div(
               "Die Standardnutzer können in der Testversion nicht entfernt
               werden."
             ),
-            footer = shiny::modalButton(
-              label = NULL,
-              icon = shiny::icon("window-close")
-            )
+            footer = NULL
           ))
 
           return()
@@ -73,7 +76,13 @@ user_table_remove_user_server <- function(id,
         ) {
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
-            title = "Zugriff verweigert!",
+            title = htmltools::tagList(
+              "Zugriff verweigert!",
+              shiny::modalButton(
+                label = NULL,
+                icon = shiny::icon("window-close")
+              )
+            ),
             htmltools::div(
               paste0(
                 "Moderatoren dürfen nur Benutzer löschen, die sie selbst
@@ -84,10 +93,7 @@ user_table_remove_user_server <- function(id,
                 "\" hinzugefügt."
               )
             ),
-            footer = shiny::modalButton(
-              label = NULL,
-              icon = shiny::icon("window-close")
-            )
+            footer = NULL
           ))
 
           return()
@@ -98,14 +104,17 @@ user_table_remove_user_server <- function(id,
         if (user_name_r() == .values$user$name()) {
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
-            title = "Zugriff verweigert!",
+            title = htmltools::tagList(
+              "Zugriff verweigert!",
+              shiny::modalButton(
+                label = NULL,
+                icon = shiny::icon("window-close")
+              )
+            ),
             htmltools::div(
               "Administratoren können sich selbst nicht löschen."
             ),
-            footer = shiny::modalButton(
-              label = NULL,
-              icon = shiny::icon("window-close")
-            )
+            footer = NULL
           ))
 
           return()
@@ -117,15 +126,18 @@ user_table_remove_user_server <- function(id,
         if (borrowed > 0) {
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
-            title = "Zugriff verweigert!",
+            title = htmltools::tagList(
+              "ZUgriff verweigert!",
+              shiny::modalButton(
+                label = NULL,
+                icon = shiny::icon("window-close")
+              )
+            ),
             htmltools::div(
               "Der Benutzer kann nicht gelöscht werden, da er Elemente
               ausgeliehen hat."
             ),
-            footer = shiny::modalButton(
-              label = NULL,
-              icon = shiny::icon("window-close")
-            )
+            footer = NULL
           ))
 
           return()
@@ -133,7 +145,13 @@ user_table_remove_user_server <- function(id,
 
         shiny::showModal(shiny::modalDialog(
           easyClose = TRUE,
-          title = "Benutzer löschen",
+          title = htmltools::tagList(
+            "Benutzer löschen",
+            shiny::modalButton(
+              label = NULL,
+              icon = shiny::icon("window-close")
+            )
+          ),
           htmltools::div(
             paste0(
               "Bist du sicher, dass du den Benutzer \"",

@@ -42,15 +42,18 @@ user_table_change_status_server <- function(id, .values) {
         if (.values$yaml$showcase && user_id_r() %in% 1:3) {
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
-            title = "Zugriff verweigert!",
+            title = htmltools::tagList(
+              "Zugriff verweigert!",
+              shiny::modalButton(
+                label = NULL,
+                icon = shiny::icon("window-close")
+              )
+            ),
             htmltools::div(
               "Der Status der Standardnutzer kann in der Testversion nicht
               geändert werden."
             ),
-            footer = shiny::modalButton(
-              label = NULL,
-              icon = shiny::icon("window-close")
-            )
+            footer = NULL
           ))
 
           return()
@@ -60,21 +63,30 @@ user_table_change_status_server <- function(id, .values) {
         if (user_name_r() == .values$user$name()) {
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
-            title = "Zugriff verweigert!",
+            title = htmltools::tagList(
+              "Zugriff verweigert!",
+              shiny::modalButton(
+                label = NULL,
+                icon = shiny::icon("window-close")
+              )
+            ),
             htmltools::div(
               "Administratoren können ihren eigenen Status nicht ändern."
             ),
-            footer = shiny::modalButton(
-              label = NULL,
-              icon = shiny::icon("window-close")
-            )
+            footer = NULL
           ))
 
           return()
         }
 
         shiny::showModal(shiny::modalDialog(
-          title = "Status ändern",
+          title = htmltools::tagList(
+            "Status ändern",
+            shiny::modalButton(
+              label = NULL,
+              icon = shiny::icon("window-close")
+            )
+          ),
           easyClose = TRUE,
           shiny::selectInput(
             inputId = ns("user_status"),

@@ -46,7 +46,13 @@ password_reset_server <- function(id, .values) {
 
       shiny::observeEvent(input$start_reset, {
         shiny::showModal(shiny::modalDialog(
-          title = "Passwort zurücksetzen",
+          title = htmltools::tagList(
+            "Passwort zurücksetzen",
+            shiny::modalButton(
+              label = NULL,
+              icon = shiny::icon("window-close")
+            )
+          ),
           easyClose = TRUE,
           htmltools::div(
             paste0(

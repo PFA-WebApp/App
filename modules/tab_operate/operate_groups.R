@@ -50,7 +50,13 @@ operate_groups_server <- function(id, .values, type_id_r) {
                   clicked_group_index_rv(index)
 
                   shiny::showModal(shiny::modalDialog(
-                    title = "Enthaltene Typen",
+                    title = htmltools::tagList(
+                      "Enthaltene Typen",
+                      shiny::modalButton(
+                        label = NULL,
+                        icon = shiny::icon("window-close")
+                      )
+                    ),
                     easyClose = TRUE,
                     htmltools::p(
                       "Klicke auf einen Typen, um die Ausleihe bzw. die Rückgabe

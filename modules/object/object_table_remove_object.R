@@ -66,7 +66,13 @@ object_table_remove_object_server <- function(id,
       shiny::observeEvent(input$remove, {
         shiny::showModal(shiny::modalDialog(
           easyClose = TRUE,
-          title = label$remove_btn_title,
+          title = htmltools::tagList(
+            label$remove_btn_title,
+            shiny::modalButton(
+              label = NULL,
+              icon = shiny::icon("window-close")
+            )
+          ),
           htmltools::div(
             paste0(
               "Bist du sicher, dass du ",

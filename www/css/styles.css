@@ -175,3 +175,11 @@ ul[data-tabsetid] .nav-link.active:hover {
 .dark-mode .fa-github {
   color: white;
 }
+
+.modal-title {
+  width: 100%;
+}
+
+.modal-title button {
+  float: right;
+}

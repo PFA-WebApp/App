@@ -68,7 +68,13 @@ object_table_quantity_server <- function(id,
 
       shiny::observeEvent(input$quantity, {
         shiny::showModal(shiny::modalDialog(
-          title = label$change_quantity,
+          title = htmltools::tagList(
+            label$change_quantity,
+            shiny::modalButton(
+              label = NULL,
+              icon = shiny::icon("window-close")
+            )
+          ),
           easyClose = TRUE,
           object_quantity_input_ui(
             id = ns("object_quantity_input"),

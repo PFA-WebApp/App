@@ -42,7 +42,13 @@ file_manager_remove_server <- function(id,
 
       shiny::observeEvent(file_r(), {
         shiny::showModal(shiny::modalDialog(
-          title = "Datei löschen",
+          title = htmltools::tagList(
+            "Datei löschen",
+            shiny::modalButton(
+              label = NULL,
+              icon = shiny::icon("window-close")
+            )
+          ),
           easyClose = TRUE,
           paste0(
             "Bist Du sicher, dass Du die Datei \"",

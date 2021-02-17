@@ -197,7 +197,13 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
         title <- c("Ausleihen", "Zurückgeben", "Abschreiben")
 
         shiny::modalDialog(
-          title = title[operate_index],
+          title = htmltools::tagList(
+            title[operate_index],
+            shiny::modalButton(
+              label = NULL,
+              icon = shiny::icon("window-close")
+            )
+          ),
           easyClose = TRUE,
           shinyjs::disabled(
             shiny::textInput(

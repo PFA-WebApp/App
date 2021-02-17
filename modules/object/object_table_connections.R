@@ -71,7 +71,13 @@ object_table_connections_server <- function(id,
         )
 
         shiny::showModal(shiny::modalDialog(
-          title = title,
+          title = htmltools::tagList(
+            title,
+            shiny::modalButton(
+              label = NULL,
+              icon = shiny::icon("window-close")
+            )
+          ),
           easyClose = TRUE,
           shiny::selectInput(
             inputId = ns("object_connections"),

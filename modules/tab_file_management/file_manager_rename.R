@@ -51,7 +51,13 @@ file_manager_rename_server <- function(id,
 
       shiny::observeEvent(file_r(), {
         shiny::showModal(shiny::modalDialog(
-          title = "Dateinamen bearbeiten",
+          title = htmltools::tagList(
+            "Dateinamen bearbeiten",
+            shiny::modalButton(
+              label = NULL,
+              icon = shiny::icon("window-close")
+            )
+          ),
           easyClose = TRUE,
           shiny::textInput(
             inputId = ns("object_name"),

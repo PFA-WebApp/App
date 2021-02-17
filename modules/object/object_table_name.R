@@ -75,7 +75,13 @@ object_table_name_server <- function(id,
       # even if the same object is clicked again
       shiny::observeEvent(object_id_r(), {
         shiny::showModal(shiny::modalDialog(
-          title = label$change_name,
+          title = htmltools::tagList(
+            label$change_name,
+            shiny::modalButton(
+              label = NULL,
+              icon = shiny::icon("window-close")
+            )
+          ),
           easyClose = TRUE,
           shiny::textInput(
             inputId = ns("object_name"),
