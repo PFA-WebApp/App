@@ -51,7 +51,8 @@ ui_server <- function(source_to_globalenv = FALSE) {
     options(shiny.maxRequestSize = 100*1024^2)
 
     # UI -----------------------------------------------------------------------
-    ui <- htmltools::div(
+    ui <- htmltools::tagList(
+        htmltools::includeScript("www/js/dark-mode.js"),
         htmltools::includeScript("www/js/fileInputText.js"),
         tags$head(
             # Include custom css styles
