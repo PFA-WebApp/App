@@ -75,6 +75,26 @@ db_get_borrowed_quantity_by_user_id <- function(db, user_id, subtype_id) {
 }
 
 
+
+#' Get Total Borrowed Quantity From user
+#'
+#' @template db
+#'
+#' @family circulation
+#'
+#' @export
+db_get_total_borrowed_quantity_by_user_id <- function(db, user_id) {
+  borrowed <- DBI::dbGetQuery(
+    db,
+    "SELECT SUM(quantity) AS borrowed FROM circulation WHERE user_id = ?",
+    params = list(user_id)
+  )$borrowed
+
+  if (is.na(borrowed)) 0 else borrowed
+}
+
+
+
 #' Get Borrow Summary
 #'
 #' @template db

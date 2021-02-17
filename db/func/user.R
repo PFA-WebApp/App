@@ -47,7 +47,7 @@ db_add_user <- function(db,
 db_get_user_id <- function(db, user_name) {
   DBI::dbGetQuery(
     db,
-    "SELECT rowid FROM user WHERE name = ?",
+    "SELECT rowid FROM user WHERE name = ? AND removed = 0",
     params = list(user_name)
   )$rowid
 }

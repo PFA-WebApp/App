@@ -111,6 +111,26 @@ user_table_remove_user_server <- function(id,
           return()
         }
 
+        borrowed <- db_get_total_borrowed_quantity_by_user_id(
+          .values$db, user_id_r()
+        )
+        if (borrowed > 0) {
+          shiny::showModal(shiny::modalDialog(
+            easyClose = TRUE,
+            title = "Zugriff verweigert!",
+            htmltools::div(
+              "Der Benutzer kann nicht gelöscht werden, da er Elemente
+              ausgeliehen hat."
+            ),
+            footer = shiny::modalButton(
+              label = NULL,
+              icon = shiny::icon("window-close")
+            )
+          ))
+
+          return()
+        }
+
         shiny::showModal(shiny::modalDialog(
           easyClose = TRUE,
           title = "Benutzer löschen",
