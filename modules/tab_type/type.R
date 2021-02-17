@@ -4,7 +4,7 @@ type_ui <- function(id) {
   shiny::fluidRow(
     shiny::column(
       width = 6,
-      add_object_ui(
+      add_object_box_ui(
         id = ns("add_type"),
         title = "Typ hinzufügen",
         label = "Typname",

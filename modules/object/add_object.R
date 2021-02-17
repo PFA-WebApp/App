@@ -1,5 +1,31 @@
 add_object_ui <- function(...,
                           id,
+                          label,
+                          placeholder
+) {
+  ns <- shiny::NS(id)
+
+  htmltools::tagList(
+    shiny::textInput(
+      inputId = ns("object_name"),
+      label = label,
+      placeholder = placeholder
+    ),
+    shiny::uiOutput(
+      outputId = ns("wrong_name_length")
+    ),
+    shiny::uiOutput(
+      outputId = ns("name_taken")
+    ),
+    ...,
+    shiny::uiOutput(
+      outputId = ns("add_object")
+    )
+  )
+}
+
+add_object_box_ui <- function(...,
+                          id,
                           title,
                           label,
                           placeholder,

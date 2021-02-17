@@ -4,7 +4,7 @@ group_ui <- function(id) {
   shiny::fluidRow(
     shiny::column(
       width = 6,
-      add_object_ui(
+      add_object_box_ui(
         id = ns("add_group"),
         title = "Gruppe hinzufügen",
         label = "Gruppenname",
