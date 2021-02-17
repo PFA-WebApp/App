@@ -290,3 +290,18 @@ db_has_subtype_id <- function(db, subtype_id) {
 db_has_subtype_name <- function(db, subtype_name) {
   subtype_name %in% names(db_get_subtypes(db))
 }
+
+
+
+#' Check If Type Has Subtype Name
+#'
+#' @template db
+#' @template xxx-name
+#' @templateVar key subtype
+#'
+#' @family subtype
+#'
+#' @export
+db_has_type_subtype_name <- function(db, type_id, name) {
+  name %in% names(db_get_subtypes_by_type_id(db, type_id))
+}
