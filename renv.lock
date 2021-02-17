@@ -219,10 +219,15 @@
     },
     "fresh": {
       "Package": "fresh",
-      "Version": "0.2.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "fa54367040deb4537da49b7ac0ee5770"
+      "Version": "0.2.0.9010",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "dreamRs",
+      "RemoteRepo": "fresh",
+      "RemoteRef": "master",
+      "RemoteSha": "bf1e00a9d9f2c3388fd88a6a0ca63869b3bf8a81",
+      "Hash": "6f6baebcf33540a38c5b606fda8199a2"
     },
     "fs": {
       "Package": "fs",
