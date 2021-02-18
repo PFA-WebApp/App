@@ -127,7 +127,7 @@ user_table_remove_user_server <- function(id,
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
             title = htmltools::tagList(
-              "ZUgriff verweigert!",
+              "Zugriff verweigert!",
               shiny::modalButton(
                 label = NULL,
                 icon = shiny::icon("window-close")

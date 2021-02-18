@@ -53,6 +53,7 @@ db_get_circulation_table <- function(db) {
     INNER JOIN user ON circulation.user_id = user.rowid
     INNER JOIN subtype ON circulation.subtype_id = subtype.rowid
     INNER JOIN type ON subtype.type_id = type.rowid
+    WHERE circulation.op_type = 1
     "
   )
 }

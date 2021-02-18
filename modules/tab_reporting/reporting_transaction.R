@@ -15,6 +15,7 @@ reporting_transaction_server <- function(id, .values) {
 
       transaction_table_r <- shiny::reactive({
         .values$update$circulation()
+        .values$update$user()
         db_get_circulation_table(.values$db)
       })
 
