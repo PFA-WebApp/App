@@ -112,55 +112,85 @@ container_server <- function(id, .values) {
 
       ns <- session$ns
 
-      sidebar_menu_server(
+      sidebar_menu_return <- sidebar_menu_server(
         id = "sidebar_menu",
         .values = .values
       )
 
-      login_server(
-        id = "login",
-        .values = .values
+      servers <- list(
+        login = function() {
+          login_server(
+            id = "login",
+            .values = .values
+          )
+        },
+        operate = function() {
+          operate_server(
+            id = "operate",
+            .values = .values
+          )
+        },
+        reporting = function() {
+          reporting_server(
+            id = "reporting",
+            .values = .values
+          )
+        },
+        user_management = function() {
+          user_management_server(
+            id = "user_management",
+            .values = .values
+          )
+        },
+        group = function() {
+          group_server(
+            id = "group",
+            .values = .values
+          )
+        },
+        type = function() {
+          type_server(
+            id = "type",
+            .values = .values
+          )
+        },
+        file_management = function() {
+          file_management_server(
+            id = "file_management",
+            .values = .values
+          )
+        },
+        qrcode = function() {
+          qrcode_server(
+            id = "qrcode",
+            .values = .values
+          )
+        },
+        settings = function() {
+          settings_server(
+            id = "settings",
+            .values = .values
+          )
+        }
       )
 
-      operate_server(
-        id = "operate",
-        .values = .values
-      )
+      called_rv <- shiny::reactiveVal(character())
 
-      reporting_server(
-        id = "reporting",
-        .values = .values
-      )
-
-      user_management_server(
-        id = "user_management",
-        .values = .values
-      )
-
-      group_server(
-        id = "group",
-        .values = .values
-      )
-
-      type_server(
-        id = "type",
-        .values = .values
-      )
-
-      file_management_server(
-        id = "file_management",
-        .values = .values
-      )
-
-      qrcode_server(
-        id = "qrcode",
-        .values = .values
-      )
-
-      settings_server(
-        id = "settings",
-        .values = .values
-      )
+      shiny::observeEvent(sidebar_menu_return$sidebar_r(), {
+        call_modules(
+          id = sidebar_menu_return$sidebar_r(),
+          servers = servers,
+          called_rv = called_rv
+        )
+      })
     }
   )
+}
+
+call_modules <- function(id, servers, called_rv) {
+  if (!id %in% called_rv()) {
+    called_rv(c(called_rv(), id))
+    # Call server function of this module
+    servers[[id]]()
+  }
 }

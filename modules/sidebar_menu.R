@@ -106,6 +106,10 @@ sidebar_menu_server <- function(id, .values) {
           selected = tabName
         )
       }
+
+      return_list <- list(
+        sidebar_r = shiny::reactive(input$sidebar)
+      )
     }
   )
 }
