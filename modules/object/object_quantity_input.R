@@ -30,7 +30,8 @@ object_quantity_input_server <- function(id,
                                          max_r = shiny::reactive(Inf),
                                          max_message_r = shiny::reactive(""),
                                          min_r = shiny::reactive(-Inf),
-                                         min_message_r = shiny::reactive("")
+                                         min_message_r = shiny::reactive(""),
+                                         object_label = "Die Menge"
 ) {
   shiny::moduleServer(
     id,
@@ -42,7 +43,10 @@ object_quantity_input_server <- function(id,
         shiny::validate(
           shiny::need(
             !not_integer_r(),
-            "Die Menge muss ganzzahlig sein!\n\n"
+            glue::glue(
+              "{object} muss ganzzahlig sein!\n\n",
+              object = object_label
+            )
           ),
           errorClass = "PFA"
         )
@@ -52,7 +56,10 @@ object_quantity_input_server <- function(id,
         shiny::validate(
           shiny::need(
             !negative_r(),
-            "Die Menge muss größer gleich Null sein!\n\n"
+            glue::glue(
+              "{object} muss größer gleich Null sein!\n\n",
+              object = object_label
+            )
           ),
           errorClass = "PFA"
         )
@@ -86,6 +93,7 @@ object_quantity_input_server <- function(id,
       })
 
       negative_r <- shiny::reactive({
+        if (min_r() > 0) return(FALSE)
         if (is.null(input$object_quantity)) return(TRUE)
         input$object_quantity < 0
       })
