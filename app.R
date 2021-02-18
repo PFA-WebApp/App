@@ -52,6 +52,10 @@ ui_server <- function(source_to_globalenv = FALSE) {
 
     # UI -----------------------------------------------------------------------
     ui <- htmltools::tagList(
+        waiter::use_waiter(),
+        waiter::waiter_show_on_load(
+            html = waiter::spin_solar()
+        ),
         htmltools::includeScript("www/js/dark-mode.js"),
         htmltools::includeScript("www/js/fileInputText.js"),
         tags$head(
@@ -148,6 +152,8 @@ ui_server <- function(source_to_globalenv = FALSE) {
             id = "container",
             .values = .values
         )
+
+        waiter::waiter_hide()
 
         session$onSessionEnded(function() {
             DBI::dbDisconnect(.values$db)
