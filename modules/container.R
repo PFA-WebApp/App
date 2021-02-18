@@ -2,6 +2,7 @@ container_ui <- function(id) {
   ns <- shiny::NS(id)
 
   bs4Dash::dashboardPage(
+    title = "Sensotheka",
     freshTheme = fresh::create_theme(
       fresh::bs4dash_vars(
         sidebar_dark_bg = "#343a40",

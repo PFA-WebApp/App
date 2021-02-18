@@ -153,6 +153,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
             .values = .values
         )
 
+        # Hide waiter when initialisation is done
         waiter::waiter_hide()
 
         session$onSessionEnded(function() {
