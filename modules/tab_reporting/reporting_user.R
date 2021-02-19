@@ -20,7 +20,7 @@ reporting_user_server <- function(id, .values) {
 
       user_choices_r <- shiny::reactive({
         .values$update$user()
-        db_get_users(.values$db, include_removed = TRUE)
+        db_get_users(.values$db)
       })
 
       output$select_user <- shiny::renderUI({
