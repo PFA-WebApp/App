@@ -156,6 +156,23 @@ ui_server <- function(source_to_globalenv = FALSE) {
         # Hide waiter when initialisation is done
         waiter::waiter_hide()
 
+        # Handle dark mode cookie
+        shiny::observeEvent(TRUE, {
+            js$getCookie(
+                cookie = "dark-mode",
+                id = "cookie_dark_mode"
+            )
+        }, once = TRUE)
+
+        shiny::observeEvent(input$dark_mode, {
+            js$setCookie(
+                cookie = "dark-mode",
+                value = input$dark_mode,
+                id = "cookie_dark_mode"
+            )
+        })
+
+        # Disconnect on session end
         session$onSessionEnded(function() {
             DBI::dbDisconnect(.values$db)
         })
