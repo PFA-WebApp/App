@@ -213,11 +213,16 @@ borrow_summary <- function(tbl, group_by) {
 #'
 #' @export
 db_get_available_summary <- function(db, type_id) {
-  subtype_ids <- db_get_subtypes_by_type_id(db, type_id)
+  DBI::dbWithTransaction(
+    db, {
+      subtype_ids <- db_get_subtypes_by_type_id(db, type_id)
 
-  tibble::tibble(
-    subtype_id = subtype_ids,
-    quantity = db_get_available_quantity(db, subtype_ids),
-    max_quantity = db_get_subtype_max_quantity(db, subtype_ids)
+      tibble::tibble(
+        subtype_id = subtype_ids,
+        quantity = db_get_available_quantity(db, subtype_ids),
+        max_quantity = db_get_subtype_max_quantity(db, subtype_ids),
+        critical_quantity = db_get_critical_quantity(db, subtype_ids)
+      )
+    }
   )
 }

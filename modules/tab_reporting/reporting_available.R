@@ -9,6 +9,10 @@ reporting_available_ui <- function(id) {
     shiny::uiOutput(
       outputId = ns("type")
     ),
+    shiny::checkboxInput(
+      inputId = ns("critical"),
+      label = "Nur kritische Bestände anzeigen"
+    ),
     DT::dataTableOutput(
       outputId = ns("table")
     )
@@ -37,7 +41,14 @@ reporting_available_server <- function(id, .values) {
 
       available_table_r <- shiny::reactive({
         .values$update$circulation()
-        db_get_available_summary(.values$db, shiny::req(input$type))
+        tbl <- db_get_available_summary(.values$db, shiny::req(input$type))
+
+        if (input$critical) {
+          tbl <- tbl %>%
+            dplyr::filter(quantity <= critical_quantity)
+        }
+
+        tbl
       })
 
       formatted_available_table_r <- shiny::reactive({

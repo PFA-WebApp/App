@@ -113,6 +113,7 @@ create_subtype_table <- function(db) {
     type_id = integer(),
     subtype_name = character(),
     quantity = integer(),
+    critical_quantity = integer(),
     removed = integer()
   )
 
