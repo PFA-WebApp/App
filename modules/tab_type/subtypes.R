@@ -35,7 +35,7 @@ subtypes_server <- function(id, .values) {
         is_group_object = FALSE,
         update_name = "subtype",
         length_name = "subtype_name",
-        show = c("name", "quantity", "remove")
+        show = c("name", "quantity", "critical_quantity", "remove")
       )
 
       db <- list(
@@ -49,6 +49,7 @@ subtypes_server <- function(id, .values) {
           filter_table = function(db) db_get_subtypes_by_type_id(db, input$type),
           get_object_name = db_get_subtype_name,
           get_object_quantity = db_get_subtype_max_quantity,
+          get_object_critical_quantity = db_get_critical_quantity,
           has_object_id = db_has_subtype_id,
           has_object_name = function(db, name) {
             db_has_type_subtype_name(
@@ -59,6 +60,7 @@ subtypes_server <- function(id, .values) {
           },
           set_object_name = db_set_subtype_name,
           set_object_quantity = db_set_subtype_max_quantity,
+          set_object_critical_quantity = db_set_critical_quantity,
           remove_object = db_remove_subtype,
           remove_object_allowed = remove_subtype_allowed
         )
@@ -68,7 +70,7 @@ subtypes_server <- function(id, .values) {
         add_label = "Untertypen hinzufügen",
         change_name = "Untertypennamen bearbeiten",
         change_quantity = "Untertypenmenge bearbeiten",
-        colnames = c("Untertypname", "Menge", "Entfernen"),
+        colnames = c("Untertypname", "Menge", "Kritischer Bestand", "Entfernen"),
         new_name = "Neuer Untertypenname",
         new_quantity = "Neue Untertypenmenge",
         object = "Untertyp",

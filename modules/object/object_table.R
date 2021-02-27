@@ -74,7 +74,27 @@ object_table_server <- function(id,
           id = "object_table_quantity",
           .values = .values,
           settings = settings,
-          db = db,
+          db = list(
+            func = list(
+              get_object_quantity = db$func$get_object_quantity,
+              set_object_quantity = db$func$set_object_quantity
+            )
+          ),
+          label = label
+        )
+      }
+
+      if ("critical_quantity" %in% settings$show) {
+        object_table_quantity_server(
+          id = "object_table_critical_quantity",
+          .values = .values,
+          settings = settings,
+          db = list(
+            func = list(
+              get_object_quantity = db$func$get_object_critical_quantity,
+              set_object_quantity = db$func$set_object_critical_quantity
+            )
+          ),
           label = label
         )
       }
@@ -139,6 +159,21 @@ object_table_server <- function(id,
               ui_args = list(
                 quantity = function(object_id) {
                   db$func$get_object_quantity(.values$db, object_id)
+                }
+              )
+            )
+          )
+        }
+
+        if ("critical_quantity" %in% settings$show) {
+          tbl$critical_quantity <- as.character(
+            map_ui(
+              id = ns("object_table_critical_quantity"),
+              object_ids = tbl$rowid,
+              ui_func = object_table_quantity_ui,
+              ui_args = list(
+                quantity = function(object_id) {
+                  db$func$get_object_critical_quantity(.values$db, object_id)
                 }
               )
             )
