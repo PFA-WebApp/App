@@ -43,7 +43,7 @@ subtypes_server <- function(id, .values) {
         name_column = "subtype_name",
         func = list(
           add_object = function(db, name) {
-            db_add_subtype(db, input$type, name, quantity_return$quantity_r())
+            db_add_subtype(db, input$type, name, quantity_return$quantity_r(), 0)
           },
           add_object_allowed = function(db, name) !quantity_return$error_r(),
           filter_table = function(db) db_get_subtypes_by_type_id(db, input$type),

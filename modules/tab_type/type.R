@@ -59,7 +59,7 @@ type_server <- function(id, .values) {
           add_object = function(db, name) {
             db_add_type(db, name)
             id <- db_get_type_id(db, name)
-            db_add_subtype(db, id, "Standard", 0)
+            db_add_subtype(db, id, "Standard", 0, 0)
           },
           get_connections = db_get_groups_by_type,
           get_possible_connections = db_get_groups,
