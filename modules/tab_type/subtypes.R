@@ -33,7 +33,7 @@ subtypes_server <- function(id, .values) {
 
       settings = list(
         is_group_object = FALSE,
-        update_name = "subtype",
+        update_name = c("subtype", "type"),
         length_name = "subtype_name",
         show = c("name", "quantity", "critical_quantity", "remove")
       )

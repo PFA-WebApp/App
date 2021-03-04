@@ -111,7 +111,9 @@ object_table_server <- function(id,
 
       # object table -----------------------------------------------------------
       output$object_table <- DT::renderDataTable({
-        .values$update[[settings$update_name]]()
+        purrr::walk(settings$update_name, function(update_name) {
+          .values$update[[update_name]]()
+        })
 
         tbl <- db_get_table(.values$db, db$table)
 

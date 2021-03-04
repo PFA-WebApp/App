@@ -67,7 +67,10 @@ object_table_name_server <- function(id,
       })
 
       old_object_name_r <- shiny::reactive({
-        .values$update[[settings$update_name]]()
+        purrr::walk(settings$update_name, function(update_name) {
+          .values$update[[update_name]]()
+        })
+
         db$func$get_object_name(.values$db, object_id_r())
       })
 
@@ -199,9 +202,11 @@ object_table_name_server <- function(id,
           )
         }
 
-        .values$update[[settings$update_name]](
-          .values$update[[settings$update_name]]() + 1
-        )
+        purrr::walk(settings$update_name, function(update_name) {
+          .values$update[[update_name]](
+            .values$update[[update_name]]() + 1
+          )
+        })
       })
     }
   )

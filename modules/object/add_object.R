@@ -175,9 +175,11 @@ add_object_server <- function(id,
 
         db$func$add_object(.values$db, input$object_name)
 
-        .values$update[[settings$update_name]](
-          .values$update[[settings$update_name]]() + 1
-        )
+        purrr::walk(settings$update_name, function(update_name) {
+          .values$update[[update_name]](
+            .values$update[[update_name]]() + 1
+          )
+        })
 
         on_add_rv(on_add_rv() + 1)
       })

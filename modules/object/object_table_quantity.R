@@ -62,7 +62,10 @@ object_table_quantity_server <- function(id,
       })
 
       old_quantity_r <- shiny::reactive({
-        .values$update[[settings$update_name]]()
+        purrr::walk(settings$update_name, function(update_name) {
+          .values$update[[update_name]]()
+        })
+
         db$func$get_object_quantity(.values$db, object_id_r())
       })
 
@@ -146,9 +149,11 @@ object_table_quantity_server <- function(id,
           )
         }
 
-        .values$update[[settings$update_name]](
-          .values$update[[settings$update_name]]() + 1
-        )
+        purrr::walk(settings$update_name, function(update_name) {
+          .values$update[[update_name]](
+            .values$update[[update_name]]() + 1
+          )
+        })
       })
 
       min_r <- shiny::reactive({

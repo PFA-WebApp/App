@@ -23,7 +23,10 @@ show_connections_server <- function(id, .values, settings, db, label) {
       ns <- session$ns
 
       objects_r <- shiny::reactive({
-        .values$update[[settings$update_name]]()
+        purrr::walk(settings$update_name, function(update_name) {
+          .values$update[[update_name]]()
+        })
+
         db$func$get_objects(.values$db)
       })
 

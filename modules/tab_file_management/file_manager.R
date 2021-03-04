@@ -58,7 +58,10 @@ file_manager_server <- function(id, .values, db, settings, label) {
       })
 
       choices_r <- shiny::reactive({
-        .values$update[[settings$update_name]]()
+        purrr::walk(settings$update_name, function(update_name) {
+          .values$update[[update_name]]()
+        })
+
         if (settings$table_name == "subtype") {
           db_get_subtypes_by_type_id(.values$db, shiny::req(input$select_type))
         } else {
