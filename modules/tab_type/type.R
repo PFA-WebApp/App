@@ -71,7 +71,8 @@ type_server <- function(id, .values) {
           remove_object = function(db, type_id) {
             db_remove_type(db, type_id)
             db_remove_subtypes_by_type_id(db, type_id)
-          }
+          },
+          remove_object_allowed = remove_type_allowed
         )
       )
 
