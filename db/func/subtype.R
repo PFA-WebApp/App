@@ -161,7 +161,7 @@ db_get_subtypes_by_type_id <- function(db, type_id) {
 db_get_type_id_by_subtype_id <- function(db, subtype_id) {
   DBI::dbGetQuery(
     db,
-    "SELECT type_id FROM subtype WHERE rowid = ? AND removed = 0",
+    "SELECT type_id FROM subtype WHERE rowid = ?",
     params = list(subtype_id)
   )$type_id
 }
