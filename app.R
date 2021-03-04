@@ -177,7 +177,6 @@ ui_server <- function(source_to_globalenv = FALSE) {
                 value = input$dark_mode,
                 id = "cookie_dark_mode"
             )
-            print(abc)
         })
 
         # Disconnect on session end
