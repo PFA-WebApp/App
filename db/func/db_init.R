@@ -75,20 +75,22 @@ db_init <- function(path = "db/db.sqlite") {
 
 #' @export
 create_user_table <- function(db) {
-  tbl <- tibble::tibble(
-    hash = character(),
-    name = character(),
-    status = character(),
-    password = character(),
-    added_from = character(),
-    time_added = character(),
-    time_current_logged = character(),
-    time_previous_logged = character(),
-    times_logged = integer(),
-    removed = integer()
+  DBI::dbExecute(
+    db,
+    "CREATE TABLE user (
+      rowid INTEGER NOT NULL PRIMARY KEY,
+      hash VARCHAR(255),
+      name VARCHAR(255) UNIQUE,
+      status VARCHAR(255) CHECK(status IN ('admin', 'mod', 'user')),
+      password VARCHAR(255),
+      added_from INT,
+      time_added VARCHAR(255),
+      time_current_logged VARCHAR(255),
+      time_previous_logged VARCHAR(255),
+      times_logged INT CHECK(times_logged >= 0),
+      removed INT CHECK(removed IN (0, 1))
+    )"
   )
-
-  DBI::dbCreateTable(db, "user", tbl)
 }
 
 
@@ -117,19 +119,33 @@ create_subtype_table <- function(db) {
     removed = integer()
   )
 
-  DBI::dbCreateTable(db, "subtype", tbl)
+  DBI::dbExecute(
+    db,
+    "CREATE TABLE subtype (
+      rowid INTEGER NOT NULL PRIMARY KEY,
+      type_id INT,
+      subtype_name VARCHAR(255),
+      quantity INT CHECK(quantity >= 0),
+      critical_quantity INT CHECK(quantity >= 0),
+      removed INT CHECK(removed IN (0, 1)),
+      FOREIGN KEY(type_id) REFERENCES type(rowid),
+      UNIQUE(type_id, subtype_name)
+    )"
+  )
 }
 
 
 
 #' @export
 create_type_table <- function(db) {
-  tbl <- tibble::tibble(
-    type_name = character(),
-    removed = integer()
+  DBI::dbExecute(
+    db,
+    "CREATE TABLE type (
+      rowid INTEGER NOT NULL PRIMARY KEY,
+      type_name VARCHAR(255) UNIQUE,
+      removed int CHECK(removed IN (0, 1))
+    )"
   )
-
-  DBI::dbCreateTable(db, "type", tbl)
 }
 
 

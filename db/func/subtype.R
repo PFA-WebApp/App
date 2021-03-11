@@ -18,7 +18,16 @@ db_add_subtype <- function(db, type_id, subtype_name, quantity, critical_quantit
     removed = 0
   )
 
-  DBI::dbAppendTable(db, "subtype", entry)
+  tryCatch(
+    DBI::dbAppendTable(db, "subtype", entry),
+    `Rcpp::exception` = function(e) {
+      if (stringr::str_detect(e$message, "UNIQUE.*type_id.*subtype_name")) {
+        return(0)
+      } else {
+        stop(e)
+      }
+    }
+  )
 
   id <- max(DBI::dbGetQuery(db, "SELECT rowid FROM subtype")$rowid)
   dir_create("subtype", id)

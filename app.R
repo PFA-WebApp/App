@@ -140,6 +140,8 @@ ui_server <- function(source_to_globalenv = FALSE) {
 
         # Connect to db
         .values$db <- DBI::dbConnect(RSQLite::SQLite(), "./db/db.sqlite")
+        # Enable foreign key support
+        DBI::dbExecute(.values$db, "PRAGMA foreign_keys=ON")
 
         # Store app.yml contents
         .values$yaml <- yaml::read_yaml(app_yml)

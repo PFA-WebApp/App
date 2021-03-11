@@ -201,21 +201,34 @@ add_user_server <- function(id, .values) {
           value = ""
         )
 
-        shiny::showNotification(
-          ui = paste0(
-            "Der Nutzer \"",
-            input$user_name,
-            "\" wurde erfolgreich hinzugefügt."
-          )
-        )
-
-        db_add_user(
+        success <- db_add_user(
           db = .values$db,
           name = input$user_name,
           status = input$user_status,
           password = bcrypt::hashpw(input$user_password_1),
           added_from = .values$user$id()
         )
+
+        if (success) {
+          shiny::showNotification(
+            ui = paste0(
+              "Der Nutzer \"",
+              input$user_name,
+              "\" wurde erfolgreich hinzugefügt."
+            ),
+            duration = 5,
+            type = "warning"
+          )
+        } else {
+          shiny::showNotification(
+            ui = paste(
+              "Hinzufügen fehlgeschlagen. Es gibt bereits einen Nutzer",
+              "mit dem selben Namen."
+            ),
+            duration = 5,
+            type = "error"
+          )
+        }
 
         .values$update$user(.values$update$user() + 1)
       })

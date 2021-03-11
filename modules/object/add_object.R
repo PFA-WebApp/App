@@ -164,16 +164,31 @@ add_object_server <- function(id,
           value = ""
         )
 
-        shiny::showNotification(
-          ui = paste0(
-            label$object_with_article,
-            " \"",
-            input$object_name,
-            "\" wurde erfolgreich hinzugefügt."
-          )
-        )
+        success <- db$func$add_object(.values$db, input$object_name)
 
-        db$func$add_object(.values$db, input$object_name)
+        if (success) {
+          shiny::showNotification(
+            ui = paste0(
+              label$object_with_article,
+              " \"",
+              input$object_name,
+              "\" wurde erfolgreich hinzugefügt."
+            ),
+            duration = 5,
+            type = "warning"
+          )
+        } else {
+          shiny::showNotification(
+            ui = paste0(
+              label$object_with_article,
+              " \"",
+              input$object_name,
+              "\" wurde bereits von einem anderen Nutzer hinzugefügt."
+            ),
+            duration = 5,
+            type = "error"
+          )
+        }
 
         purrr::walk(settings$update_name, function(update_name) {
           .values$update[[update_name]](

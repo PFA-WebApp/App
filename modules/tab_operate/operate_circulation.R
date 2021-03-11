@@ -315,28 +315,56 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
       shiny::observeEvent(input$confirm_borrow, {
         shiny::removeModal()
 
-        db_add_circulation(
-          db = .values$db,
-          user_id = user_id_r(),
-          subtype_id = input$subtype,
-          quantity = quantity_return$quantity_r(),
-          op_type = 1L
+        DBI::dbWithTransaction(
+          .values$db,
+          {
+            available_quantity <- db_get_available_quantity(
+              .values$db,
+              input$subtype
+            )
+
+            if (available_quantity < quantity_return$quantity_r()) {
+              success <- FALSE
+              DBI::dbBreak()
+            } else {
+              success <- TRUE
+            }
+
+            db_add_circulation(
+              db = .values$db,
+              user_id = user_id_r(),
+              subtype_id = input$subtype,
+              quantity = quantity_return$quantity_r(),
+              op_type = 1L
+            )
+          }
         )
 
         .values$update$circulation(.values$update$circulation() + 1)
 
-        shiny::showNotification(
-          ui = operate_notification_text(
-            operation = operate_rv(),
-            status = .values$user$status(),
-            user_name = user_name_r(),
-            quantity = quantity_return$quantity_r(),
-            type_name = type_name_r(),
-            subtype_name = subtype_name_r()
-          ),
-          duration = 5,
-          type = "warning"
-        )
+        if (success) {
+          shiny::showNotification(
+            ui = operate_notification_text(
+              operation = operate_rv(),
+              status = .values$user$status(),
+              user_name = user_name_r(),
+              quantity = quantity_return$quantity_r(),
+              type_name = type_name_r(),
+              subtype_name = subtype_name_r()
+            ),
+            duration = 5,
+            type = "warning"
+          )
+        } else {
+          shiny::showNotification(
+            ui = paste(
+              "Ausleihen fehlgeschlagen! Möglicherweise war ein anderer Nutzer",
+              "schneller als Du."
+            ),
+            duration = NULL,
+            type = "error"
+          )
+        }
       })
 
       shiny::observeEvent(input$confirm_return, {

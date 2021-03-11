@@ -31,7 +31,16 @@ db_add_user <- function(db,
     removed = 0
   )
 
-  DBI::dbAppendTable(db, "user", entry)
+  tryCatch(
+    DBI::dbAppendTable(db, "user", entry),
+    `Rcpp::exception` = function(e) {
+      if (stringr::str_detect(e$message, "user.name")) {
+        return(0)
+      } else {
+        stop(e)
+      }
+    }
+  )
 }
 
 
