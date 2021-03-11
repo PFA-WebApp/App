@@ -15,6 +15,8 @@ reporting_table_server <- function(id, .values, settings, object_id_r = NULL) {
 
       borrow_summary_r <- shiny::reactive({
         .values$update$circulation()
+        .values$update$subtype()
+        .values$update$type()
 
         switch(
           settings$summary,

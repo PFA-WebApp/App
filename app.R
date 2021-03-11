@@ -79,6 +79,13 @@ ui_server <- function(source_to_globalenv = FALSE) {
         shinyjs::extendShinyjs(
             "js/cookies.js",
             functions = c("getCookie", "setCookie", "rmCookie")
+        ),
+        shinydisconnect::disconnectMessage(
+            text = "Verbindung zum Server unterbrochen. Lade neu und versuche es erneut!",
+            refresh = "Neu laden",
+            background = "#343a40",
+            colour = "white",
+            top = "center"
         )
     )
 

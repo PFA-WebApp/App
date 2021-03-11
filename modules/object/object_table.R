@@ -85,7 +85,7 @@ object_table_server <- function(id,
       }
 
       if ("critical_quantity" %in% settings$show) {
-        object_table_quantity_server(
+        object_table_critical_quantity_server(
           id = "object_table_critical_quantity",
           .values = .values,
           settings = settings,
@@ -172,7 +172,7 @@ object_table_server <- function(id,
             map_ui(
               id = ns("object_table_critical_quantity"),
               object_ids = tbl$rowid,
-              ui_func = object_table_quantity_ui,
+              ui_func = object_table_critical_quantity_ui,
               ui_args = list(
                 quantity = function(object_id) {
                   db$func$get_object_critical_quantity(.values$db, object_id)
