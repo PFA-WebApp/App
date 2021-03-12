@@ -35,6 +35,16 @@ container_ui <- function(id) {
             href = "https://github.com/PFA-WebApp/App",
             shiny::icon("github")
           )
+        ),
+        htmltools::tags$li(
+          # Fake dropdown
+          class = "dropdown",
+          shiny::actionLink(
+            inputId = ns("refresh_db"),
+            label = NULL,
+            icon = shiny::icon("sync"),
+            class = "refresh-link"
+          )
         )
       )
     ),
@@ -182,6 +192,18 @@ container_server <- function(id, .values) {
           id = sidebar_menu_return$sidebar_r(),
           servers = servers,
           called_rv = called_rv
+        )
+      })
+
+      shiny::observeEvent(input$refresh_db, {
+        purrr::walk(.values$update, function(rv) {
+          rv(rv() + 1)
+        })
+
+        shiny::showNotification(
+          ui = "Daten aktualisiert.",
+          duration = 5,
+          type = "warning"
         )
       })
     }

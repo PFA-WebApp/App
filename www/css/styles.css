@@ -164,12 +164,22 @@ ul[data-tabsetid] .nav-link.active:hover {
   color: white;
 }
 
+.navbar .dropdown {
+  margin: 0 5px;
+}
+
 .github-link {
-  margin-right: 10px;
+  margin-right: 5px;
 }
 
 .fa-github {
   color: black;
+  transition: transform 0.5s ease;
+}
+
+.fa-github:hover, .dark-mode .fa-github:hover {
+  color: #007bff;
+  transform: scale(1.5);
 }
 
 .dark-mode .fa-github {
@@ -182,4 +192,49 @@ ul[data-tabsetid] .nav-link.active:hover {
 
 .modal-title button {
   float: right;
+}
+
+.refresh-link {
+  color: black;
+}
+
+.refresh-link:hover {
+  color: #007bff;
+}
+
+.refresh-link i {
+  animation: rotate 1.2s linear infinite;;
+  animation-play-state: paused;
+}
+
+.refresh-link i:hover {
+  animation-play-state: running;
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.dark-mode .refresh-link {
+  color: white;
+}
+
+.main-sidebar span.brand-text {
+  transition:
+    margin-left .3s linear,
+    opacity .3s ease,
+    visibility .3s ease,
+    letter-spacing .5s ease;
+}
+
+.brand-text:hover {
+  letter-spacing: 5px;
+}
+
+nav .nav-pills .nav-link:not(.active):hover,
+[class*="sidebar-dark-"] nav .nav-treeview > .nav-item > .nav-link:hover,
+[class*="sidebar-dark-"] nav .nav-treeview > .nav-item > .nav-link:focus {
+  color: rgb(194, 199, 208);
 }
