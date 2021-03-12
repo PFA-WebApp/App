@@ -1,6 +1,7 @@
 library(shiny)
 library(shinyjs)
 library(dplyr)
+# library needs to be called, otherwise qrcode generation does not work
 library(qrcode)
 
 # app.yml stores settings that may differ between execution environments

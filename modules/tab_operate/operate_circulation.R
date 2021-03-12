@@ -411,7 +411,7 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
             user_id = user_id_r(),
             subtype_id = input$subtype,
             quantity = amount,
-            op_type = 2
+            op_type = 2L
           )
 
           shiny::showNotification(

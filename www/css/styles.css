@@ -5,6 +5,14 @@
   align-content: stretch;
 }
 
+.flex-start {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: stretch;
+  flex-wrap: wrap;
+}
+
 .shiny-output-error-PFA {
   color: red;
 }
@@ -237,4 +245,30 @@ nav .nav-pills .nav-link:not(.active):hover,
 [class*="sidebar-dark-"] nav .nav-treeview > .nav-item > .nav-link:hover,
 [class*="sidebar-dark-"] nav .nav-treeview > .nav-item > .nav-link:focus {
   color: rgb(194, 199, 208);
+}
+
+.green {
+  background-color: rgb(0, 166, 90);
+}
+
+.red {
+  background-color: rgb(221, 75, 57)
+}
+
+.orange {
+  background-color: rgb(255, 133, 27);
+}
+
+.color-box {
+  width: 15px;
+  height: 15px;
+  margin: 0 3px;
+}
+
+.color-text {
+  margin-right: 12px;
+}
+
+.color-boxes {
+  margin-left: -3px;
 }

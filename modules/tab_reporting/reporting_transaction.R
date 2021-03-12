@@ -1,8 +1,43 @@
 reporting_transaction_ui <- function(id) {
   ns <- shiny::NS(id)
 
-  DT::dataTableOutput(
-    outputId = ns("table")
+  htmltools::tagList(
+    htmltools::div(
+      class = "flex-start color-boxes",
+      htmltools::div(
+        class = "flex",
+        htmltools::div(
+          class = "color-box green"
+        ),
+        htmltools::div(
+          class = "color-text",
+          "Zurückgegebene Menge"
+        )
+      ),
+      htmltools::div(
+        class = "flex",
+        htmltools::div(
+          class = "color-box red"
+        ),
+        htmltools::div(
+          class = "color-text",
+          "Ausgeliehene Menge"
+        )
+      ),
+      htmltools::div(
+        class = "flex",
+        htmltools::div(
+          class = "color-box orange"
+        ),
+        htmltools::div(
+          class = "color-text",
+          "Bestandsänderungen"
+        )
+      )
+    ),
+    DT::dataTableOutput(
+      outputId = ns("table")
+    )
   )
 }
 
@@ -33,11 +68,19 @@ reporting_transaction_server <- function(id, .values) {
               as.logical(user_removed) ~ paste(user_name, "-", user_id, "(gelöscht)"),
               TRUE ~ user_name
             ),
-            quantity = -quantity
+            quantity = dplyr::case_when(
+              op_type == 1 ~ -quantity,
+              TRUE ~ quantity
+            ),
+            quantity_color = dplyr::case_when(
+              op_type == 1 & quantity >= 0 ~ "rgb(0, 166, 90)",
+              op_type == 1 ~ "rgb(221, 75, 57)",
+              TRUE ~ "rgb(255, 133, 27)"
+            )
           ) %>%
           dplyr::select(
             Nutzer = user_name, Typ = type_name, Untertyp = subtype_name,
-            Datum = time, Menge = quantity, Entfernt = user_removed
+            Datum = time, Menge = quantity, user_removed, quantity_color
           )
 
         if (.values$user$status() != "admin") {
@@ -55,20 +98,20 @@ reporting_transaction_server <- function(id, .values) {
           options = list(
             columnDefs = list(
               list(
-                targets = which(names(tbl) == "Entfernt"),
+                targets = which(
+                  names(tbl) %in% c("user_removed", "quantity_color")
+                ),
                 visible = FALSE
               )
             )
           )
         ) %>%  DT::formatStyle(
           columns = "Menge",
-          color = DT::styleInterval(
-            cuts = 0,
-            values = c("rgb(221, 75, 57)", "rgb(0, 166, 90)")
-          )
+          valueColumns = "quantity_color",
+          color = DT::styleValue()
         ) %>% DT::formatStyle(
           columns = "Nutzer",
-          valueColumns = "Entfernt",
+          valueColumns = "user_removed",
           color = DT::styleInterval(
             cuts = 0,
             values = c("inherit", "rgb(221, 75, 57)")
