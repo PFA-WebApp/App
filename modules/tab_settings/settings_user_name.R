@@ -143,15 +143,26 @@ settings_user_name_server <- function(id, .values) {
         }
 
         if (pwd_correct) {
-          shiny::showNotification(
-            ui = paste0(
-              "Dein Benutzername wurde erfolgreich zu \"",
-              input$user_name,
-              "\" geändert."
-            )
-          )
+          success <- db_set_user_name(.values$db, .values$user$id(), input$user_name)
 
-          db_set_user_name(.values$db, .values$user$id(), input$user_name)
+          if (success) {
+            shiny::showNotification(
+              ui = paste0(
+                "Dein Benutzername wurde erfolgreich zu \"",
+                input$user_name,
+                "\" geändert."
+              ),
+              duration = 5,
+              type = "warning"
+            )
+          } else {
+            shiny::showNotification(
+              ui = "Dein Benutzername konnte nicht geändert werden.",
+              duration = 5,
+              type = "error"
+            )
+          }
+
           .values$user$name(input$user_name)
           .values$update$user(.values$update$user() + 1)
         }

@@ -399,36 +399,46 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
 
         amount <- -1 * quantity_return$quantity_r()
 
-        db_change_subtype_max_quantity(
+        success <- db_change_subtype_max_quantity(
           .values$db,
           subtype_id = input$subtype,
           amount = amount
         )
 
+        if (success) {
+          db_add_circulation(
+            db = .values$db,
+            user_id = user_id_r(),
+            subtype_id = input$subtype,
+            quantity = amount,
+            op_type = 2
+          )
+
+          shiny::showNotification(
+            ui = operate_notification_text(
+              operation = operate_rv(),
+              status = .values$user$status(),
+              user_name = user_name_r(),
+              quantity = quantity_return$quantity_r(),
+              type_name = type_name_r(),
+              subtype_name = subtype_name_r()
+            ),
+            duration = 5,
+            type = "warning"
+          )
+        } else {
+          shiny::showNotification(
+            ui = paste(
+              "Abschreiben fehlgeschlagen.",
+              "Ein anderer Nutzer war schneller als Du."
+            ),
+            duration = 5,
+            type = "error"
+          )
+        }
+
         .values$update$subtype(.values$update$subtype() + 1)
-
-        db_add_circulation(
-          db = .values$db,
-          user_id = user_id_r(),
-          subtype_id = input$subtype,
-          quantity = amount,
-          op_type = 2
-        )
-
         .values$update$circulation(.values$update$circulation() + 1)
-
-        shiny::showNotification(
-          ui = operate_notification_text(
-            operation = operate_rv(),
-            status = .values$user$status(),
-            user_name = user_name_r(),
-            quantity = quantity_return$quantity_r(),
-            type_name = type_name_r(),
-            subtype_name = subtype_name_r()
-          ),
-          duration = 5,
-          type = "warning"
-        )
       })
 
       max_r <- shiny::reactive({

@@ -13,10 +13,30 @@ db_add_group <- function(db, group_name) {
     removed = 0
   )
 
-  DBI::dbAppendTable(db, "groups", entry)
+  success <- tryCatch(
+    DBI::dbWithTransaction(
+      db,
+      {
+        success <- DBI::dbAppendTable(db, "groups", entry)
 
-  id <- max(DBI::dbGetQuery(db, "SELECT rowid FROM groups")$rowid)
-  dir_create("group", id)
+        if (success) {
+          id <- max(DBI::dbGetQuery(db, "SELECT rowid FROM groups")$rowid)
+          dir_create("group", id)
+        }
+
+        success
+      }
+    ),
+    `Rcpp::exception` = function(e) {
+      if (stringr::str_detect(e$message, "UNIQUE.*group_name")) {
+        return(0)
+      }
+
+      stop(e)
+    }
+  )
+
+  success
 }
 
 
@@ -57,10 +77,19 @@ db_remove_group <- function(db, group_id) {
 #'
 #' @export
 db_set_group_name <- function(db, group_id, group_name) {
-  DBI::dbExecute(
-    db,
-    "UPDATE groups SET group_name = ? WHERE rowid = ?",
-    params = list(group_name, group_id)
+  tryCatch(
+    DBI::dbExecute(
+      db,
+      "UPDATE groups SET group_name = ? WHERE rowid = ?",
+      params = list(group_name, group_id)
+    ),
+    `Rcpp::exception` = function(e) {
+      if (stringr::str_detect(e$message, "UNIQUE.*group_name")) {
+        return(0)
+      }
+
+      stop(e)
+    }
   )
 }
 

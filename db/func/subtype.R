@@ -18,19 +18,21 @@ db_add_subtype <- function(db, type_id, subtype_name, quantity, critical_quantit
     removed = 0
   )
 
-  tryCatch(
+  success <- tryCatch(
     DBI::dbAppendTable(db, "subtype", entry),
     `Rcpp::exception` = function(e) {
       if (stringr::str_detect(e$message, "UNIQUE.*type_id.*subtype_name")) {
         return(0)
-      } else {
-        stop(e)
       }
+
+      stop(e)
     }
   )
 
   id <- max(DBI::dbGetQuery(db, "SELECT rowid FROM subtype")$rowid)
   dir_create("subtype", id)
+
+  success
 }
 
 
@@ -45,10 +47,19 @@ db_add_subtype <- function(db, type_id, subtype_name, quantity, critical_quantit
 #'
 #' @export
 db_set_subtype_name <- function(db, subtype_id, subtype_name) {
-  DBI::dbExecute(
-    db,
-    "UPDATE subtype SET subtype_name = ? WHERE rowid = ?",
-    params = list(subtype_name, subtype_id)
+  tryCatch(
+    DBI::dbExecute(
+      db,
+      "UPDATE subtype SET subtype_name = ? WHERE rowid = ?",
+      params = list(subtype_name, subtype_id)
+    ),
+    `Rcpp::exception` = function(e) {
+      if (stringr::str_detect(e$message, "UNIQUE.*type_id.*subtype_name")) {
+        return(0)
+      }
+
+      stop(e)
+    }
   )
 }
 
@@ -122,10 +133,19 @@ db_set_subtype_max_quantity <- function(db, subtype_id, quantity) {
 #'
 #' @export
 db_change_subtype_max_quantity <- function(db, subtype_id, amount) {
-  DBI::dbExecute(
-    db,
-    "UPDATE subtype SET quantity = quantity + ? WHERE rowid = ?",
-    params = list(amount, subtype_id)
+  tryCatch(
+    DBI::dbExecute(
+      db,
+      "UPDATE subtype SET quantity = quantity + ? WHERE rowid = ?",
+      params = list(amount, subtype_id)
+    ),
+    `Rcpp::exception` = function(e) {
+      if (stringr::str_detect(e$message, "CHECK.*quantity")) {
+        return(0)
+      }
+
+      stop(e)
+    }
   )
 }
 
