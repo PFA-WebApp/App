@@ -65,8 +65,17 @@ reporting_transaction_server <- function(id, .values) {
           dplyr::arrange(desc(time)) %>%
           dplyr::mutate(
             user_name = dplyr::case_when(
-              as.logical(user_removed) ~ paste(user_name, "-", user_id, "(gelöscht)"),
+              as.logical(user_removed) ~ paste0(user_name, ":", user_id, " (gelöscht)"),
               TRUE ~ user_name
+            ),
+            subtype_name = dplyr::case_when(
+              as.logical(type_removed) ~ subtype_name,
+              as.logical(subtype_removed) ~ paste0(subtype_name, ":", subtype_id, " (gelöscht)"),
+              TRUE ~ subtype_name
+            ),
+            type_name = dplyr::case_when(
+              as.logical(type_removed) ~ paste0(type_name, ":", type_id, " (gelöscht)"),
+              TRUE ~ type_name
             ),
             quantity = dplyr::case_when(
               op_type == 1 ~ -quantity,
@@ -80,7 +89,8 @@ reporting_transaction_server <- function(id, .values) {
           ) %>%
           dplyr::select(
             Nutzer = user_name, Typ = type_name, Untertyp = subtype_name,
-            Datum = time, Menge = quantity, user_removed, quantity_color
+            Datum = time, Menge = quantity, user_removed, subtype_removed,
+            type_removed, quantity_color
           )
 
         if (.values$user$status() != "admin") {
@@ -99,7 +109,10 @@ reporting_transaction_server <- function(id, .values) {
             columnDefs = list(
               list(
                 targets = which(
-                  names(tbl) %in% c("user_removed", "quantity_color")
+                  names(tbl) %in% c(
+                    "user_removed", "subtype_removed", "type_removed",
+                    "quantity_color"
+                  )
                 ),
                 visible = FALSE
               )
@@ -112,6 +125,20 @@ reporting_transaction_server <- function(id, .values) {
         ) %>% DT::formatStyle(
           columns = "Nutzer",
           valueColumns = "user_removed",
+          color = DT::styleInterval(
+            cuts = 0,
+            values = c("inherit", "rgb(221, 75, 57)")
+          )
+        ) %>% DT::formatStyle(
+          columns = "Untertyp",
+          valueColumns = "subtype_removed",
+          color = DT::styleInterval(
+            cuts = 0,
+            values = c("inherit", "rgb(221, 75, 57)")
+          )
+        ) %>% DT::formatStyle(
+          columns = "Typ",
+          valueColumns = "type_removed",
           color = DT::styleInterval(
             cuts = 0,
             values = c("inherit", "rgb(221, 75, 57)")

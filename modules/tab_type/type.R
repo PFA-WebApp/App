@@ -58,9 +58,39 @@ type_server <- function(id, .values) {
         func = list(
           add_object = function(db, name) {
             success <- db_add_type(db, name)
+
             if (!success) return(FALSE)
-            id <- db_get_type_id(db, name)
-            db_add_subtype(db, id, "Standard", 0, 0)
+
+            type_id <- db_get_type_id(
+              db = db,
+              type_name = name
+            )
+
+            db_add_subtype(
+              db = db,
+              type_id = type_id,
+              subtype_name = "Standard",
+              quantity = 0,
+              critical_quantity = 0
+            )
+
+            subtype_id <- db_get_subtype_id(
+              db = db,
+              type_id = type_id,
+              subtype_name = "Standard"
+            )
+
+            db_add_circulation(
+              db = db,
+              user_id = .values$user$id(),
+              subtype_id = subtype_id,
+              quantity = 0,
+              op_type = 2
+            )
+
+            .values$update$circulation(.values$update$circulation() + 1)
+
+            TRUE
           },
           get_connections = db_get_groups_by_type,
           get_possible_connections = db_get_groups,

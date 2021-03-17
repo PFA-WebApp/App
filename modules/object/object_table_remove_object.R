@@ -134,6 +134,8 @@ object_table_remove_object_server <- function(id,
             .values$update[[update_name]]() + 1
           )
         })
+
+        .values$update$circulation(.values$update$circulation() + 1)
       })
     }
   )

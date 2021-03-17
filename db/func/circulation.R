@@ -48,7 +48,10 @@ db_get_circulation_table <- function(db) {
       user.removed AS user_removed,
       user.name AS user_name,
       subtype.subtype_name AS subtype_name,
-      type.type_name AS type_name
+      subtype.removed AS subtype_removed,
+      type.type_name AS type_name,
+      type.removed AS type_removed,
+      type.rowid AS type_id
     FROM circulation
     INNER JOIN user ON circulation.user_id = user.rowid
     INNER JOIN subtype ON circulation.subtype_id = subtype.rowid
