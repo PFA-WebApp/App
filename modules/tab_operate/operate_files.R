@@ -89,8 +89,8 @@ operate_files_server <- function(id,
         label = list(
           object_name = "Gruppe"
         ),
-        object_ids_r = group_ids_r,
-        type_id_r = type_id_r
+        type_id_r = type_id_r,
+        object_ids_r = group_ids_r
       )
 
       type_files_return <- operate_file_manager_server(
