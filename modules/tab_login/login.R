@@ -46,12 +46,21 @@ login_server <- function(id, .values) {
       })
 
       login_r <- shiny::reactive({
-        htmltools::tagList(
+        name_input <- if (.values$yaml$showcase) {
           shiny::selectInput(
             inputId = ns("user_name"),
             label = "Benutzername",
             choices = user_name_choices_r()
-          ),
+          )
+        } else {
+          shiny::textInput(
+            inputId = ns("user_name"),
+            label = "Benutzername"
+          )
+        }
+
+        htmltools::tagList(
+          name_input,
           shiny::passwordInput(
             inputId = ns("user_password"),
             label = "Passwort",
@@ -149,8 +158,6 @@ login_server <- function(id, .values) {
 
         names(db_get_users(.values$db))
       })
-
-
 
       login_user_info_server(
         id = "login_user_info",
