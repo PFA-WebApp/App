@@ -50,7 +50,8 @@ login_server <- function(id, .values) {
           shiny::selectInput(
             inputId = ns("user_name"),
             label = "Benutzername",
-            choices = user_name_choices_r()
+            choices = user_name_choices_r(),
+            selectize = .values$device$large
           )
         } else {
           shiny::textInput(

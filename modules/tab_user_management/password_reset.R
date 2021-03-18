@@ -36,7 +36,8 @@ password_reset_server <- function(id, .values) {
         shiny::selectInput(
           inputId = ns("user_id"),
           label = "Benutzername",
-          choices = user_choices_r()
+          choices = user_choices_r(),
+          selectize = .values$device$large
         )
       })
 

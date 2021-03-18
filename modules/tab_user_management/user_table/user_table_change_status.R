@@ -96,7 +96,8 @@ user_table_change_status_server <- function(id, .values) {
               Moderator = "mod",
               Benutzer = "user"
             ),
-            selected = status_r()
+            selected = status_r(),
+            selectize = .values$device$large
           ),
           footer = shiny::actionButton(
             inputId = ns("confirm_status"),

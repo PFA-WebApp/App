@@ -84,7 +84,8 @@ object_table_connections_server <- function(id,
             label = label$connections,
             selected = object_connections_r(),
             choices = db$func$get_possible_connections(.values$db),
-            multiple = TRUE
+            multiple = TRUE,
+            selectize = .values$device$large
           ),
           footer = shiny::actionButton(
             inputId = ns("confirm_object_connections"),

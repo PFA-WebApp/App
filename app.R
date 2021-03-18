@@ -72,6 +72,8 @@ ui_server <- function(source_to_globalenv = FALSE) {
         container_ui(
             id = "container"
         ),
+        # Enable shinybrowser
+        shinybrowser::detect(),
         # Enable rclipboard
         rclipboard::rclipboardSetup(),
         # Enable shinyjs
@@ -145,6 +147,8 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$update$circulation <- shiny::reactiveVal(0)
 
         .values$query$type <- shiny::reactiveVal(NULL)
+
+        shiny::observe(.values$device$large <- shinybrowser::get_width() > 768)
 
         # Connect to db
         .values$db <- DBI::dbConnect(RSQLite::SQLite(), "./db/db.sqlite")

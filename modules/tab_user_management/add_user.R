@@ -63,7 +63,8 @@ add_user_server <- function(id, .values) {
         shiny::selectInput(
           inputId = ns("user_status"),
           label = "Status",
-          choices = choices_r()
+          choices = choices_r(),
+          selectize = .values$device$large
         )
       })
 

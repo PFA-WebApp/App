@@ -39,7 +39,8 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
             inputId = ns("user"),
             label = "Ausführender Nutzer",
             choices = user_r(),
-            selected = .values$user$id()
+            selected = .values$user$id(),
+            selectize = .values$device$large
           )
         }
       })
@@ -66,7 +67,8 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
           inputId = ns("type"),
           label = "Typ",
           choices = types_r(),
-          selected = .values$query$type()
+          selected = .values$query$type(),
+          selectize = .values$device$large
         )
       })
 
@@ -102,7 +104,8 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
         shiny::selectInput(
           inputId = ns("subtype"),
           label = "Untertyp",
-          choices = subtypes_r()
+          choices = subtypes_r(),
+          selectize = .values$device$large
         )
       })
 

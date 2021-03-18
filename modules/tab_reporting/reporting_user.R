@@ -28,7 +28,8 @@ reporting_user_server <- function(id, .values) {
           inputId = ns("user"),
           label = "Nutzer",
           choices = user_choices_r(),
-          selected = .values$user$id()
+          selected = .values$user$id(),
+          selectize = .values$device$large
         )
       })
 

@@ -44,7 +44,8 @@ file_manager_server <- function(id, .values, db, settings, label) {
           shiny::selectInput(
             inputId = ns("select_type"),
             label = "Typ",
-            choices = type_choices_r()
+            choices = type_choices_r(),
+            .values$device$large
           )
         })
       }
@@ -53,7 +54,8 @@ file_manager_server <- function(id, .values, db, settings, label) {
         shiny::selectInput(
           inputId = ns("select_object"),
           label = label$object_name,
-          choices = choices_r()
+          choices = choices_r(),
+          selectize = .values$device$large
         )
       })
 

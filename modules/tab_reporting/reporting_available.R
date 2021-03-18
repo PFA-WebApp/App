@@ -35,7 +35,8 @@ reporting_available_server <- function(id, .values) {
         shiny::selectInput(
           inputId = ns("type"),
           label = "Typ",
-          choices = type_choices_r()
+          choices = type_choices_r(),
+          selectize = .values$device$large
         )
       })
 

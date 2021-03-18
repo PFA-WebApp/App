@@ -62,7 +62,8 @@ qrcode_server <- function(id, .values) {
           inputId = ns("type"),
           label = "Typ",
           choices = types_r(),
-          width = "100%"
+          width = "100%",
+          selectize = .values$device$large
         )
       })
 
@@ -144,7 +145,8 @@ qrcode_server <- function(id, .values) {
                   PDF = "pdf",
                   PNG = "png",
                   SVG = "svg"
-                )
+                ),
+                selectize = .values$device$large
               )
             ),
             shiny::column(

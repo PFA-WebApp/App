@@ -123,7 +123,8 @@ subtypes_server <- function(id, .values) {
         shiny::selectInput(
           inputId = ns("type"),
           label = "Typ",
-          choices = db_get_types(.values$db)
+          choices = db_get_types(.values$db),
+          selectize = .values$device$large
         )
       })
 

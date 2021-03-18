@@ -35,7 +35,8 @@ show_connections_server <- function(id, .values, settings, db, label) {
           inputId = ns("object"),
           label = label$object,
           choices = objects_r(),
-          selected = NA
+          selected = NA,
+          selectize = .values$device$large
         )
       })
 
