@@ -24,7 +24,7 @@ container_ui <- function(id) {
       title = bs4Dash::dashboardBrand(
         title = "Sensotheka",
         image = "img/sensotheka.png",
-        href = "https://github.com/PFA-WebApp/App"
+        href = "https://pfa-webapp.github.io/Docs/"
       ),
       rightUi = htmltools::tagList(
         htmltools::tags$li(
