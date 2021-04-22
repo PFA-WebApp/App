@@ -45,6 +45,9 @@ container_ui <- function(id) {
             icon = shiny::icon("sync"),
             class = "refresh-link"
           )
+        ),
+        language_selector(
+          inputId = ns("language")
         )
       )
     ),
@@ -127,6 +130,11 @@ container_server <- function(id, .values) {
         id = "sidebar_menu",
         .values = .values
       )
+
+      shiny::observeEvent(input$language, {
+        shiny.i18n::update_lang(.values$app_session, input$language)
+        i18n$set_translation_language(input$language)
+      })
 
       servers <- list(
         login = function() {

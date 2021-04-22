@@ -272,3 +272,11 @@ nav .nav-pills .nav-link:not(.active):hover,
 .color-boxes {
   margin-left: -3px;
 }
+
+.dropdown-flag {
+  cursor: pointer;
+}
+
+.language-selector .dropdown-menu {
+  min-width: 0;
+}

@@ -7,7 +7,7 @@ login_ui <- function(id) {
       bs4Dash::box(
         width = NULL,
         status = "primary",
-        title = "Anmeldung",
+        title = i18n$t("login", session = NULL),
         solidHeader = TRUE,
         shiny::uiOutput(
           outputId = ns("login")
@@ -49,14 +49,14 @@ login_server <- function(id, .values) {
         name_input <- if (.values$yaml$showcase) {
           shiny::selectInput(
             inputId = ns("user_name"),
-            label = "Benutzername",
+            label = i18n$t("user_name", session = NULL),
             choices = user_name_choices_r(),
             selectize = .values$device$large
           )
         } else {
           shiny::textInput(
             inputId = ns("user_name"),
-            label = "Benutzername"
+            label = i18n$t("user_name", session = NULL)
           )
         }
 
@@ -64,12 +64,12 @@ login_server <- function(id, .values) {
           name_input,
           shiny::passwordInput(
             inputId = ns("user_password"),
-            label = "Passwort",
-            placeholder = "Passwort"
+            label = i18n$t("password", session = NULL),
+            placeholder = "1234"
           ),
           shiny::actionButton(
             inputId = ns("user_login"),
-            label = "Anmelden",
+            label = i18n$t("login", session = NULL),
             width = "100%"
           )
         )
@@ -107,13 +107,13 @@ login_server <- function(id, .values) {
           )
 
           shiny::showNotification(
-            ui = "Du hast Dich erfolgreich angemeldet.",
+            ui = i18n$t("msg_login_successful", session = NULL),
             type = "default",
             duration = 3
           )
         } else {
           shiny::showNotification(
-            ui = "Falsches Passwort! Bitte versuche es erneut.",
+            ui = i18n$t("msg_wrong_password", session = NULL),
             type = "error",
             duration = 3
           )
@@ -129,7 +129,7 @@ login_server <- function(id, .values) {
       logout_r <- shiny::reactive({
         shiny::actionButton(
           inputId = ns("user_logout"),
-          label = "Abmelden",
+          label = i18n$t("logout", session = NULL),
           width = "100%"
         )
       })
@@ -148,7 +148,7 @@ login_server <- function(id, .values) {
         )
 
         shiny::showNotification(
-          ui = "Du hast Dich erfolgreich abgemeldet. Bis zum nächsten Mal.",
+          ui = i18n$t("msg_logout_successful", session = NULL),
           type = "default",
           duration = 3
         )
@@ -201,9 +201,9 @@ login_server <- function(id, .values) {
             width = NULL,
             status = "primary",
             solidHeader = TRUE,
-            title = "Passwörter",
+            title = i18n$t("passwords", session = NULL),
             htmltools::p(
-              "Diese Tabelle ist nur in der Testversion sichtbar"
+              i18n$t("table_only_visible_test_version", session = NULL)
             ),
             DT::dataTableOutput(outputId = ns("password_tbl"))
           )
@@ -218,7 +218,14 @@ login_server <- function(id, .values) {
         )
 
 
-        DT::datatable(password_tbl)
+        DT::datatable(
+          password_tbl,
+          colnames = c(
+            i18n$t("user_name", session = NULL) %>% as.character(),
+            i18n$t("password", session = NULL) %>% as.character()
+          ),
+          escape = FALSE
+        )
       })
     }
   )

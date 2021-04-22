@@ -3,6 +3,12 @@ library(shinyjs)
 library(dplyr)
 # library needs to be called, otherwise qrcode generation does not work
 library(qrcode)
+library(shiny.i18n)
+
+i18n <- shiny.i18n::Translator$new(
+    translation_json_path = "translation/translation.json"
+)
+i18n$set_translation_language("de")
 
 # app.yml stores settings that may differ between execution environments
 app_yml <- "./app.yml"
@@ -53,12 +59,15 @@ ui_server <- function(source_to_globalenv = FALSE) {
 
     # UI -----------------------------------------------------------------------
     ui <- htmltools::tagList(
+        # Enable shiny.18n
+        shiny.i18n::usei18n(i18n),
         waiter::use_waiter(),
         waiter::waiter_show_on_load(
             html = waiter::spin_solar()
         ),
         htmltools::includeScript("www/js/dark-mode.js"),
         htmltools::includeScript("www/js/fileInputText.js"),
+        htmltools::includeScript("www/js/language-selector.js"),
         tags$head(
             # Include custom css styles
             htmltools::includeCSS("www/css/styles.css"),
@@ -147,6 +156,8 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$update$circulation <- shiny::reactiveVal(0)
 
         .values$query$type <- shiny::reactiveVal(NULL)
+
+        .values$app_session <- session
 
         shiny::observe(.values$device$large <- shinybrowser::get_width() > 768)
 
