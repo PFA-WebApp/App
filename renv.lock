@@ -461,6 +461,30 @@
       "RemoteSha": "60db1e02b03d8e6fb146c9bb1bbfbce269231add",
       "Hash": "1e32111f1a62bd24b8604353665f8e2f"
     },
+    "shiny.i18n": {
+      "Package": "shiny.i18n",
+      "Version": "0.2.1",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "Appsilon",
+      "RemoteRepo": "shiny.i18n",
+      "RemoteRef": "master",
+      "RemoteSha": "c73ba3521fd8beca9fb4f348c9ce152fde1846cf",
+      "Hash": "5efbcb9bf1584a2b8da6768a94f0d5cf"
+    },
+    "shinybrowser": {
+      "Package": "shinybrowser",
+      "Version": "0.0.0.9001",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "daattali",
+      "RemoteRepo": "shinybrowser",
+      "RemoteRef": "master",
+      "RemoteSha": "114e4e0887a79c9d01620bb1df393add78ed1b47",
+      "Hash": "0abe8c6ee8bcdd0a48fdb2d04a01ddc3"
+    },
     "shinydisconnect": {
       "Package": "shinydisconnect",
       "Version": "0.1.0",
