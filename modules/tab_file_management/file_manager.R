@@ -134,6 +134,9 @@ file_manager_server <- function(id, .values, db, settings, label) {
                 className = 'dt-center',
                 targets = 2:3
               )
+            ),
+            language = list(
+              url = .values$dt_language_r()
             )
           )
         )

@@ -65,7 +65,14 @@ reporting_available_server <- function(id, .values) {
       })
 
       output$table <- DT::renderDataTable({
-        DT::datatable(formatted_available_table_r())
+        DT::datatable(
+          formatted_available_table_r(),
+          options = list(
+            language = list(
+              url = .values$dt_language_r()
+            )
+          )
+        )
       })
     }
   )

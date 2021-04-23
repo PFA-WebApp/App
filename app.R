@@ -147,6 +147,9 @@ ui_server <- function(source_to_globalenv = FALSE) {
             "subtype" = "Untertyp"
         )
 
+        # These reactiveVals should be written after the corresponding database
+        # table has been updated. They should be read in all location where
+        # the content of the corresponding table is retrieved
         .values$update$user <- shiny::reactiveVal(0)
         .values$update$group <- shiny::reactiveVal(0)
         .values$update$type <- shiny::reactiveVal(0)
@@ -155,11 +158,27 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$update$files <- shiny::reactiveVal(0)
         .values$update$circulation <- shiny::reactiveVal(0)
 
+        # Query string's type parameter
         .values$query$type <- shiny::reactiveVal(NULL)
 
+        # Store reference to this session
         .values$app_session <- session
 
+        # Detect if mobile device or not
         shiny::observe(.values$device$large <- shinybrowser::get_width() > 768)
+
+        # Internationalization
+        .values$language_rv <- shiny::reactiveVal("de")
+
+        # Language for DT::datatable
+        dt_languages <- list(
+            de = "http://cdn.datatables.net/plug-ins/1.10.24/i18n/de_de.json",
+            en = "http://cdn.datatables.net/plug-ins/1.10.24/i18n/en-gb.json"
+        )
+
+        .values$dt_language_r <- shiny::reactive({
+            dt_languages[[.values$language_rv()]]
+        })
 
         # Connect to db
         .values$db <- DBI::dbConnect(RSQLite::SQLite(), "./db/db.sqlite")

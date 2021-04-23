@@ -212,6 +212,9 @@ object_table_server <- function(id,
                 className = "dt-left",
                 targets = 0
               )
+            ),
+            language = list(
+              url = .values$dt_language_r()
             )
           ),
           escape = FALSE,

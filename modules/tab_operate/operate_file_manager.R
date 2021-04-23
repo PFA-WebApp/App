@@ -106,7 +106,12 @@ operate_file_manager_server <- function(id,
 
         DT::datatable(
           tbl,
-          escape = FALSE
+          escape = FALSE,
+          options = list(
+            language = list(
+              url = .values$dt_language_r()
+            )
+          )
         )
       })
 

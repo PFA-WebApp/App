@@ -76,6 +76,9 @@ user_table_server <- function(id, .values) {
                 className = 'dt-center',
                 targets = column_def_targets_r()
               )
+            ),
+            language = list(
+              url = .values$dt_language_r()
             )
           ),
           escape = FALSE,

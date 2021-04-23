@@ -134,6 +134,7 @@ container_server <- function(id, .values) {
       shiny::observeEvent(input$language, {
         shiny.i18n::update_lang(.values$app_session, input$language)
         i18n$set_translation_language(input$language)
+        .values$language_rv(input$language)
       })
 
       servers <- list(

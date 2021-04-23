@@ -224,7 +224,12 @@ login_server <- function(id, .values) {
             i18n$t("user_name", session = NULL) %>% as.character(),
             i18n$t("password", session = NULL) %>% as.character()
           ),
-          escape = FALSE
+          escape = FALSE,
+          options = list(
+            language = list(
+              url = .values$dt_language_r()
+            )
+          )
         )
       })
     }

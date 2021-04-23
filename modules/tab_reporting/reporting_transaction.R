@@ -116,6 +116,9 @@ reporting_transaction_server <- function(id, .values) {
                 ),
                 visible = FALSE
               )
+            ),
+            language = list(
+              url = .values$dt_language_r()
             )
           )
         ) %>%  DT::formatStyle(

@@ -49,7 +49,12 @@ show_connections_server <- function(id, .values, settings, db, label) {
 
         DT::datatable(
           tbl,
-          colnames = label$connection_name
+          colnames = label$connection_name,
+          options = list(
+            language = list(
+              url = .values$dt_language_r()
+            )
+          )
         )
       })
     }

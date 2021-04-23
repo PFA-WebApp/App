@@ -56,7 +56,14 @@ reporting_table_server <- function(id, .values, settings, object_id_r = NULL) {
       })
 
       output$table <- DT::renderDataTable({
-        DT::datatable(formatted_borrow_summary_r())
+        DT::datatable(
+          formatted_borrow_summary_r(),
+          options = list(
+            language = list(
+              url = .values$dt_language_r()
+            )
+          )
+        )
       })
     }
   )
