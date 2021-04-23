@@ -47,7 +47,7 @@ settings_user_name_server <- function(id, .values) {
             paste(
               "Der Benutzername benötigt mindestens",
               as_german(.values$settings$user_name$length$min),
-              "Zeichen!\n\n"
+              "Zeichen!"
             )
           ),
           shiny::need(
@@ -55,7 +55,7 @@ settings_user_name_server <- function(id, .values) {
             paste(
               "Der Benutzername darf nicht länger sein als",
               as_german(.values$settings$user_name$length$max),
-              "Zeichen!\n\n"
+              "Zeichen!"
             )
           ),
           errorClass = "PFA"
@@ -66,7 +66,7 @@ settings_user_name_server <- function(id, .values) {
         shiny::validate(
           shiny::need(
             !user_name_taken_r(),
-            "Der Benutzername existiert bereits!\n\n"
+            "Der Benutzername existiert bereits!"
           ),
           errorClass = "PFA"
         )

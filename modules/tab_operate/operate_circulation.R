@@ -490,9 +490,9 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
 
       max_message_r <- shiny::reactive({
         context <- c(
-          "als verfügbar sind!\n\n",
-          "als Du ausgeliehen hast!\n\n",
-          "als verfügbar sind!\n\n"
+          "als verfügbar sind!",
+          "als Du ausgeliehen hast!",
+          "als verfügbar sind!"
         )
 
         paste(

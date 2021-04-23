@@ -83,7 +83,7 @@ add_object_server <- function(id,
               label$object_name_with_article,
               "benötigt mindestens",
               as_german(.values$settings[[settings$length_name]]$length$min),
-              "Zeichen!\n\n"
+              "Zeichen!"
             )
           ),
           shiny::need(
@@ -92,7 +92,7 @@ add_object_server <- function(id,
               label$object_name_with_article,
               "darf nicht länger sein als",
               as_german(.values$settings[[settings$length_name]]$length$max),
-              "Zeichen!\n\n"
+              "Zeichen!"
             )
           ),
           errorClass = "PFA"
@@ -105,7 +105,7 @@ add_object_server <- function(id,
             !name_taken_r(),
             paste(
               label$object_name_with_article,
-              "existiert bereits!\n\n"
+              "existiert bereits!"
             )
           ),
           errorClass = "PFA"

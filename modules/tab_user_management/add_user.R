@@ -75,7 +75,7 @@ add_user_server <- function(id, .values) {
             paste(
               "Der Benutzername benötigt mindestens",
               as_german(.values$settings$user_name$length$min),
-              "Zeichen!\n\n"
+              "Zeichen!"
             )
           ),
           shiny::need(
@@ -83,7 +83,7 @@ add_user_server <- function(id, .values) {
             paste(
               "Der Benutzername darf nicht länger sein als",
               as_german(.values$settings$user_name$length$max),
-              "Zeichen!\n\n"
+              "Zeichen!"
             )
           ),
           errorClass = "PFA"
@@ -94,7 +94,7 @@ add_user_server <- function(id, .values) {
         shiny::validate(
           shiny::need(
             !user_name_taken_r(),
-            "Der Benutzername existiert bereits!\n\n"
+            "Der Benutzername existiert bereits!"
           ),
           errorClass = "PFA"
         )
@@ -107,7 +107,7 @@ add_user_server <- function(id, .values) {
             paste(
               "Das Passwort benötigt mindestens",
               as_german(.values$settings$password$length$min),
-              "Zeichen!\n\n"
+              "Zeichen!"
             )
           ),
           shiny::need(
@@ -115,7 +115,7 @@ add_user_server <- function(id, .values) {
             paste(
               "Das Passwort darf nicht länger sein als",
               as_german(.values$settings$user_name$length$max),
-              "Zeichen!\n\n"
+              "Zeichen!"
             )
           ),
           errorClass = "PFA"
@@ -126,7 +126,7 @@ add_user_server <- function(id, .values) {
         shiny::validate(
           shiny::need(
             !non_matching_passwords_r(),
-            "Die Passwörter stimmen nicht überein!\n\n"
+            "Die Passwörter stimmen nicht überein!"
           ),
           errorClass = "PFA"
         )

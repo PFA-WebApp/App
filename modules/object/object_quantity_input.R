@@ -44,7 +44,7 @@ object_quantity_input_server <- function(id,
           shiny::need(
             !not_integer_r(),
             glue::glue(
-              "{object} muss ganzzahlig sein!\n\n",
+              "{object} muss ganzzahlig sein!",
               object = object_label
             )
           ),
@@ -57,7 +57,7 @@ object_quantity_input_server <- function(id,
           shiny::need(
             !negative_r(),
             glue::glue(
-              "{object} muss größer gleich Null sein!\n\n",
+              "{object} muss größer gleich Null sein!",
               object = object_label
             )
           ),

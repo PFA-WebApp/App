@@ -80,7 +80,7 @@ file_manager_rename_server <- function(id,
         shiny::validate(
           shiny::need(
             !name_taken_r(),
-            "Der Dateiname existiert bereits!\n\n"
+            "Der Dateiname existiert bereits!"
           ),
           errorClass = "PFA"
         )
