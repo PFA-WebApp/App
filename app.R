@@ -155,11 +155,14 @@ ui_server <- function(source_to_globalenv = FALSE) {
             weeks = i18n$t("weeks")
         )
 
-        .values$settings$table_dict <- c(
-            "group" = "Gruppe",
-            "type" = "Typ",
-            "subtype" = "Untertyp"
-        )
+        .values$settings$table_dict <- function() {
+            .values$language_rv()
+            list(
+                "group" = i18n$translate("group"),
+                "type" = i18n$translate("type"),
+                "subtype" = i18n$translate("subtype")
+            )
+        }
 
         # These reactiveVals should be written after the corresponding database
         # table has been updated. They should be read in all location where

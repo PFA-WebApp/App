@@ -150,6 +150,26 @@
       "key": "tab_settings",
       "en": "Settings",
       "de": "Einstellungen"
+    },
+    {
+      "key": "group",
+      "en": "Group",
+      "de": "Gruppe"
+    },
+    {
+      "key": "type",
+      "en": "Type",
+      "de": "Typ"
+    },
+    {
+      "key": "subtype",
+      "en": "Subtype",
+      "de": "Untertyp"
+    },
+    {
+      "key": "data_refreshed",
+      "en": "Data refreshed.",
+      "de": "Daten aktualisiert."
     }
   ]
 }

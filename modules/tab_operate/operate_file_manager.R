@@ -140,7 +140,7 @@ operate_file_manager_server <- function(id,
 
       download_all_name_r <- shiny::reactive({
         name <- type_name_r() %_%
-          .values$settings$table_dict[settings$table_name] %>%
+          .values$settings$table_dict()[[settings$table_name]] %>%
           paste0(".zip")
         stringr::str_replace_all(name, "\\s", "_")
       })

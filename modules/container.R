@@ -210,7 +210,7 @@ container_server <- function(id, .values) {
         })
 
         shiny::showNotification(
-          ui = "Daten aktualisiert.",
+          ui = i18n$t("data_refreshed"),
           duration = 5,
           type = "warning"
         )
