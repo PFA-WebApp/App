@@ -117,7 +117,7 @@ user_table_change_status_server <- function(id, .values) {
               "Der Status von Benutzer \"",
               user_name_r(),
               "\" wurde erfolgreich auf \"",
-              .values$settings$status_dict[input$user_status],
+              .values$settings$status_dict()[input$user_status],
               "\" geändert."
             ),
             type = "warning",

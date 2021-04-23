@@ -45,6 +45,61 @@
       "key": "table_only_visible_test_version",
       "en": "This table is only visible in the test version.",
       "de": "Diese Tabelle ist nur in der Testversion sichtbar."
+    },
+    {
+      "key": "admin",
+      "en": "Administrator",
+      "de": "Administrator"
+    },
+    {
+      "key": "mod",
+      "en": "Moderator",
+      "de": "Moderator"
+    },
+    {
+      "key": "user",
+      "en": "User",
+      "de": "Benutzer"
+    },
+    {
+      "key": "secs",
+      "en": "Seconds",
+      "de": "Sekunden"
+    },
+    {
+      "key": "mins",
+      "en": "Minutes",
+      "de": "Minuten"
+    },
+    {
+      "key": "hours",
+      "en": "Hours",
+      "de": "Stunden"
+    },
+    {
+      "key": "days",
+      "en": "Days",
+      "de": "Tage"
+    },
+    {
+      "key": "weeks",
+      "en": "Weeks",
+      "de": "Wochen"
+    },
+    {
+      "key": "logged_for",
+      "en": "Time since current login",
+      "de": "Angemeldet seit"
+    },
+    {
+      "key": "last_logged_ago",
+      "en": "Time since previous login",
+      "de": "Zuletzt angemeldet vor"
+    },
+    {
+      "key": "visits",
+      "en": "Visits",
+      "de": "Besuche"
     }
   ]
 }

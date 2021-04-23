@@ -33,7 +33,7 @@ login_user_info_server <- function(id, .values) {
       output$user_name <- shiny::renderUI({
         if (is_logged_r()) {
           bs4Dash::infoBox(
-            title = .values$settings$status_dict[.values$user$status()],
+            title = .values$settings$status_dict()[.values$user$status()],
             value = .values$user$name(),
             icon = shiny::icon("users"),
             color = "primary",
@@ -58,15 +58,15 @@ login_user_info_server <- function(id, .values) {
       })
 
       logged_since_r <- shiny::reactive({
-        unit <- .values$settings$time_unit_dict[attr(diff_time_since_r(), "units")]
+        unit <- .values$settings$time_unit_dict[[attr(diff_time_since_r(), "units")]]
         value <- round(as.numeric(diff_time_since_r()))
-        paste(value, unit)
+        htmltools::tagList(value, unit)
       })
 
       output$user_logged_since <- shiny::renderUI({
         if (is_logged_r()) {
           bs4Dash::infoBox(
-            title = "Eingeloggt seit",
+            title = i18n$t("logged_for"),
             value = htmltools::div(
               class = "relative",
               logged_since_r()
@@ -88,15 +88,15 @@ login_user_info_server <- function(id, .values) {
       })
 
       last_logged_r <- shiny::reactive({
-        unit <- .values$settings$time_unit_dict[attr(diff_time_last_r(), "units")]
+        unit <- .values$settings$time_unit_dict[[attr(diff_time_last_r(), "units")]]
         value <- round(as.numeric(diff_time_last_r()))
-        paste(value, unit)
+        htmltools::tagList(value, unit)
       })
 
       output$user_last_logged <- shiny::renderUI({
         if (is_logged_r()) {
           bs4Dash::infoBox(
-            title = "Zuletzt eingeloggt vor",
+            title = i18n$t("last_logged_ago"),
             value = htmltools::div(
               class = "relative",
               last_logged_r()
@@ -115,7 +115,7 @@ login_user_info_server <- function(id, .values) {
       output$user_times_logged <- shiny::renderUI({
         if (is_logged_r()) {
           bs4Dash::infoBox(
-            title = "Besuche",
+            title = i18n$t("visits"),
             value = htmltools::div(
               class = "relative",
               times_logged_r()
