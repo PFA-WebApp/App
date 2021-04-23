@@ -50,7 +50,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
     # Globals ------------------------------------------------------------------
 
     # Translator
-    i18n <- Translator2$new(
+    i18n <- shiny.i18n::Translator$new(
         translation_json_path = "translation/translation.json"
     )
     i18n$set_translation_language("de")
@@ -186,6 +186,11 @@ ui_server <- function(source_to_globalenv = FALSE) {
 
         # Internationalization
         .values$language_rv <- shiny::reactiveVal("de")
+
+        .values$i18n_r <- shiny::reactive({
+            .values$language_rv()
+            i18n
+        })
 
         # Language for DT::datatable
         dt_languages <- list(

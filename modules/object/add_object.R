@@ -76,27 +76,21 @@ add_object_server <- function(id,
       on_add_rv <- shiny::reactiveVal(0)
 
       output$wrong_name_length <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !name_too_short_r(),
-            paste(
-              label$object_name_with_article,
-              "benötigt mindestens",
-              as_german(.values$settings[[settings$length_name]]$length$min),
-              "Zeichen!"
-            )
-          ),
-          shiny::need(
-            !name_too_long_r(),
-            paste(
-              label$object_name_with_article,
-              "darf nicht länger sein als",
-              as_german(.values$settings[[settings$length_name]]$length$max),
-              "Zeichen!"
-            )
-          ),
-          errorClass = "PFA"
-        )
+        if (name_too_short_r()) {
+          return(i18n$t(
+            "err_min_chars",
+            label$object_name_with_article,
+            as_german(.values$settings[[settings$length_name]]$length$min)
+          ))
+        }
+
+        if (name_too_long_r()) {
+          return(i18n$t(
+            "err_max_chars",
+            label$object_name_with_article,
+            as_german(.values$settings[[settings$length_name]]$length$max)
+          ))
+        }
       })
 
       output$name_taken <- shiny::renderUI({

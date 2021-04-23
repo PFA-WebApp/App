@@ -170,6 +170,16 @@
       "key": "data_refreshed",
       "en": "Data refreshed.",
       "de": "Daten aktualisiert."
+    },
+    {
+      "key": "err_min_chars",
+      "en": "{0} requires at least {1} characters.",
+      "de": "{0} benötigt mindestens {1} Zeichen."
+    },
+    {
+      "key": "err_max_chars",
+      "en": "{0} must be shorter than {1} characters.",
+      "de": "{0} darf nicht mehr als {1} Zeichen besitzen."
     }
   ]
 }
