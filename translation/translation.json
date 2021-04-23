@@ -100,6 +100,56 @@
       "key": "visits",
       "en": "Visits",
       "de": "Besuche"
+    },
+    {
+      "key": "tab_login",
+      "en": "Login",
+      "de": "Anmelden"
+    },
+    {
+      "key": "tab_operate",
+      "en": "Borrow & Return",
+      "de": "Ausleihen & Zurückgeben"
+    },
+    {
+      "key": "tab_reporting",
+      "en": "Inventory",
+      "de": "Bestandsinformation"
+    },
+    {
+      "key": "tab_user_management",
+      "en": "User Management",
+      "de": "Nutzerverwaltung"
+    },
+    {
+      "key": "tab_sensor_management",
+      "en": "Sensor Management",
+      "de": "Sensorverwaltung"
+    },
+    {
+      "key": "tab_group",
+      "en": "Groups",
+      "de": "Gruppen"
+    },
+    {
+      "key": "tab_type",
+      "en": "Sensor Types",
+      "de": "Sensortypen"
+    },
+    {
+      "key": "tab_file_management",
+      "en": "File Management",
+      "de": "Dateiverwaltung"
+    },
+    {
+      "key": "tab_qrcode",
+      "en": "QR-Code",
+      "de": "QR-Code"
+    },
+    {
+      "key": "tab_settings",
+      "en": "Settings",
+      "de": "Einstellungen"
     }
   ]
 }
