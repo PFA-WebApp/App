@@ -5,11 +5,6 @@ library(dplyr)
 library(qrcode)
 library(shiny.i18n)
 
-i18n <- shiny.i18n::Translator$new(
-    translation_json_path = "translation/translation.json"
-)
-i18n$set_translation_language("de")
-
 # app.yml stores settings that may differ between execution environments
 app_yml <- "./app.yml"
 if (!file.exists(app_yml)) {
@@ -53,6 +48,12 @@ ui_server <- function(source_to_globalenv = FALSE) {
     )
 
     # Globals ------------------------------------------------------------------
+
+    # Translator
+    i18n <- Translator2$new(
+        translation_json_path = "translation/translation.json"
+    )
+    i18n$set_translation_language("de")
 
     # Allow bigger file inputs
     options(shiny.maxRequestSize = 100*1024^2)
@@ -129,11 +130,13 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$settings$group_name$length <- list(min = 4, max = 32)
         .values$settings$type_name$length <- list(min = 4, max = 32)
         .values$settings$subtype_name$length <- list(min = 4, max = 32)
+
         .values$settings$status_dict <- c(
             admin = "Administrator",
             mod = "Moderator",
             user = "Benutzer"
         )
+
         .values$settings$time_unit_dict <- c(
             secs = "Sekunden",
             mins = "Minuten",
@@ -141,6 +144,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
             days = "Tagen",
             weeks = "Wochen"
         )
+
         .values$settings$table_dict <- c(
             "group" = "Gruppe",
             "type" = "Typ",
