@@ -53,7 +53,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
     i18n <- shiny.i18n::Translator$new(
         translation_json_path = "translation/translation.json"
     )
-    i18n$set_translation_language("de")
+    i18n$set_language("de")
 
     # Allow bigger file inputs
     options(shiny.maxRequestSize = 100*1024^2)

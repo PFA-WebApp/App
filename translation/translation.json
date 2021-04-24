@@ -1,185 +1,78 @@
 {
-  "languages": ["key", "de", "en"],
-  "translation": [
-    {
-      "key": "login",
-      "en": "Login",
-      "de": "Anmelden"
-    },
-    {
-      "key": "logout",
-      "en": "Logout",
-      "de": "Abmelden"
-    },
-    {
-      "key": "user_name",
-      "en": "User name",
-      "de": "Benutzername"
-    },
-    {
-      "key": "password",
-      "en": "Password",
-      "de": "Passwort"
-    },
-    {
-      "key": "passwords",
-      "en": "Passwords",
-      "de": "Passwörter"
-    },
-    {
-      "key": "msg_login_successful",
-      "en": "Login successful!",
-      "de": "Du hast Dich erfolgreich angemeldet!"
-    },
-    {
-      "key": "msg_logout_successful",
-      "en": "Logout successful. See you soon!",
-      "de": "Du hast Dich erfolgreich abgemeldet. Bis zum nächsten Mal!"
-    },
-    {
-      "key": "msg_wrong_password",
-      "en": "Wrong password. Please try again.",
-      "de": "Falsches Passwort. Bitte versuche es erneut."
-    },
-    {
-      "key": "table_only_visible_test_version",
-      "en": "This table is only visible in the test version.",
-      "de": "Diese Tabelle ist nur in der Testversion sichtbar."
-    },
-    {
-      "key": "admin",
-      "en": "Administrator",
-      "de": "Administrator"
-    },
-    {
-      "key": "mod",
-      "en": "Moderator",
-      "de": "Moderator"
-    },
-    {
-      "key": "user",
-      "en": "User",
-      "de": "Benutzer"
-    },
-    {
-      "key": "secs",
-      "en": "Seconds",
-      "de": "Sekunden"
-    },
-    {
-      "key": "mins",
-      "en": "Minutes",
-      "de": "Minuten"
-    },
-    {
-      "key": "hours",
-      "en": "Hours",
-      "de": "Stunden"
-    },
-    {
-      "key": "days",
-      "en": "Days",
-      "de": "Tage"
-    },
-    {
-      "key": "weeks",
-      "en": "Weeks",
-      "de": "Wochen"
-    },
-    {
-      "key": "logged_for",
-      "en": "Time since current login",
-      "de": "Angemeldet seit"
-    },
-    {
-      "key": "last_logged_ago",
-      "en": "Time since previous login",
-      "de": "Zuletzt angemeldet vor"
-    },
-    {
-      "key": "visits",
-      "en": "Visits",
-      "de": "Besuche"
-    },
-    {
-      "key": "tab_login",
-      "en": "Login",
-      "de": "Anmelden"
-    },
-    {
-      "key": "tab_operate",
-      "en": "Borrow & Return",
-      "de": "Ausleihen & Zurückgeben"
-    },
-    {
-      "key": "tab_reporting",
-      "en": "Inventory",
-      "de": "Bestandsinformation"
-    },
-    {
-      "key": "tab_user_management",
-      "en": "User Management",
-      "de": "Nutzerverwaltung"
-    },
-    {
-      "key": "tab_sensor_management",
-      "en": "Sensor Management",
-      "de": "Sensorverwaltung"
-    },
-    {
-      "key": "tab_group",
-      "en": "Groups",
-      "de": "Gruppen"
-    },
-    {
-      "key": "tab_type",
-      "en": "Sensor Types",
-      "de": "Sensortypen"
-    },
-    {
-      "key": "tab_file_management",
-      "en": "File Management",
-      "de": "Dateiverwaltung"
-    },
-    {
-      "key": "tab_qrcode",
-      "en": "QR-Code",
-      "de": "QR-Code"
-    },
-    {
-      "key": "tab_settings",
-      "en": "Settings",
-      "de": "Einstellungen"
-    },
-    {
-      "key": "group",
-      "en": "Group",
-      "de": "Gruppe"
-    },
-    {
-      "key": "type",
-      "en": "Type",
-      "de": "Typ"
-    },
-    {
-      "key": "subtype",
-      "en": "Subtype",
-      "de": "Untertyp"
-    },
-    {
-      "key": "data_refreshed",
-      "en": "Data refreshed.",
-      "de": "Daten aktualisiert."
-    },
-    {
-      "key": "err_min_chars",
-      "en": "{0} requires at least {1} characters.",
-      "de": "{0} benötigt mindestens {1} Zeichen."
-    },
-    {
-      "key": "err_max_chars",
-      "en": "{0} must be shorter than {1} characters.",
-      "de": "{0} darf nicht mehr als {1} Zeichen besitzen."
-    }
-  ]
+  "en": {
+    "login": "Login",
+    "logout": "Logout",
+    "user_name": "User name",
+    "password": "Password",
+    "passwords": "Passwords",
+    "msg_login_successful": "Login successful!",
+    "msg_logout_successful": "Logout successful. See you soon!",
+    "msg_wrong_password": "Wrong password. Please try again.",
+    "table_only_visible_test_version": "This table is only visible in the test version.",
+    "admin": "Administrator",
+    "mod": "Moderator",
+    "user": "User",
+    "secs": "Seconds",
+    "mins": "Minutes",
+    "hours": "Hours",
+    "days": "Days",
+    "weeks": "Weeks",
+    "logged_for": "Time since current login",
+    "last_logged_ago": "Time since previous login",
+    "visits": "Visits",
+    "tab_login": "Login",
+    "tab_operate": "Borrow & Return",
+    "tab_reporting": "Inventory",
+    "tab_user_management": "User Management",
+    "tab_sensor_management": "Sensor Management",
+    "tab_group": "Groups",
+    "tab_type": "Sensor Types",
+    "tab_file_management": "File Management",
+    "tab_qrcode": "QR-Code",
+    "tab_settings": "Settings",
+    "group": "Group",
+    "type": "Type",
+    "subtype": "Subtype",
+    "data_refreshed": "Data refreshed.",
+    "err_min_chars": "{0} requires at least {1} characters.",
+    "err_max_chars": "{0} must be shorter than {1} characters."
+  },
+  "de": {
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "user_name": "Benutzername",
+    "password": "Passwort",
+    "passwords": "Passwörter",
+    "msg_login_successful": "Du hast Dich erfolgreich angemeldet!",
+    "msg_logout_successful": "Du hast Dich erfolgreich abgemeldet. Bis zum nächsten Mal!",
+    "msg_wrong_password": "Falsches Passwort. Bitte versuche es erneut.",
+    "table_only_visible_test_version": "Diese Tabelle ist nur in der Testversion sichtbar.",
+    "admin": "Administrator",
+    "mod": "Moderator",
+    "user": "Benutzer",
+    "secs": "Sekunden",
+    "mins": "Minuten",
+    "hours": "Stunden",
+    "days": "Tage",
+    "weeks": "Wochen",
+    "logged_for": "Angemeldet seit",
+    "last_logged_ago": "Zuletzt angemeldet vor",
+    "visits": "Besuche",
+    "tab_login": "Anmelden",
+    "tab_operate": "Ausleihen & Zurückgeben",
+    "tab_reporting": "Bestandsinformation",
+    "tab_user_management": "Nutzerverwaltung",
+    "tab_sensor_management": "Sensorverwaltung",
+    "tab_group": "Gruppen",
+    "tab_type": "Sensortypen",
+    "tab_file_management": "Dateiverwaltung",
+    "tab_qrcode": "QR-Code",
+    "tab_settings": "Einstellungen",
+    "group": "Gruppe",
+    "type": "Typ",
+    "subtype": "Untertyp",
+    "data_refreshed": "Daten aktualisiert.",
+    "err_min_chars": "{0} benötigt mindestens {1} Zeichen.",
+    "err_max_chars": "{0} darf nicht mehr als {1} Zeichen besitzen."
+  }
 }
