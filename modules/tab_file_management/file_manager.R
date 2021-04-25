@@ -8,14 +8,8 @@ file_manager_ui <- function(id) {
     shiny::uiOutput(
       outputId = ns("select_object")
     ),
-    shiny::fileInput(
-      inputId = ns("upload"),
-      label = "Datei hochladen",
-      multiple = TRUE,
-      accept = "application/pdf",
-      buttonLabel = "Durchsuchen",
-      placeholder = "Keine Datei ausgewählt",
-      width = "100%"
+    shiny::uiOutput(
+      outputId = ns("file_input")
     ),
     DT::dataTableOutput(
       outputId = ns("files")
@@ -43,7 +37,7 @@ file_manager_server <- function(id, .values, db, settings, label) {
         output$select_type <- shiny::renderUI({
           shiny::selectInput(
             inputId = ns("select_type"),
-            label = "Typ",
+            label = i18n$t("type"),
             choices = type_choices_r(),
             .values$device$large
           )
@@ -53,7 +47,7 @@ file_manager_server <- function(id, .values, db, settings, label) {
       output$select_object <- shiny::renderUI({
         shiny::selectInput(
           inputId = ns("select_object"),
-          label = label$object_name,
+          label = i18n$t(label$object_name),
           choices = choices_r(),
           selectize = .values$device$large
         )
@@ -79,6 +73,26 @@ file_manager_server <- function(id, .values, db, settings, label) {
         names(choices_r()[choices_r() == input$select_object])
       })
 
+      file_input_placeholder_r <- shiny::reactive({
+        switch(
+          .values$language_rv(),
+          "en" = "No file selected",
+          "de" = "Keine Datei ausgewählt"
+        )
+      })
+
+      output$file_input <- shiny::renderUI({
+        shiny::fileInput(
+          inputId = ns("upload"),
+          label = i18n$t("upload_file"),
+          multiple = TRUE,
+          accept = "application/pdf",
+          buttonLabel = i18n$t("browse"),
+          placeholder = file_input_placeholder_r(),
+          width = "100%"
+        )
+      })
+
       path_r <- shiny::reactive(
         file.path("files", settings$table_name, object_id_r())
       )
@@ -92,12 +106,8 @@ file_manager_server <- function(id, .values, db, settings, label) {
         )
       })
 
-      paths_r <- shiny::reactive({
-        file.path(path_r(), files_r())
-      })
-
-      output$files <- DT::renderDataTable({
-        files_ui <- purrr::map2_chr(
+      files_ui_r <- shiny::reactive({
+        purrr::map2_chr(
           files_r(), seq_along(files_r()),
           function(name, index) {
             file_manager_rename_ui(
@@ -107,23 +117,43 @@ file_manager_server <- function(id, .values, db, settings, label) {
             )
           }
         )
+      })
 
-        download_ui <- purrr::map_chr(paths_r(), function(href) {
+      paths_r <- shiny::reactive({
+        file.path(path_r(), files_r())
+      })
+
+      download_ui_r <- shiny::reactive({
+        purrr::map_chr(paths_r(), function(href) {
           file_manager_download_btn(href)
         })
+      })
 
-        remove_ui <- purrr::map_chr(seq_along(files_r()), function(index) {
+      remove_ui_r <- shiny::reactive({
+        purrr::map_chr(seq_along(files_r()), function(index) {
           file_manager_remove_ui(
             id = ns("file_manager_remove"),
             index = index
           )
         })
+      })
 
-        tbl <- tibble::tibble(
-          Datei = files_ui,
-          Herunterladen = download_ui,
-          "Löschen" = remove_ui
+      file_tbl_names_r <- shiny::reactive({
+        switch(
+          .values$language_rv(),
+          "en" = c("File", "Download", "Remove"),
+          "de" = c("Datei", "Herunterladen", "Löschen")
         )
+      })
+
+      output$files <- DT::renderDataTable({
+        tbl <- tibble::tibble(
+          file = files_ui_r(),
+          download = download_ui_r(),
+          remove = remove_ui_r()
+        )
+
+        names(tbl) <- file_tbl_names_r()
 
         DT::datatable(
           tbl,
@@ -147,9 +177,12 @@ file_manager_server <- function(id, .values, db, settings, label) {
           input$upload$name, input$upload$datapath,
           function(name, path) {
             if (!stringr::str_detect(name, "\\.(pdf|PDF|Pdf)$")) {
-              shiny::showNotification(paste0(
-                "Es dürfen nur .pdf-Dateien hochgeladen werden!"
-              ), type = "error")
+              shiny::showNotification(
+                i18n$t("err_upload_pdf_only"),
+                type = "error"
+              )
+
+              # Break early
               return()
             }
 
@@ -160,11 +193,12 @@ file_manager_server <- function(id, .values, db, settings, label) {
               paste0(substr(name, 1, 22), "...")
             } else name
 
-            shiny::showNotification(paste0(
-              "Die Datei \"",
-              short_name,
-              "\" wurde erfolgreich hochgeladen."
-            ))
+            shiny::showNotification(
+              i18n$t(
+                "msg_upload_successful",
+                short_name
+              )
+            )
           }
         )
 
@@ -181,7 +215,7 @@ file_manager_server <- function(id, .values, db, settings, label) {
         if (length(files_r())) {
           shiny::downloadButton(
             outputId = ns("download_all"),
-            label = "Verzeichnis herunterladen",
+            label = i18n$t("download_directory"),
             width = "100%",
             style = "display: block"
           )
