@@ -11,7 +11,7 @@ reporting_transaction_ui <- function(id) {
         ),
         htmltools::div(
           class = "color-text",
-          "Zurückgegebene Menge"
+          i18n$t("returned_quantity")
         )
       ),
       htmltools::div(
@@ -21,7 +21,7 @@ reporting_transaction_ui <- function(id) {
         ),
         htmltools::div(
           class = "color-text",
-          "Ausgeliehene Menge"
+          i18n$t("borrowed_quantity")
         )
       ),
       htmltools::div(
@@ -31,7 +31,7 @@ reporting_transaction_ui <- function(id) {
         ),
         htmltools::div(
           class = "color-text",
-          "Bestandsänderungen"
+          i18n$t("stock_changes")
         )
       )
     ),
@@ -61,20 +61,31 @@ reporting_transaction_server <- function(id, .values) {
           tbl <- dplyr::filter(tbl, user_id == .values$user$id())
         }
 
+        .values$language_rv()
+
         tbl <- tbl %>%
           dplyr::arrange(desc(time)) %>%
           dplyr::mutate(
             user_name = dplyr::case_when(
-              as.logical(user_removed) ~ paste0(user_name, ":", user_id, " (gelöscht)"),
+              as.logical(user_removed) ~
+                paste0(
+                  user_name, ":", user_id, " (", i18n$t_chr("removed"), ")"
+                ),
               TRUE ~ user_name
             ),
             subtype_name = dplyr::case_when(
               as.logical(type_removed) ~ subtype_name,
-              as.logical(subtype_removed) ~ paste0(subtype_name, ":", subtype_id, " (gelöscht)"),
+              as.logical(subtype_removed) ~
+                paste0(
+                  subtype_name, ":", subtype_id, " (", i18n$t_chr("removed"), ")"
+                ),
               TRUE ~ subtype_name
             ),
             type_name = dplyr::case_when(
-              as.logical(type_removed) ~ paste0(type_name, ":", type_id, " (gelöscht)"),
+              as.logical(type_removed) ~
+                paste0(
+                  type_name, ":", type_id, " (", i18n$t_chr("removed"), ")"
+                ),
               TRUE ~ type_name
             ),
             quantity = dplyr::case_when(
@@ -93,6 +104,18 @@ reporting_transaction_server <- function(id, .values) {
             type_removed, quantity_color
           )
 
+        names(tbl) <- c(
+          i18n$t_chr("user_name"),
+          i18n$t_chr("type"),
+          i18n$t_chr("subtype"),
+          i18n$t_chr("date"),
+          i18n$t_chr("quantity"),
+          "user_removed",
+          "subtype_removed",
+          "type_removed",
+          "quantity_color"
+        )
+
         if (.values$user$status() != "admin") {
           tbl <- dplyr::select(tbl, -Nutzer)
         }
@@ -101,8 +124,6 @@ reporting_transaction_server <- function(id, .values) {
       })
 
       output$table <- DT::renderDataTable({
-        tbl <- formatted_transaction_table_r()
-
         DT::datatable(
           formatted_transaction_table_r(),
           options = list(
@@ -122,25 +143,25 @@ reporting_transaction_server <- function(id, .values) {
             )
           )
         ) %>%  DT::formatStyle(
-          columns = "Menge",
+          columns = i18n$t_chr("quantity"),
           valueColumns = "quantity_color",
           color = DT::styleValue()
         ) %>% DT::formatStyle(
-          columns = "Nutzer",
+          columns = i18n$t_chr("user_name"),
           valueColumns = "user_removed",
           color = DT::styleInterval(
             cuts = 0,
             values = c("inherit", "rgb(221, 75, 57)")
           )
         ) %>% DT::formatStyle(
-          columns = "Untertyp",
+          columns = i18n$t_chr("subtype"),
           valueColumns = "subtype_removed",
           color = DT::styleInterval(
             cuts = 0,
             values = c("inherit", "rgb(221, 75, 57)")
           )
         ) %>% DT::formatStyle(
-          columns = "Typ",
+          columns = i18n$t_chr("type"),
           valueColumns = "type_removed",
           color = DT::styleInterval(
             cuts = 0,

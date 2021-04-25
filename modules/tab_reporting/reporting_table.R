@@ -32,7 +32,7 @@ reporting_table_server <- function(id, .values, settings, object_id_r = NULL) {
 
       formatted_borrow_summary_r <- shiny::reactive({
         if (settings$summary %in% c("user", "all")) {
-          borrow_summary_r() %>%
+          tbl <- borrow_summary_r() %>%
             dplyr::mutate(
               type_id = db_get_type_id_by_subtype_id(.values$db, subtype_id),
               type_name = db_get_type_name(.values$db, type_id),
@@ -40,8 +40,7 @@ reporting_table_server <- function(id, .values, settings, object_id_r = NULL) {
             ) %>%
             dplyr::arrange(type_name, subtype_name) %>%
             dplyr::select(
-              Typ = type_name, Untertyp = subtype_name, Menge = quantity,
-              `Zuletzt ausgeliehen` = time
+              type_name, subtype_name, quantity, time
             )
         } else {
           borrow_summary_r() %>%
@@ -50,14 +49,37 @@ reporting_table_server <- function(id, .values, settings, object_id_r = NULL) {
             ) %>%
             dplyr::arrange(user_name) %>%
             dplyr::select(
-              Name = user_name, Menge = quantity, `Zuletzt ausgeliehen` = time
+              user_name, quantity, time
             )
         }
       })
 
+      tbl_names_r <- shiny::reactive({
+        .values$language_rv()
+
+        if (settings$summary %in% c("user", "all")) {
+          c(
+            i18n$t_chr("type"),
+            i18n$t_chr("subtype"),
+            i18n$t_chr("quantity"),
+            i18n$t_chr("last_borrowed")
+          )
+        } else {
+          c(
+            i18n$t_chr("user_name"),
+            i18n$t_chr("quantity"),
+            i18n$t_chr("last_borrowed")
+          )
+        }
+      })
+
       output$table <- DT::renderDataTable({
+        tbl <- formatted_borrow_summary_r()
+
+        names(tbl) <- tbl_names_r()
+
         DT::datatable(
-          formatted_borrow_summary_r(),
+          tbl,
           options = list(
             language = list(
               url = .values$dt_language_r()
