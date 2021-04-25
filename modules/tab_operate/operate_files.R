@@ -4,7 +4,7 @@ operate_files_ui <- function(id) {
   bs4Dash::tabBox(
     id = ns("file_tabs"),
     width = NULL,
-    title = "Dateien",
+    title = i18n$t("files"),
     shiny::tabPanel(
       title = shiny::uiOutput(
         outputId = ns("group_title"),
@@ -59,22 +59,22 @@ operate_files_server <- function(id,
       })
 
       output$group_title <- shiny::renderUI({
-        format_file_title(
-          "Gruppen",
+        i18n$i(
+          "${groups} (${p_[[1]]})",
           length(group_files_return$files_r())
         )
       })
 
       output$type_title <- shiny::renderUI({
-        format_file_title(
-          "Typ",
+        i18n$i(
+          "${types} (${p_[[1]]})",
           length(type_files_return$files_r())
         )
       })
 
       output$subtype_title <- shiny::renderUI({
-        format_file_title(
-          "Untertypen",
+        i18n$i(
+          "${subtypes} (${p_[[1]]})",
           length(subtype_files_return$files_r())
         )
       })
@@ -87,7 +87,7 @@ operate_files_server <- function(id,
         ),
         settings = list(table_name = "group"),
         label = list(
-          object_name = "Gruppe"
+          object_name = "group"
         ),
         type_id_r = type_id_r,
         object_ids_r = group_ids_r
@@ -101,7 +101,7 @@ operate_files_server <- function(id,
         ),
         settings = list(table_name = "type"),
         label = list(
-          object_name = "Typ"
+          object_name = "type"
         ),
         type_id_r = type_id_r,
         object_ids_r = type_id_r
@@ -115,7 +115,7 @@ operate_files_server <- function(id,
         ),
         settings = list(table_name = "subtype"),
         label = list(
-          object_name = "Untertyp"
+          object_name = "subtype"
         ),
         type_id_r = type_id_r,
         object_ids_r = subtype_ids_r
@@ -124,6 +124,3 @@ operate_files_server <- function(id,
   )
 }
 
-format_file_title <- function(name, n) {
-  glue::glue("{name} ({n})", name = name, n = n)
-}
