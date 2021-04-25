@@ -2,6 +2,10 @@
 
 `%||%` <- function(x, y) if (!is.null(x)) x else y
 
+is_empty <- function(x) {
+  is.null(x) || is.na(x)
+}
+
 format_number <- function(x) {
   dict <- c(
     "1"  = "${one}",
