@@ -37,7 +37,7 @@ file_manager_server <- function(id, .values, db, settings, label) {
         output$select_type <- shiny::renderUI({
           shiny::selectInput(
             inputId = ns("select_type"),
-            label = i18n$t("type"),
+            label = i18n$t("${type}"),
             choices = type_choices_r(),
             .values$device$large
           )
@@ -84,10 +84,10 @@ file_manager_server <- function(id, .values, db, settings, label) {
       output$file_input <- shiny::renderUI({
         shiny::fileInput(
           inputId = ns("upload"),
-          label = i18n$t("upload_file"),
+          label = i18n$t("${upload_file}"),
           multiple = TRUE,
           accept = "application/pdf",
-          buttonLabel = i18n$t("browse"),
+          buttonLabel = i18n$t("${browse}"),
           placeholder = file_input_placeholder_r(),
           width = "100%"
         )
@@ -178,7 +178,7 @@ file_manager_server <- function(id, .values, db, settings, label) {
           function(name, path) {
             if (!stringr::str_detect(name, "\\.(pdf|PDF|Pdf)$")) {
               shiny::showNotification(
-                i18n$t("err_upload_pdf_only"),
+                i18n$t("${err_upload_pdf_only}"),
                 type = "error"
               )
 
@@ -195,7 +195,7 @@ file_manager_server <- function(id, .values, db, settings, label) {
 
             shiny::showNotification(
               i18n$t(
-                "msg_upload_successful",
+                "${msg_upload_successful}",
                 short_name
               )
             )
@@ -215,7 +215,7 @@ file_manager_server <- function(id, .values, db, settings, label) {
         if (length(files_r())) {
           shiny::downloadButton(
             outputId = ns("download_all"),
-            label = i18n$t("download_directory"),
+            label = i18n$t("${download_directory}"),
             width = "100%",
             style = "display: block"
           )

@@ -131,36 +131,34 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$settings$type_name$length <- list(min = 4, max = 32)
         .values$settings$subtype_name$length <- list(min = 4, max = 32)
 
-        .values$settings$status_dict <- function() {
+        .values$settings$status_dict <- list(
+            admin = i18n$t("${admin}"),
+            mod = i18n$t("${mod}"),
+            user = i18n$t("${user}")
+        )
+
+        .values$settings$status_dict_chr <- list(
+            admin = i18n$t_chr("${admin}"),
+            mod = i18n$t_chr("${mod}"),
+            user = i18n$t_chr("${user}")
+        )
+
+        .values$settings$time_unit_dict <- function() {
             list(
-                admin = i18n$t("admin"),
-                mod = i18n$t("mod"),
-                user = i18n$t("user")
+                secs = i18n$t("${secs}"),
+                mins = i18n$t("${mins}"),
+                hours = i18n$t("${hours}"),
+                days = i18n$t("${days}"),
+                weeks = i18n$t("${weeks}")
             )
         }
-
-        .values$settings$status_dict_chr <- function() {
-            list(
-                admin = i18n$translate("admin"),
-                mod = i18n$translate("mod"),
-                user = i18n$translate("user")
-            ) %>% purrr::map_chr(as.character)
-        }
-
-        .values$settings$time_unit_dict <- list(
-            secs = i18n$t("secs"),
-            mins = i18n$t("mins"),
-            hours = i18n$t("hours"),
-            days = i18n$t("days"),
-            weeks = i18n$t("weeks")
-        )
 
         .values$settings$table_dict <- function() {
             .values$language_rv()
             list(
-                "group" = i18n$translate("group"),
-                "type" = i18n$translate("type"),
-                "subtype" = i18n$translate("subtype")
+                "group" = i18n$t_chr("group"),
+                "type" = i18n$t_chr("type"),
+                "subtype" = i18n$t_chr("subtype")
             )
         }
 

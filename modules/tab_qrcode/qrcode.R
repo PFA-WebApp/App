@@ -195,7 +195,7 @@ qrcode_server <- function(id, .values) {
         .values = .values,
         min_r = min_width_r,
         min_message_r = shiny::reactive({
-          "err_min_qrcode_width"
+          "${err_min_qrcode_width}"
         }),
         object_label = "Die Seitenbreite"
       )
@@ -207,7 +207,7 @@ qrcode_server <- function(id, .values) {
         .values = .values,
         min_r = min_height_r,
         min_message_r = shiny::reactive({
-          "err_min_qrcode_height"
+          "${err_min_qrcode_height}"
         }),
         object_label = "Die Seitenbreite"
       )

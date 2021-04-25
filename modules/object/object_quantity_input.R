@@ -46,7 +46,7 @@ object_quantity_input_server <- function(id,
       output$not_integer <- shiny::renderUI({
         if (not_integer_r()) {
           i18n$t(
-            "err_must_be_integer",
+            "${err_must_be_integer}",
             object_label
           )
         }
@@ -55,7 +55,7 @@ object_quantity_input_server <- function(id,
       output$negative <- shiny::renderUI({
         if (negative_r()) {
           i18n$t(
-            "err_must_be_positve",
+            "${err_must_be_positve}",
             object_label
           )
         }

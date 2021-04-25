@@ -12,10 +12,12 @@ add_object_ui <- function(...,
       placeholder = placeholder
     ),
     shiny::uiOutput(
-      outputId = ns("wrong_name_length")
+      outputId = ns("wrong_name_length"),
+      class = "pfa-error"
     ),
     shiny::uiOutput(
-      outputId = ns("name_taken")
+      outputId = ns("name_taken"),
+      class = "pfa-error"
     ),
     ...,
     shiny::uiOutput(
@@ -49,14 +51,17 @@ add_object_box_ui <- function(...,
       placeholder = placeholder
     ),
     shiny::uiOutput(
-      outputId = ns("wrong_name_length")
+      outputId = ns("wrong_name_length"),
+      class = "pfa-error"
     ),
     shiny::uiOutput(
-      outputId = ns("name_taken")
+      outputId = ns("name_taken"),
+      class = "pfa-error"
     ),
     ...,
     shiny::uiOutput(
-      outputId = ns("add_object")
+      outputId = ns("add_object"),
+      class = "pfa-error"
     )
   )
 }
@@ -76,10 +81,9 @@ add_object_server <- function(id,
       on_add_rv <- shiny::reactiveVal(0)
 
       output$wrong_name_length <- shiny::renderUI({
-        .values$language_rv()
         if (name_too_short_r()) {
           return(i18n$t(
-            "err_min_chars",
+            "${err_min_chars}",
             label$object_name_with_article,
             format_number(.values$settings[[settings$length_name]]$length$min)
           ))
@@ -87,7 +91,7 @@ add_object_server <- function(id,
 
         if (name_too_long_r()) {
           return(i18n$t(
-            "err_max_chars",
+            "${err_max_chars}",
             label$object_name_with_article,
             format_number(.values$settings[[settings$length_name]]$length$max)
           ))
@@ -95,16 +99,12 @@ add_object_server <- function(id,
       })
 
       output$name_taken <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !name_taken_r(),
-            paste(
-              label$object_name_with_article,
-              "existiert bereits!"
-            )
-          ),
-          errorClass = "PFA"
-        )
+        if (name_taken_r()) {
+          i18n$t(
+            "${err_name_taken}",
+            label$object_name_with_article
+          )
+        }
       })
 
       output$add_object <- shiny::renderUI({
@@ -112,14 +112,14 @@ add_object_server <- function(id,
           shinyjs::disabled(
             shiny::actionButton(
               inputId = ns("add_object"),
-              label = label$add_label,
+              label = i18n$t(label$add_label),
               width = "100%"
             )
           )
         } else {
           shiny::actionButton(
             inputId = ns("add_object"),
-            label = label$add_label,
+            label = i18n$t(label$add_label),
             width = "100%"
           )
         }
@@ -163,22 +163,20 @@ add_object_server <- function(id,
 
         if (success) {
           shiny::showNotification(
-            ui = paste0(
+            ui = i18n$t(
+              "${msg_object_added_succesfully}",
               label$object_with_article,
-              " \"",
-              input$object_name,
-              "\" wurde erfolgreich hinzugefügt."
+              input$object_name
             ),
             duration = 5,
             type = "warning"
           )
         } else {
           shiny::showNotification(
-            ui = paste0(
+            ui = i18n$t(
+              "${err_object_added_from_another_user}",
               label$object_with_article,
-              " \"",
-              input$object_name,
-              "\" wurde bereits von einem anderen Nutzer hinzugefügt."
+              input$object_name
             ),
             duration = 5,
             type = "error"

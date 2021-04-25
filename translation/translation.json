@@ -1,5 +1,9 @@
 {
   "en": {
+    "err_object_added_from_another_user": "${p_[[1]]} \"${p_[[2]]}\" has been already added by another user!",
+    "msg_object_added_successfully": "${p_[[1]]} \"${p_[[2]]}\" was added successfully.",
+    "file_name_with_article": "The file name",
+    "err_name_taken": "${p_[[1]]} already exists!",
     "add_group": "Add group",
     "admin": "Administrator",
     "browse": "Browse",
@@ -13,7 +17,6 @@
     "eight": "eight",
     "eleven": "eleven",
     "err_borrow_positive": "You must borrow at least one unit!",
-    "err_file_name_taken": "The file name already exists!",
     "err_file_name_too_short": "The file name is too short!",
     "err_max_chars": "${p_[[1]]} must be shorter than ${p_[[2]]} characters!",
     "err_min_chars": "${p_[[1]]} requires at least ${p_[[2]]} characters!",
@@ -96,6 +99,10 @@
     "weeks": "weeks"
   },
   "de": {
+    "err_object_added_from_another_user": "${p_[[1]]} \"${p_[[2]]}\" wurde bereits von einem anderen Benutzer hinzugefügt!",
+    "msg_object_added_successfully": "${p_[[1]]} \"${p_[[2]]}\" wurde erfolgreich hinzugefügt!",
+    "file_name_with_article": "Der Dateiname",
+    "err_name_taken": "${p_[[1]]} existiert bereits!",
     "add_group": "Gruppe hinzufügen",
     "admin": "Administrator",
     "browse": "Durchsuchen",
@@ -109,7 +116,6 @@
     "eight": "acht",
     "eleven": "elf",
     "err_borrow_positive": "Du musst mindestens eine Einheit ausleihen!",
-    "err_file_name_taken": "Der Dateiname existiert bereits!",
     "err_file_name_too_short": "Der Dateiname ist zu kurz!",
     "err_max_chars": "${p_[[1]]} darf nicht mehr als ${p_[[2]]} Zeichen besitzen.",
     "err_min_chars": "${p_[[1]]} benötigt mindestens ${p_[[2]]} Zeichen.",

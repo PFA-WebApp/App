@@ -96,13 +96,13 @@ object_table_quantity_server <- function(id,
           shinyjs::disabled(
             shiny::actionButton(
               inputId = ns("confirm_object_quantity"),
-              label = i18n$t("confirm")
+              label = i18n$t("${confirm}")
             )
           )
         } else {
           shiny::actionButton(
             inputId = ns("confirm_object_quantity"),
-            label = i18n$t("confirm")
+            label = i18n$t("${confirm}")
           )
         }
       })
@@ -168,7 +168,7 @@ object_table_quantity_server <- function(id,
         .values = .values,
         min_r = min_r,
         min_message_r = shiny::reactive({
-          "err_min_subtype_quantity"
+          "${err_min_subtype_quantity}"
         })
       )
     }

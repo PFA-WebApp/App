@@ -6,20 +6,20 @@ group_ui <- function(id) {
       width = 6,
       add_object_box_ui(
         id = ns("add_group"),
-        title = i18n$t("add_group"),
-        label = i18n$t("group_name"),
-        placeholder = "Versuchsaufbau"
+        title = i18n$t("${add_group}"),
+        label = i18n$t("${group_name}"),
+        placeholder = NULL
       ),
       object_table_box_ui(
         id = ns("group_table"),
-        title = i18n$t("group_table")
+        title = i18n$t("${group_table}")
       )
     ),
     shiny::column(
       width = 6,
       show_connections_ui(
         id = ns("show_types"),
-        title = i18n$t("show_types")
+        title = i18n$t("${show_types}")
       )
     )
   )
