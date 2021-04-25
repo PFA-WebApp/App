@@ -52,7 +52,7 @@ file_manager_rename_server <- function(id,
       shiny::observeEvent(file_r(), {
         shiny::showModal(shiny::modalDialog(
           title = htmltools::tagList(
-            i18n$t("${edit_file_name}"),
+            i18n$t("edit_file_name"),
             shiny::modalButton(
               label = NULL,
               icon = shiny::icon("window-close")
@@ -61,7 +61,7 @@ file_manager_rename_server <- function(id,
           easyClose = TRUE,
           shiny::textInput(
             inputId = ns("object_name"),
-            label = i18n$t("${new_file_name}"),
+            label = i18n$t("new_file_name"),
             value = stringr::str_split(file_r(), "\\.(pdf|PDF|Pdf)$")[[1]][1]
           ),
           shiny::uiOutput(
@@ -82,7 +82,7 @@ file_manager_rename_server <- function(id,
       output$name_taken <- shiny::renderUI({
         if (name_taken_r()) {
           i18n$t(
-            "${err_name_taken}",
+            "err_name_taken",
             "${file_name_with_article}"
           )
         }
@@ -90,7 +90,7 @@ file_manager_rename_server <- function(id,
 
       output$name_too_short <- shiny::renderUI({
         if (name_too_short_r()) {
-          i18n$t("${err_file_name_too_short}")
+          i18n$t("err_file_name_too_short")
         }
       })
 
@@ -99,13 +99,13 @@ file_manager_rename_server <- function(id,
           shinyjs::disabled(
             shiny::actionButton(
               inputId = ns("confirm_object_name"),
-              label = i18n$t("${confirm}")
+              label = i18n$t("confirm")
             )
           )
         } else {
           shiny::actionButton(
             inputId = ns("confirm_object_name"),
-            label = i18n$t("${confirm}")
+            label = i18n$t("confirm")
           )
         }
       })
@@ -136,7 +136,7 @@ file_manager_rename_server <- function(id,
 
         shiny::showNotification(
           ui = i18n$t(
-            "${msg_file_name_edit_successful}",
+            "msg_file_name_edit_successful",
             file_name
           ),
           type = "warning",

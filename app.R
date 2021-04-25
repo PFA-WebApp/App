@@ -132,24 +132,24 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$settings$subtype_name$length <- list(min = 4, max = 32)
 
         .values$settings$status_dict <- list(
-            admin = i18n$t("${admin}"),
-            mod = i18n$t("${mod}"),
-            user = i18n$t("${user}")
+            admin = i18n$t("admin"),
+            mod = i18n$t("mod"),
+            user = i18n$t("user")
         )
 
         .values$settings$status_dict_chr <- list(
-            admin = i18n$t_chr("${admin}"),
-            mod = i18n$t_chr("${mod}"),
-            user = i18n$t_chr("${user}")
+            admin = i18n$t_chr("admin"),
+            mod = i18n$t_chr("mod"),
+            user = i18n$t_chr("user")
         )
 
         .values$settings$time_unit_dict <- function() {
             list(
-                secs = i18n$t("${secs}"),
-                mins = i18n$t("${mins}"),
-                hours = i18n$t("${hours}"),
-                days = i18n$t("${days}"),
-                weeks = i18n$t("${weeks}")
+                secs = i18n$t("secs"),
+                mins = i18n$t("mins"),
+                hours = i18n$t("hours"),
+                days = i18n$t("days"),
+                weeks = i18n$t("weeks")
             )
         }
 

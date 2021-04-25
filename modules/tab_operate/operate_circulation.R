@@ -5,7 +5,7 @@ operate_circulation_ui <- function(id) {
     width = NULL,
     solidHeader = TRUE,
     status = "primary",
-    title = "Ausleihen & Zurückgeben",
+    title = i18n$t("tab_operate"),
     shiny::uiOutput(
       outputId = ns("user"),
     ),
@@ -37,7 +37,7 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
         if (.values$user$status() == "admin") {
           shiny::selectInput(
             inputId = ns("user"),
-            label = "Ausführender Nutzer",
+            label = i18n$t("executing_user"),
             choices = user_r(),
             selected = .values$user$id(),
             selectize = .values$device$large
@@ -65,7 +65,7 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
       output$type <- shiny::renderUI({
         shiny::selectInput(
           inputId = ns("type"),
-          label = "Typ",
+          label = i18n$t("type"),
           choices = types_r(),
           selected = .values$query$type(),
           selectize = .values$device$large
@@ -103,7 +103,7 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
       output$subtype <- shiny::renderUI({
         shiny::selectInput(
           inputId = ns("subtype"),
-          label = "Untertyp",
+          label = i18n$t("subtype"),
           choices = subtypes_r(),
           selectize = .values$device$large
         )
@@ -124,7 +124,7 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
               width = 4,
               shiny::actionButton(
                 inputId = ns("borrow"),
-                label = "Ausleihen",
+                label = i18n$t("borrow"),
                 icon = shiny::icon("sign-out-alt"),
                 width = "100%",
                 class = "borrow-btn"
@@ -134,7 +134,7 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
               width = 4,
               shiny::actionButton(
                 inputId = ns("write_off"),
-                label = "Abschreiben",
+                label = i18n$t("write_off"),
                 icon = shiny::icon("balance-scale-right"),
                 width = "100%",
                 class = "write-off-btn"
@@ -144,7 +144,7 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
               width = 4,
               shiny::actionButton(
                 inputId = ns("return"),
-                label = "Zurückgeben",
+                label = i18n$t("return"),
                 icon = shiny::icon("sign-in-alt"),
                 width = "100%",
                 class = "return-btn"
@@ -157,7 +157,7 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
               width = 6,
               shiny::actionButton(
                 inputId = ns("borrow"),
-                label = "Ausleihen",
+                label = i18n$t("borrow"),
                 icon = shiny::icon("sign-out-alt"),
                 width = "100%",
                 class = "borrow-btn"
@@ -167,7 +167,7 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
               width = 6,
               shiny::actionButton(
                 inputId = ns("return"),
-                label = "Zurückgeben",
+                label = i18n$t("return"),
                 icon = shiny::icon("sign-in-alt"),
                 width = "100%",
                 class = "return-btn"
@@ -197,7 +197,11 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
       modal_dialog_r <- shiny::reactive({
         operate_index <- operate_rv()
 
-        title <- c("Ausleihen", "Zurückgeben", "Abschreiben")
+        title <- list(
+          i18n$t("borrow"),
+          i18n$t("return"),
+          i18n$t("write_off")
+        )
 
         shiny::modalDialog(
           title = htmltools::tagList(
@@ -211,21 +215,21 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
           shinyjs::disabled(
             shiny::textInput(
               inputId = "disabled",
-              label = "Nutzer",
+              label = i18n$t("user"),
               value = user_name_r()
             )
           ),
           shinyjs::disabled(
             shiny::textInput(
               inputId = "disabled",
-              label = "Typ",
+              label = i18n$t("type"),
               value = type_name_r()
             )
           ),
           shinyjs::disabled(
             shiny::textInput(
               inputId = "disabled",
-              label = "Untertyp",
+              label = i18n$t("subtype"),
               value = subtype_name_r()
             )
           ),
@@ -264,31 +268,31 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
       })
 
       borrow_label_r <- shiny::reactive({
-        glue::glue(
-          "Menge ({quantity} verfügbar)",
-          quantity = max_borrow_r()
+        i18n$t(
+          "quantity_available",
+          max_borrow_r()
         )
       })
 
       return_label_r <- shiny::reactive({
-        glue::glue(
-          "Menge ({quantity} ausgeliehen)",
-          quantity = max_return_r()
+        i18n$t(
+          "quantity_borrowed",
+          max_return_r()
         )
       })
 
       write_off_label_r <- shiny::reactive({
-        glue::glue(
-          "Menge ({available} verfügbar, {borrowed} insgesamt ausgeliehen)",
-          available = max_borrow_r(),
-          borrowed = max_borrowed_r()
+        i18n$t(
+          "quantity_write_off",
+          max_borrow_r(),
+          max_borrowed_r()
         )
       })
 
       borrow_footer_r <- shiny::reactive({
         shiny::actionButton(
           inputId = ns("confirm_borrow"),
-          label = "Ausleihen bestätigen",
+          label = i18n$t("confirm_borrow"),
           icon = shiny::icon("sign-out-alt"),
           class = "borrow-btn",
           width = "100%"
@@ -298,7 +302,7 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
       return_footer_r <- shiny::reactive({
         shiny::actionButton(
           inputId = ns("confirm_return"),
-          label = "Zurückgeben bestätigen",
+          label = i18n$t("confirm_return"),
           icon = shiny::icon("sign-in-alt"),
           class = "return-btn",
           width = "100%"
@@ -308,7 +312,7 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
       write_off_footer_r <- shiny::reactive({
         shiny::actionButton(
           inputId = ns("confirm_write_off"),
-          label = "Abschreiben bestätigen",
+          label = i18n$t("confirm_write_off"),
           icon = shiny::icon("balance-scale-right"),
           class = "write-off-btn",
           width = "100%"
@@ -360,10 +364,7 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
           )
         } else {
           shiny::showNotification(
-            ui = paste(
-              "Ausleihen fehlgeschlagen! Möglicherweise war ein anderer Nutzer",
-              "schneller als Du."
-            ),
+            ui = i18n$t("err_borrow"),
             duration = NULL,
             type = "error"
           )
@@ -431,10 +432,7 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
           )
         } else {
           shiny::showNotification(
-            ui = paste(
-              "Abschreiben fehlgeschlagen.",
-              "Ein anderer Nutzer war schneller als Du."
-            ),
+            ui = i18n$t("err_write_off"),
             duration = 5,
             type = "error"
           )
@@ -484,21 +482,12 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
         )
       })
 
-      operate_verb_r <- shiny::reactive({
-        get_operation_verb(operate_rv())
-      })
-
       max_message_r <- shiny::reactive({
-        context <- c(
-          "als verfügbar sind!",
-          "als Du ausgeliehen hast!",
-          "als verfügbar sind!"
-        )
-
-        paste(
-          "Du kannst nicht mehr Einheiten",
-          operate_verb_r(),
-          context[operate_rv()]
+        switch(
+          operate_rv(),
+          "1" = "${err_borrow_max}",
+          "2" = "${err_return_max}",
+          "3" = "${err_write_off_max}"
         )
       })
 
@@ -541,23 +530,21 @@ operate_notification_text <- function(operation,
 ) {
   verb <- get_operation_verb(operation, participle = TRUE)
 
+  obj_name <- paste0(type_name, ":", subtype_name)
+
   if (status == "admin" && operation != 3) {
-    paste(
-      "Du hast für",
+    i18n$t(
+      "msg_operate_successful_admin",
       user_name,
       quantity,
-      type_name,
-      ":",
-      subtype_name,
+      obj_name,
       verb
     )
   } else {
-    paste(
-      "Du hast",
+    i18n$t(
+      "msg_operate_successful",
       quantity,
-      type_name,
-      ":",
-      subtype_name,
+      obj_name,
       verb
     )
   }
@@ -568,9 +555,9 @@ operate_notification_text <- function(operation,
 get_operation_verb <- function(operation, participle = FALSE) {
   stopifnot(operation %in% 1:3)
   verb <- if (participle) {
-    c("ausgeliehen", "zurückgegeben", "abgeschrieben")
+    c("${borrowed}", "${returned}", "${wrote_off}")
   } else {
-    c("ausleihen", "zurückgeben", "abschreiben")
+    c("${borrow_s}", "${return_s}", "${write_off_s}")
   }
   verb[operation]
 }

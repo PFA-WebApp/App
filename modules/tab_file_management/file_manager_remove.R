@@ -43,7 +43,7 @@ file_manager_remove_server <- function(id,
       shiny::observeEvent(file_r(), {
         shiny::showModal(shiny::modalDialog(
           title = htmltools::tagList(
-            i18n$t("${remove_file}"),
+            i18n$t("remove_file"),
             shiny::modalButton(
               label = NULL,
               icon = shiny::icon("window-close")
@@ -51,12 +51,12 @@ file_manager_remove_server <- function(id,
           ),
           easyClose = TRUE,
           i18n$t(
-            "${msg_confirm_file_remove}",
+            "msg_confirm_file_remove",
             file_r()
           ),
           footer = shiny::actionButton(
             inputId = ns("confirm_remove"),
-            label = i18n$t("${confirm}")
+            label = i18n$t("confirm")
           )
         ))
       }, priority = -1)
@@ -68,7 +68,7 @@ file_manager_remove_server <- function(id,
 
         shiny::showNotification(
           ui = i18n$t(
-            "${msg_file_remove_successful}",
+            "msg_file_remove_successful",
             file_r()
           ),
           type = "warning",

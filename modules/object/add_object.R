@@ -83,7 +83,7 @@ add_object_server <- function(id,
       output$wrong_name_length <- shiny::renderUI({
         if (name_too_short_r()) {
           return(i18n$t(
-            "${err_min_chars}",
+            "err_min_chars",
             label$object_name_with_article,
             format_number(.values$settings[[settings$length_name]]$length$min)
           ))
@@ -91,7 +91,7 @@ add_object_server <- function(id,
 
         if (name_too_long_r()) {
           return(i18n$t(
-            "${err_max_chars}",
+            "err_max_chars",
             label$object_name_with_article,
             format_number(.values$settings[[settings$length_name]]$length$max)
           ))
@@ -101,7 +101,7 @@ add_object_server <- function(id,
       output$name_taken <- shiny::renderUI({
         if (name_taken_r()) {
           i18n$t(
-            "${err_name_taken}",
+            "err_name_taken",
             label$object_name_with_article
           )
         }
@@ -164,7 +164,7 @@ add_object_server <- function(id,
         if (success) {
           shiny::showNotification(
             ui = i18n$t(
-              "${msg_object_added_succesfully}",
+              "msg_object_added_succesfully",
               label$object_with_article,
               input$object_name
             ),
@@ -174,7 +174,7 @@ add_object_server <- function(id,
         } else {
           shiny::showNotification(
             ui = i18n$t(
-              "${err_object_added_from_another_user}",
+              "err_object_added_from_another_user",
               label$object_with_article,
               input$object_name
             ),
