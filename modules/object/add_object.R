@@ -76,11 +76,12 @@ add_object_server <- function(id,
       on_add_rv <- shiny::reactiveVal(0)
 
       output$wrong_name_length <- shiny::renderUI({
+        .values$language_rv()
         if (name_too_short_r()) {
           return(i18n$t(
             "err_min_chars",
             label$object_name_with_article,
-            as_german(.values$settings[[settings$length_name]]$length$min)
+            format_number(.values$settings[[settings$length_name]]$length$min)
           ))
         }
 
@@ -88,7 +89,7 @@ add_object_server <- function(id,
           return(i18n$t(
             "err_max_chars",
             label$object_name_with_article,
-            as_german(.values$settings[[settings$length_name]]$length$max)
+            format_number(.values$settings[[settings$length_name]]$length$max)
           ))
         }
       })

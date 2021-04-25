@@ -505,9 +505,9 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
       min_message_r <- shiny::reactive({
         switch(
           operate_rv(),
-          "1" = "Du musst mindestens eine Einheit ausleihen!",
-          "2" = "Du musst mindestens eine Einheit zurückgeben!",
-          "3" = "Du musst mindestens eine Einheit abschreiben!"
+          "1" = "err_borrow_positive",
+          "2" = "err_return_positive",
+          "3" = "err_write_off_positive"
         )
       })
 

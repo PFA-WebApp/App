@@ -96,13 +96,13 @@ object_table_quantity_server <- function(id,
           shinyjs::disabled(
             shiny::actionButton(
               inputId = ns("confirm_object_quantity"),
-              label = "Bestätigen"
+              label = i18n$t("confirm")
             )
           )
         } else {
           shiny::actionButton(
             inputId = ns("confirm_object_quantity"),
-            label = "Bestätigen"
+            label = i18n$t("confirm")
           )
         }
       })
@@ -168,11 +168,7 @@ object_table_quantity_server <- function(id,
         .values = .values,
         min_r = min_r,
         min_message_r = shiny::reactive({
-          paste0(
-            "Die Menge eines Untertyps muss mindestens der ausgeliehenen Menge (",
-            min_r(),
-            ") entsprechen."
-          )
+          "err_min_subtype_quantity"
         })
       )
     }

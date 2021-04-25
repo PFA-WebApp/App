@@ -116,10 +116,10 @@ type_server <- function(id, .values) {
         connections = "Gruppen",
         connection_name = "Gruppenname",
         new_name = "Neuer Typname",
-        object = "Typ",
-        object_name_with_article = "Der Typname",
-        object_with_article = "Der Typ",
-        object_with_small_article = "den Typen",
+        object = "${type}",
+        object_name_with_article = "${type_name_with_article}",
+        object_with_article = "${type_with_article}",
+        object_with_small_article = "${type_with_small_article}",
         remove_btn_title = "Typ entfernen"
       )
 

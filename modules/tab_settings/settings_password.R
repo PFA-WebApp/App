@@ -39,7 +39,7 @@ settings_password_server <- function(id, .values) {
             !password_too_short_r(),
             paste(
               "Das Passwort benötigt mindestens",
-              as_german(.values$settings$password$length$min),
+              format_number(.values$settings$password$length$min),
               "Zeichen!"
             )
           ),
@@ -47,7 +47,7 @@ settings_password_server <- function(id, .values) {
             !password_too_long_r(),
             paste(
               "Das Passwort darf nicht länger sein als",
-              as_german(.values$settings$password$length$max),
+              format_number(.values$settings$password$length$max),
               "Zeichen!"
             )
           ),

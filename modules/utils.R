@@ -2,20 +2,20 @@
 
 `%||%` <- function(x, y) if (!is.null(x)) x else y
 
-as_german <- function(x) {
+format_number <- function(x) {
   dict <- c(
-    "1"  = "ein",
-    "2"  = "zwei",
-    "3"  = "drei",
-    "4"  = "vier",
-    "5"  = "fünf",
-    "6"  = "sechs",
-    "7"  = "sieben",
-    "8"  = "acht",
-    "9"  = "neun",
-    "10" = "zehn",
-    "11" = "elf",
-    "12" = "zwölf"
+    "1"  = "${one}",
+    "2"  = "${two}",
+    "3"  = "${three}",
+    "4"  = "${four}",
+    "5"  = "${five}",
+    "6"  = "${six}",
+    "7"  = "${seven}",
+    "8"  = "${eight}",
+    "9"  = "${nine}",
+    "10" = "${ten}",
+    "11" = "${eleven}",
+    "12" = "${twelve}"
   )
 
   if (x <= 12) {

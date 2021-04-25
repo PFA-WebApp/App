@@ -168,7 +168,7 @@ object_table_critical_quantity_server <- function(id,
         .values = .values,
         min_r = shiny::reactive(0),
         min_message_r = shiny::reactive({
-          "Die kritische Menge eines Untertyps muss mindestens 0 betragen."
+          "err_min_critical_quantity"
         })
       )
     }

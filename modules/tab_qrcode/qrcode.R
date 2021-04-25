@@ -195,7 +195,7 @@ qrcode_server <- function(id, .values) {
         .values = .values,
         min_r = min_width_r,
         min_message_r = shiny::reactive({
-          "Die minimale Seitenbreite muss mindestens 32 mm betragen."
+          "err_min_qrcode_width"
         }),
         object_label = "Die Seitenbreite"
       )
@@ -207,7 +207,7 @@ qrcode_server <- function(id, .values) {
         .values = .values,
         min_r = min_height_r,
         min_message_r = shiny::reactive({
-          "Die minimale Seitenhöhe muss mindestens 47 mm betragen."
+          "err_min_qrcode_height"
         }),
         object_label = "Die Seitenbreite"
       )

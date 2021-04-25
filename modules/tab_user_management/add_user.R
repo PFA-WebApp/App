@@ -74,7 +74,7 @@ add_user_server <- function(id, .values) {
             !user_name_too_short_r(),
             paste(
               "Der Benutzername benötigt mindestens",
-              as_german(.values$settings$user_name$length$min),
+              format_number(.values$settings$user_name$length$min),
               "Zeichen!"
             )
           ),
@@ -82,7 +82,7 @@ add_user_server <- function(id, .values) {
             !user_name_too_long_r(),
             paste(
               "Der Benutzername darf nicht länger sein als",
-              as_german(.values$settings$user_name$length$max),
+              format_number(.values$settings$user_name$length$max),
               "Zeichen!"
             )
           ),
@@ -106,7 +106,7 @@ add_user_server <- function(id, .values) {
             !password_too_short_r(),
             paste(
               "Das Passwort benötigt mindestens",
-              as_german(.values$settings$password$length$min),
+              format_number(.values$settings$password$length$min),
               "Zeichen!"
             )
           ),
@@ -114,7 +114,7 @@ add_user_server <- function(id, .values) {
             !password_too_long_r(),
             paste(
               "Das Passwort darf nicht länger sein als",
-              as_german(.values$settings$user_name$length$max),
+              format_number(.values$settings$user_name$length$max),
               "Zeichen!"
             )
           ),

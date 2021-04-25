@@ -101,12 +101,12 @@ subtypes_server <- function(id, .values) {
         new_name = "Neuer Untertypenname",
         new_quantity = "Neue Untertypenmenge",
         new_critical_quantity = "Neuer kritischer Bestand",
-        object = "Untertyp",
-        object_name_with_article = "Der Untertypenname",
+        object = "${subtype}",
+        object_name_with_article = "${subtype_name_with_article}",
         object_quantity_with_article = "Die Untertypenmenge",
         object_critical_quantity_with_article = "Der kritische Bestand",
-        object_with_article = "Der Untertyp",
-        object_with_small_article = "den Untertypen",
+        object_with_article = "${subtype_with_article}",
+        object_with_small_article = "${subtype_with_small_article}",
         remove_btn_title = "Untertyp entfernen"
       )
 

@@ -10,16 +10,20 @@ object_quantity_input_ui <- function(id, old_quantity, label) {
       step = 1
     ),
     shiny::uiOutput(
-      outputId = ns("not_integer")
+      outputId = ns("not_integer"),
+      class = "shiny-output-error-PFA"
     ),
     shiny::uiOutput(
-      outputId = ns("negative")
+      outputId = ns("negative"),
+      class = "shiny-output-error-PFA"
     ),
     shiny::uiOutput(
-      outputId = ns("too_small")
+      outputId = ns("too_small"),
+      class = "shiny-output-error-PFA"
     ),
     shiny::uiOutput(
-      outputId = ns("too_big")
+      outputId = ns("too_big"),
+      class = "shiny-output-error-PFA"
     )
   )
 }
@@ -40,49 +44,39 @@ object_quantity_input_server <- function(id,
       ns <- session$ns
 
       output$not_integer <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !not_integer_r(),
-            glue::glue(
-              "{object} muss ganzzahlig sein!",
-              object = object_label
-            )
-          ),
-          errorClass = "PFA"
-        )
+        if (not_integer_r()) {
+          i18n$t(
+            "err_must_be_integer",
+            object_label
+          )
+        }
       })
 
       output$negative <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !negative_r(),
-            glue::glue(
-              "{object} muss größer gleich Null sein!",
-              object = object_label
-            )
-          ),
-          errorClass = "PFA"
-        )
+        if (negative_r()) {
+          i18n$t(
+            "err_must_be_positve",
+            object_label
+          )
+        }
       })
 
       output$too_small <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !too_small_r(),
-            min_message_r()
-          ),
-          errorClass = "PFA"
-        )
+        if (too_small_r()) {
+          i18n$t(
+            min_message_r(),
+            min_r()
+          )
+        }
       })
 
       output$too_big <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !too_big_r(),
-            max_message_r()
-          ),
-          errorClass = "PFA"
-        )
+        if (too_big_r()) {
+          i18n$t(
+            max_message_r(),
+            max_r()
+          )
+        }
       })
 
       not_integer_r <- shiny::reactive({

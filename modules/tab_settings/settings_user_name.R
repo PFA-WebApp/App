@@ -46,7 +46,7 @@ settings_user_name_server <- function(id, .values) {
             !user_name_too_short_r(),
             paste(
               "Der Benutzername benötigt mindestens",
-              as_german(.values$settings$user_name$length$min),
+              format_number(.values$settings$user_name$length$min),
               "Zeichen!"
             )
           ),
@@ -54,7 +54,7 @@ settings_user_name_server <- function(id, .values) {
             !user_name_too_long_r(),
             paste(
               "Der Benutzername darf nicht länger sein als",
-              as_german(.values$settings$user_name$length$max),
+              format_number(.values$settings$user_name$length$max),
               "Zeichen!"
             )
           ),

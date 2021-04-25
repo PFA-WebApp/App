@@ -110,7 +110,7 @@ object_table_name_server <- function(id,
             paste(
               label$object_name_with_article,
               "benötigt mindestens",
-              as_german(.values$settings[[settings$length_name]]$length$min),
+              format_number(.values$settings[[settings$length_name]]$length$min),
               "Zeichen!"
             )
           ),
@@ -119,7 +119,7 @@ object_table_name_server <- function(id,
             paste(
               label$object_name_with_article,
               "darf nicht länger sein als",
-              as_german(.values$settings[[settings$length_name]]$length$max),
+              format_number(.values$settings[[settings$length_name]]$length$max),
               "Zeichen!"
             )
           ),
