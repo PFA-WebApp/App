@@ -113,7 +113,7 @@ login_server <- function(id, .values) {
           )
         } else {
           shiny::showNotification(
-            ui = i18n$t("msg_wrong_password"),
+            ui = i18n$t("err_wrong_password"),
             type = "error",
             duration = 3
           )
