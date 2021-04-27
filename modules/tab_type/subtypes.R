@@ -7,7 +7,7 @@ subtypes_ui <- function(id, collapsed) {
     status = "primary",
     collapsible = TRUE,
     collapsed = collapsed,
-    title = "Untertypen bearbeiten",
+    title = i18n$t("edit_subtypes"),
     shiny::uiOutput(
       outputId = ns("select_type")
     ),
@@ -17,7 +17,7 @@ subtypes_ui <- function(id, collapsed) {
     htmltools::br(),
     shiny::actionButton(
       inputId = ns("add_subtype"),
-      label = "Untertyp hinzufügen",
+      label = i18n$t("add_subtype"),
       icon = shiny::icon("plus"),
       width = "100%"
     )
@@ -93,21 +93,21 @@ subtypes_server <- function(id, .values) {
       )
 
       label <- list(
-        add_label = "Untertypen hinzufügen",
-        change_name = "Untertypennamen bearbeiten",
-        change_quantity = "Untertypenmenge bearbeiten",
-        change_critical_quantity = "Kritischen Bestand bearbeiten",
-        colnames = c("Untertypname", "Menge", "Kritischer Bestand", "Entfernen"),
-        new_name = "Neuer Untertypenname",
-        new_quantity = "Neue Untertypenmenge",
-        new_critical_quantity = "Neuer kritischer Bestand",
-        object = "${subtype}",
+        add_label = "add_subtype",
+        change_name = "edit_subtype_name",
+        change_quantity = "edit_quantity",
+        change_critical_quantity = "edit_critical_quantity",
+        colnames = c("subtype_name", "quantity", "critical_quantity", "remove"),
+        new_name = "new_subtype_name",
+        new_quantity = "new_quantity",
+        new_critical_quantity = "new_critical_quantity",
+        object = "subtype",
         object_name_with_article = "${subtype_name_with_article}",
-        object_quantity_with_article = "Die Untertypenmenge",
-        object_critical_quantity_with_article = "Der kritische Bestand",
+        object_quantity_with_article = "${subtype_quantity_with_article}",
+        object_critical_quantity_with_article = "${critical_quantity_with_article}",
         object_with_article = "${subtype_with_article}",
         object_with_small_article = "${subtype_with_small_article}",
-        remove_btn_title = "Untertyp entfernen"
+        remove_btn_title = "remove_subtype"
       )
 
       object_table_server(
@@ -122,7 +122,7 @@ subtypes_server <- function(id, .values) {
         .values$update$type()
         shiny::selectInput(
           inputId = ns("type"),
-          label = "Typ",
+          label = i18n$t("type"),
           choices = db_get_types(.values$db),
           selectize = .values$device$large
         )
@@ -132,7 +132,7 @@ subtypes_server <- function(id, .values) {
         shiny::showModal(shiny::modalDialog(
           easyClose = TRUE,
           title = htmltools::tagList(
-            "Untertyp hinzufügen",
+            i18n$t("add_subtype"),
             shiny::modalButton(
               label = NULL,
               icon = shiny::icon("window-close")
@@ -140,12 +140,12 @@ subtypes_server <- function(id, .values) {
           ),
           add_object_ui(
             id = ns("add_object"),
-            label = "Untertyp",
+            label = i18n$t("subtype"),
             placeholder = NULL,
             object_quantity_input_ui(
               id = ns("object_quantity_input"),
               old_quantity = 0,
-              label = "Menge"
+              label = i18n$t("quantity")
             )
           ),
           footer = NULL

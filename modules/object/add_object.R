@@ -164,7 +164,7 @@ add_object_server <- function(id,
         if (success) {
           shiny::showNotification(
             ui = i18n$t(
-              "msg_object_added_succesfully",
+              "msg_object_added_successfully",
               label$object_with_article,
               input$object_name
             ),

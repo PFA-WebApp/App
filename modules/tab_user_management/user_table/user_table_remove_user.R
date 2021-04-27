@@ -149,7 +149,8 @@ user_table_remove_user_server <- function(id,
           ),
           htmltools::div(
             i18n$t(
-              "msg_confirm_remove_user",
+              "msg_confirm_remove_obj",
+              "${user_with_small_article}",
               user_name_r()
             )
           ),
@@ -168,7 +169,7 @@ user_table_remove_user_server <- function(id,
         if (success) {
           shiny::showNotification(
             ui = i18n$t(
-              "msg_remove_succesful",
+              "msg_remove_successful",
               "${user_with_article} \"${p_[[2]]}\"",
               user_name_r()
             ),

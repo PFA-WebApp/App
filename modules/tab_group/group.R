@@ -56,18 +56,18 @@ group_server <- function(id, .values) {
 
       label <- list(
         add_label = "add_group",
-        change_connections = "${edit_group_types}",
-        change_name = "${edit_group_name}",
-        colnames = c("Gruppenname", "Typen bearbeiten", "Entfernen"),
+        change_connections = "edit_group_types",
+        change_name = "edit_group_name",
+        colnames = c("group_name", "edit_types", "remove"),
         connection_modification = "${types_of_group}",
-        connections = "${types}",
-        connection_name = "${type_name}",
-        new_name = "${new_group_name}",
-        object = "${group}",
+        connections = "types",
+        connection_name = "type_name",
+        new_name = "new_group_name",
+        object = "group",
         object_name_with_article = "${group_name_with_article}",
-        object_with_article = "{group_with_article}",
+        object_with_article = "${group_with_article}",
         object_with_small_article = "${group_with_small_article}",
-        remove_btn_title = "${remove_group}"
+        remove_btn_title = "remove_group"
       )
 
       add_object_server(

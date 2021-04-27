@@ -211,7 +211,7 @@ add_user_server <- function(id, .values) {
           )
         } else {
           shiny::showNotification(
-            ui = i18n$t("err_add_user_not_succesful"),
+            ui = i18n$t("err_add_user_not_successful"),
             duration = 5,
             type = "error"
           )

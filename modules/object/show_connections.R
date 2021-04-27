@@ -33,11 +33,17 @@ show_connections_server <- function(id, .values, settings, db, label) {
       output$select_object <- shiny::renderUI({
         shiny::selectInput(
           inputId = ns("object"),
-          label = label$object,
+          label = i18n$t(label$object),
           choices = objects_r(),
           selected = NA,
           selectize = .values$device$large
         )
+      })
+
+      colnames_r <- shiny::reactive({
+        .values$language_rv()
+
+        i18n$t_chr(label$connection_name)
       })
 
       output$connections_table <- DT::renderDataTable({
@@ -49,7 +55,7 @@ show_connections_server <- function(id, .values, settings, db, label) {
 
         DT::datatable(
           tbl,
-          colnames = label$connection_name,
+          colnames = colnames_r(),
           options = list(
             language = list(
               url = .values$dt_language_r()

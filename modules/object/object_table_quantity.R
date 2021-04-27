@@ -73,7 +73,7 @@ object_table_quantity_server <- function(id,
       shiny::observeEvent(input$quantity, {
         shiny::showModal(shiny::modalDialog(
           title = htmltools::tagList(
-            label$change_quantity,
+            i18n$t(label$change_quantity),
             shiny::modalButton(
               label = NULL,
               icon = shiny::icon("window-close")
@@ -83,7 +83,7 @@ object_table_quantity_server <- function(id,
           object_quantity_input_ui(
             id = ns("object_quantity_input"),
             old_quantity = old_quantity_r(),
-            label = label$new_quantity
+            label = i18n$t(label$new_quantity)
           ),
           footer = shiny::uiOutput(
             outputId = ns("confirm_object_quantity")
@@ -118,11 +118,10 @@ object_table_quantity_server <- function(id,
 
         if (success) {
           shiny::showNotification(
-            ui = paste0(
+            ui = i18n$t(
+              "msg_obj_changed_to",
               label$object_quantity_with_article,
-              " wurde erfolgreich zu \"",
-              quantity_return$quantity_r(),
-              "\" geändert."
+              quantity_return$quantity_r()
             ),
             type = "warning",
             duration = 5
@@ -141,9 +140,9 @@ object_table_quantity_server <- function(id,
           .values$update$circulation(.values$update$circulation() + 1)
         } else {
           shiny::showNotification(
-            ui = paste0(
-              label$object_quantity_with_article,
-              " konnte nicht geändert werden."
+            ui = i18n$t(
+              "err_obj_could_not_be_changed",
+              label$object_quantity_with_article
             ),
             type = "error",
             duration = 5
