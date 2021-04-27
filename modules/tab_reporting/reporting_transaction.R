@@ -123,8 +123,10 @@ reporting_transaction_server <- function(id, .values) {
       })
 
       output$table <- DT::renderDataTable({
+        tbl <- formatted_transaction_table_r()
+
         DT::datatable(
-          formatted_transaction_table_r(),
+          tbl,
           options = list(
             columnDefs = list(
               list(

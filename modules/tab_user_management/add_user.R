@@ -26,7 +26,8 @@ add_user_ui <- function(id) {
       label = i18n$t("password")
     ),
     shiny::uiOutput(
-      outputId = ns("wrong_password_length")
+      outputId = ns("wrong_password_length"),
+      class = "pfa-error"
     ),
     shiny::passwordInput(
       inputId = ns("user_password_2"),

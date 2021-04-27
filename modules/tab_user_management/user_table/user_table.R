@@ -104,8 +104,8 @@ user_table_server <- function(id, .values) {
             i18n$t_chr("user_name"),
             i18n$t_chr("status"),
             i18n$t_chr("edit_status"),
-            i18n$t("remove"),
-            i18n$t("reset_password")
+            i18n$t_chr("remove"),
+            i18n$t_chr("reset_password")
           )
         } else {
           c(

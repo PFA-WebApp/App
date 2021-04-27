@@ -193,8 +193,8 @@ ui_server <- function(source_to_globalenv = FALSE) {
 
         # Language for DT::datatable
         dt_languages <- list(
-            de = "http://cdn.datatables.net/plug-ins/1.10.24/i18n/de_de.json",
-            en = "http://cdn.datatables.net/plug-ins/1.10.24/i18n/en-gb.json"
+            de = "//cdn.datatables.net/plug-ins/1.10.24/i18n/de_de.json",
+            en = "//cdn.datatables.net/plug-ins/1.10.24/i18n/en-gb.json"
         )
 
         .values$dt_language_r <- shiny::reactive({
