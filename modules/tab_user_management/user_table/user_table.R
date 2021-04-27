@@ -4,7 +4,7 @@ user_table_ui <- function(id) {
   bs4Dash::box(
     width = NULL,
     status = "primary",
-    title = "Nutzertabelle",
+    title = i18n$t("user_table"),
     solidHeader = TRUE,
     DT::dataTableOutput(
       outputId = ns("user_table")
@@ -97,13 +97,22 @@ user_table_server <- function(id, .values) {
       })
 
       col_display_names_by_status_r <- shiny::reactive({
+        .values$language_rv()
+
         if (.values$user$status() == "admin") {
           c(
-            "Benutzername", "Status", "Status ändern", "Entfernen",
-            "Passwort zurücksetzen"
+            i18n$t_chr("user_name"),
+            i18n$t_chr("status"),
+            i18n$t_chr("edit_status"),
+            i18n$t("remove"),
+            i18n$t("reset_password")
           )
         } else {
-          c("Benutzername", "Status", "Entfernen")
+          c(
+            i18n$t_chr("user_name"),
+            i18n$t_chr("status"),
+            i18n$t_chr("remove")
+          )
         }
       })
 

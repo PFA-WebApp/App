@@ -99,9 +99,8 @@ reporting_transaction_server <- function(id, .values) {
             )
           ) %>%
           dplyr::select(
-            Nutzer = user_name, Typ = type_name, Untertyp = subtype_name,
-            Datum = time, Menge = quantity, user_removed, subtype_removed,
-            type_removed, quantity_color
+            user_name, type_name, subtype_name, time, quantity, user_removed,
+            subtype_removed, type_removed, quantity_color
           )
 
         names(tbl) <- c(

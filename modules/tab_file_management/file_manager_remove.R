@@ -68,7 +68,8 @@ file_manager_remove_server <- function(id,
 
         shiny::showNotification(
           ui = i18n$t(
-            "msg_file_remove_successful",
+            "msg_remove_successful",
+            "${file_with_article} \"${p_[[2]]}\"",
             file_r()
           ),
           type = "warning",

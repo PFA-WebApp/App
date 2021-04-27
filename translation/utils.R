@@ -24,14 +24,14 @@ check_names <- function(x) {
         warn_old <- if (length(missing_old)) {
           paste0(
             "Names in ", names(x)[i], " but not in ",
-            names(x)[1], ": ", missing_old
+            names(x)[1], ": ", paste(missing_old, collapse = ", ")
           )
         }
 
         warn_new <- if (length(missing_new)) {
           paste0(
             "Names in ", names(x)[1], " but not in ",
-            names(x)[i], ": ", missing_new
+            names(x)[i], ": ", paste(missing_new, collapse = ", ")
           )
         }
 

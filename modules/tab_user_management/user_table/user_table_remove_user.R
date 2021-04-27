@@ -52,15 +52,14 @@ user_table_remove_user_server <- function(id,
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
             title = htmltools::tagList(
-              "Zugriff verweigert!",
+              i18n$t("err_access_denied"),
               shiny::modalButton(
                 label = NULL,
                 icon = shiny::icon("window-close")
               )
             ),
-            htmltools::div(
-              "Die Standardnutzer können in der Testversion nicht entfernt
-              werden."
+            htmltools::p(
+              i18n$t("err_remove_standard_user")
             ),
             footer = NULL
           ))
@@ -77,20 +76,17 @@ user_table_remove_user_server <- function(id,
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
             title = htmltools::tagList(
-              "Zugriff verweigert!",
+              i18n$t("err_access_denied"),
               shiny::modalButton(
                 label = NULL,
                 icon = shiny::icon("window-close")
               )
             ),
-            htmltools::div(
-              paste0(
-                "Moderatoren dürfen nur Benutzer löschen, die sie selbst
-                hinzugefügt haben. \"",
+            htmltools::p(
+              i18n$t(
+                "err_mod_remove_user",
                 user_name_r(),
-                "\" wurde von \"",
-                added_from_name_r(),
-                "\" hinzugefügt."
+                added_from_name_r()
               )
             ),
             footer = NULL
@@ -105,14 +101,14 @@ user_table_remove_user_server <- function(id,
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
             title = htmltools::tagList(
-              "Zugriff verweigert!",
+              i18n$t("err_access_denied"),
               shiny::modalButton(
                 label = NULL,
                 icon = shiny::icon("window-close")
               )
             ),
-            htmltools::div(
-              "Administratoren können sich selbst nicht löschen."
+            htmltools::p(
+              i18n$t("err_remove_self_admin")
             ),
             footer = NULL
           ))
@@ -127,15 +123,14 @@ user_table_remove_user_server <- function(id,
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
             title = htmltools::tagList(
-              "Zugriff verweigert!",
+              i18n$t("err_access_denied"),
               shiny::modalButton(
                 label = NULL,
                 icon = shiny::icon("window-close")
               )
             ),
-            htmltools::div(
-              "Der Benutzer kann nicht gelöscht werden, da er Elemente
-              ausgeliehen hat."
+            htmltools::p(
+              i18n$t("err_remove_user_borrowed")
             ),
             footer = NULL
           ))
@@ -146,22 +141,21 @@ user_table_remove_user_server <- function(id,
         shiny::showModal(shiny::modalDialog(
           easyClose = TRUE,
           title = htmltools::tagList(
-            "Benutzer löschen",
+            i18n$t("remove_user"),
             shiny::modalButton(
               label = NULL,
               icon = shiny::icon("window-close")
             )
           ),
           htmltools::div(
-            paste0(
-              "Bist du sicher, dass du den Benutzer \"",
-              user_name_r(),
-              "\" löschen möchtest?"
+            i18n$t(
+              "msg_confirm_remove_user",
+              user_name_r()
             )
           ),
           footer = shiny::actionButton(
             inputId = ns("confirm_remove"),
-            label = "Ja"
+            label = i18n$t("confirm")
           )
         ))
       })
@@ -173,20 +167,19 @@ user_table_remove_user_server <- function(id,
 
         if (success) {
           shiny::showNotification(
-            ui = paste0(
-              "Der Benutzer \"",
-              user_name_r(),
-              "\" wurde erfolgreich gelöscht."
+            ui = i18n$t(
+              "msg_remove_succesful",
+              "${user_with_article} \"${p_[[2]]}\"",
+              user_name_r()
             ),
             type = "warning",
             duration = 5
           )
         } else {
           shiny::showNotification(
-            ui = paste0(
-              "Der Benutzer \"",
-              user_name_r(),
-              "\" konnte nicht gelöscht werden."
+            ui = i18n$t(
+              "err_remove_not_successful",
+              "${user_with_article} \"${p_[[2]]}\""
             ),
             type = "error",
             duration = 5

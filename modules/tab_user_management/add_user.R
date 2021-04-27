@@ -4,34 +4,37 @@ add_user_ui <- function(id) {
   bs4Dash::box(
     width = NULL,
     status = "primary",
-    title = "Nutzer hinzufügen",
+    title = i18n$t("add_user"),
     solidHeader = TRUE,
     collapsible = TRUE,
     collapsed = TRUE,
     shiny::textInput(
       inputId = ns("user_name"),
-      label = "Benutzername",
+      label = i18n$t("user_name"),
       placeholder = "Max Mustermann"
     ),
     shiny::uiOutput(
-      outputId = ns("wrong_name_length")
+      outputId = ns("wrong_name_length"),
+      class = "pfa-error"
     ),
     shiny::uiOutput(
-      outputId = ns("user_name_taken")
+      outputId = ns("user_name_taken"),
+      class = "pfa-error"
     ),
     shiny::passwordInput(
       inputId = ns("user_password_1"),
-      label = "Passwort"
+      label = i18n$t("password")
     ),
     shiny::uiOutput(
       outputId = ns("wrong_password_length")
     ),
     shiny::passwordInput(
       inputId = ns("user_password_2"),
-      label = "Passwort bestätigen"
+      label = i18n$t("confirm_password")
     ),
     shiny::uiOutput(
-      outputId = ns("non_matching_passwords")
+      outputId = ns("non_matching_passwords"),
+      class = "pfa-error"
     ),
     shiny::uiOutput(
       outputId = ns("status")
@@ -62,74 +65,61 @@ add_user_server <- function(id, .values) {
       output$status <- shiny::renderUI({
         shiny::selectInput(
           inputId = ns("user_status"),
-          label = "Status",
+          label = i18n$t("status"),
           choices = choices_r(),
           selectize = .values$device$large
         )
       })
 
       output$wrong_name_length <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !user_name_too_short_r(),
-            paste(
-              "Der Benutzername benötigt mindestens",
-              format_number(.values$settings$user_name$length$min),
-              "Zeichen!"
-            )
-          ),
-          shiny::need(
-            !user_name_too_long_r(),
-            paste(
-              "Der Benutzername darf nicht länger sein als",
-              format_number(.values$settings$user_name$length$max),
-              "Zeichen!"
-            )
-          ),
-          errorClass = "PFA"
-        )
+        if (user_name_too_short_r()) {
+          return(i18n$t(
+            "err_min_chars",
+            "${user_name_with_article}",
+            format_number(.values$settings$user_name$length$min)
+          ))
+        }
+
+        if (user_name_too_long_r()) {
+          return(i18n$t(
+            "err_max_chars",
+            "${user_name_with_article}",
+            format_number(.values$settings$user_name$length$max)
+          ))
+        }
       })
 
       output$user_name_taken <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !user_name_taken_r(),
-            "Der Benutzername existiert bereits!"
-          ),
-          errorClass = "PFA"
-        )
+        if (user_name_taken_r()) {
+          i18n$t(
+            "err_name_taken",
+            "${user_name_with_article}"
+          )
+        }
       })
 
       output$wrong_password_length <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !password_too_short_r(),
-            paste(
-              "Das Passwort benötigt mindestens",
-              format_number(.values$settings$password$length$min),
-              "Zeichen!"
-            )
-          ),
-          shiny::need(
-            !password_too_long_r(),
-            paste(
-              "Das Passwort darf nicht länger sein als",
-              format_number(.values$settings$user_name$length$max),
-              "Zeichen!"
-            )
-          ),
-          errorClass = "PFA"
-        )
+        if (password_too_short_r()) {
+          return(i18n$t(
+            "err_min_chars",
+            "${password_with_article}",
+            format_number(.values$settings$password$length$min)
+          ))
+        }
+
+        if (password_too_long_r()) {
+          return(i18n$t(
+            "err_max_chars",
+            "${password_with_article}",
+            format_number(.values$settings$password$length$max)
+          ))
+        }
       })
 
       output$non_matching_passwords <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !non_matching_passwords_r(),
-            "Die Passwörter stimmen nicht überein!"
-          ),
-          errorClass = "PFA"
-        )
+        if (non_matching_passwords_r()) {
+          i18n$t("err_non_matching_passwords")
+        }
       })
 
       output$add_user <- shiny::renderUI({
@@ -137,14 +127,14 @@ add_user_server <- function(id, .values) {
           shinyjs::disabled(
             shiny::actionButton(
               inputId = ns("add_user"),
-              label = "Nutzer hinzufügen",
+              label = i18n$t("add_user"),
               width = "100%"
             )
           )
         } else {
           shiny::actionButton(
             inputId = ns("add_user"),
-            label = "Nutzer hinzufügen",
+            label = i18n$t("add_user"),
             width = "100%"
           )
         }
@@ -212,20 +202,16 @@ add_user_server <- function(id, .values) {
 
         if (success) {
           shiny::showNotification(
-            ui = paste0(
-              "Der Nutzer \"",
-              input$user_name,
-              "\" wurde erfolgreich hinzugefügt."
+            ui = i18n$t(
+              "msg_add_user_successful",
+              input$user_name
             ),
             duration = 5,
             type = "warning"
           )
         } else {
           shiny::showNotification(
-            ui = paste(
-              "Hinzufügen fehlgeschlagen. Es gibt bereits einen Nutzer",
-              "mit dem selben Namen."
-            ),
+            ui = i18n$t("err_add_user_not_succesful"),
             duration = 5,
             type = "error"
           )
