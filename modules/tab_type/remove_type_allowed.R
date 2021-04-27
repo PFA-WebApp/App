@@ -10,8 +10,7 @@ remove_type_allowed <- function(db, type_id) {
     allowed <- FALSE
 
     shiny::showNotification(
-      ui = "Der Typ kann nicht gelöscht werden, solange Elemente eines Untertypen
-      ausgeliehen sind",
+      ui = i18n$t("err_type_subtype_borrowed"),
       type = "error"
     )
   }

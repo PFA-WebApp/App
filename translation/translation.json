@@ -213,9 +213,15 @@
     "width_in_mm": "Width (in mm)",
     "write_off": "Write off",
     "write_off_s": "write off",
-    "wrote_off": "wrote off"
+    "wrote_off": "wrote off",
+    "err_at_least_one_subtype_per_type_required": "There is at least one subtype per type required!",
+    "err_subtype_borrowed": "Subtype can not be removed as long as items are borrowed!",
+    "err_type_subtype_borrowed": "Type can not be removed as long as any subtypes are borrowed!"
   },
   "de": {
+    "err_type_subtype_borrowed": "Der Typ kann nicht gelöscht werden, solange Elemente eines Untertypen ausgeliehen sind!",
+    "err_subtype_borrowed": "Der Untertyp kann nicht gelöscht werden, solange noch Elemente ausgeliehen sind!",
+    "err_at_least_one_subtype_per_type_required": "Es wird mindestens ein Untertyp pro Typ benötigt!",
     "add_group": "Gruppe hinzufügen",
     "add_subtype": "Untertyp hinzufügen",
     "add_type": "Typ hinzufügen",

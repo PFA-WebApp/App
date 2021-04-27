@@ -66,10 +66,11 @@ ui_server <- function(source_to_globalenv = FALSE) {
         waiter::waiter_show_on_load(
             html = waiter::spin_solar()
         ),
-        htmltools::includeScript("www/js/dark-mode.js"),
-        htmltools::includeScript("www/js/fileInputText.js"),
-        htmltools::includeScript("www/js/language-selector.js"),
         tags$head(
+            # Include custom scripts
+            htmltools::includeScript("www/js/dark-mode.js"),
+            htmltools::includeScript("www/js/fileInputText.js"),
+            htmltools::includeScript("www/js/language-selector.js"),
             # Include custom css styles
             htmltools::includeCSS("www/css/styles.css"),
             htmltools::includeCSS("www/css/dt-dark.css"),

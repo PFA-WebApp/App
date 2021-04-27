@@ -8,19 +8,16 @@ remove_subtype_allowed <- function(db, subtype_id) {
     allowed <- FALSE
 
     shiny::showNotification(
-      ui = "Es wird mindestens ein Untertyp pro Typ benötigt.",
+      ui = i18n$t("err_at_least_one_subtype_per_type_required"),
       type = "error"
     )
   }
 
-  if (print(db_get_borrowed_quantity(db, subtype_id)) > 0) {
+  if (db_get_borrowed_quantity(db, subtype_id) > 0) {
     allowed <- FALSE
 
     shiny::showNotification(
-      ui = "
-      Der Untertyp kann nicht gelöscht werden, solange noch Elemente ausgeliehen
-      sind.
-      ",
+      ui = i18n$t("err_subtype_borrowed"),
       type = "error"
     )
   }
