@@ -57,6 +57,7 @@ $.extend(binding, {
   flagsDict: {
     de: "\u{1F1E9}\u{1F1EA}",
     en: "\u{1F1EC}\u{1F1E7}",
+    es: "\u{1F1EA}\u{1F1F8}",
     fr: "\u{1F1EB}\u{1F1F7}"
   }
 

@@ -195,6 +195,7 @@ ui_server <- function(source_to_globalenv = FALSE) {
         dt_languages <- list(
             de = "//cdn.datatables.net/plug-ins/1.10.24/i18n/de_de.json",
             en = "//cdn.datatables.net/plug-ins/1.10.24/i18n/en-gb.json",
+            es = "//cdn.datatables.net/plug-ins/1.10.24/i18n/es_es.json",
             fr = "//cdn.datatables.net/plug-ins/1.10.24/i18n/fr_fr.json"
         )
 
