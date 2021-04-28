@@ -1,4 +1,4 @@
-language_selector <- function(inputId, choices = c("de", "en")) {
+language_selector <- function(inputId, choices = c("de", "en", "fr")) {
   htmltools::tags$li(
     id = inputId,
     class = "dropdown language-selector",
