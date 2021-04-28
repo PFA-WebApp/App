@@ -18,6 +18,13 @@ if (!file.exists(app_yml)) {
     yaml::write_yaml(x, app_yml)
 }
 
+if (!dir.exists("files")) {
+    dir.create("files")
+    dir.create("files/group")
+    dir.create("files/type")
+    dir.create("files/subtype")
+}
+
 addResourcePath("files", "./files")
 options(shiny.port = 1234)
 
