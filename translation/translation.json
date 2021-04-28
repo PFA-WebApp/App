@@ -620,7 +620,7 @@
     "tab_file_management": "Gestion des fichiers",
     "tab_group": "Groupes",
     "tab_login": "Connexion",
-    "tab_operate": "Emprunter & returner",
+    "tab_operate": "Emprunter & Returner",
     "tab_qrcode": "Code QR",
     "tab_reporting": "Informations sur l'inventaire",
     "tab_sensor_management": "Gestion des capteurs",
@@ -640,7 +640,7 @@
     "type_table": "Table des types",
     "type_with_article": "Le ${type}",
     "type_with_small_article": "le ${type}",
-    "types": "types",
+    "types": "Types",
     "types_of_group": "Les types de groupe",
     "upload_file": "Télécharger le fichier",
     "user": "Utilisateur",
@@ -652,7 +652,7 @@
     "visits": "Visites",
     "weeks": "semaines",
     "width_in_mm": "Largeur (en mm)",
-    "write_off": "déduire",
+    "write_off": "Déduire",
     "write_off_s": "déduire",
     "wrote_off": "déduit"
   }
