@@ -74,11 +74,9 @@ file_manager_server <- function(id, .values, db, settings, label) {
       })
 
       file_input_placeholder_r <- shiny::reactive({
-        switch(
-          .values$language_rv(),
-          "en" = "No file selected",
-          "de" = "Keine Datei ausgewählt"
-        )
+        .values$language_rv()
+
+        i18n$t_chr("no_file_selected")
       })
 
       output$file_input <- shiny::renderUI({
