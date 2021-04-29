@@ -22,11 +22,11 @@ Sensotheka - Management of Inventory, Files & Users
 
 ## Authors
 
-David Barkemeyer, Johannes Hendrik Lutz Sturm
+David Barkemeyer, Johannes Sturm
 
 ## Usernames
 
-David_Barkemeyer
+David_Barkemeyer, JHLSturm
 
 ## Keywords
 
@@ -70,7 +70,7 @@ Every semester, the Department of Vehicle Propulsion Systems at TU Berlin offers
  
 ### 2. User Management
 
-There are three different user roles: *User*, *Moderator* and *Administrator*. Depending on the user role, different tabs are visible in the sidebar and many operations differ depending on the user role.For example, an *Administrator* can borrow and return sensors for any user, while a *User* can only perform transactions for themselves. 
+There are three different user roles: *User*, *Moderator* and *Administrator*. Depending on the user role, different tabs are visible in the sidebar and many operations differ depending on the user role. For example, an *Administrator* can borrow and return sensors for any user, while a *User* can only perform transactions for themselves. 
 
 ![Login](./img/SC1_HD.png)
 

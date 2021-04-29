@@ -12,11 +12,11 @@ Sensotheka - Management of Inventory, Files & Users
 
 ## Authors
 
-David Barkemeyer, Johannes Hendrik Lutz Sturm
+David Barkemeyer, Johannes Sturm
 
 ## Usernames
 
-David\_Barkemeyer
+David\_Barkemeyer, JHLSturm
 
 ## Keywords
 
@@ -73,9 +73,9 @@ application presented here.
 
 There are three different user roles: *User*, *Moderator* and
 *Administrator*. Depending on the user role, different tabs are visible
-in the sidebar and many operations differ depending on the user role.For
-example, an *Administrator* can borrow and return sensors for any user,
-while a *User* can only perform transactions for themselves.
+in the sidebar and many operations differ depending on the user role.
+For example, an *Administrator* can borrow and return sensors for any
+user, while a *User* can only perform transactions for themselves.
 
 ![Login](./img/SC1_HD.png)
 
