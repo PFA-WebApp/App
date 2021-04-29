@@ -55,7 +55,7 @@ object_quantity_input_server <- function(id,
       output$negative <- shiny::renderUI({
         if (negative_r()) {
           i18n$t(
-            "err_must_be_positve",
+            "err_must_be_positive",
             object_label
           )
         }
