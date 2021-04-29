@@ -139,10 +139,12 @@ file_manager_server <- function(id, .values, db, settings, label) {
       })
 
       file_tbl_names_r <- shiny::reactive({
-        switch(
-          .values$language_rv(),
-          "en" = c("File", "Download", "Remove"),
-          "de" = c("Datei", "Herunterladen", "Löschen")
+        .values$language_rv()
+
+        c(
+          i18n$t_chr("file"),
+          i18n$t_chr("download"),
+          i18n$t_chr("remove")
         )
       })
 
