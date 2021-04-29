@@ -124,6 +124,7 @@ subtypes_server <- function(id, .values) {
           inputId = ns("type"),
           label = i18n$t("type"),
           choices = db_get_types(.values$db),
+          selected = input$type,
           selectize = .values$device$large
         )
       })
