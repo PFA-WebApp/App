@@ -485,18 +485,18 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
       max_message_r <- shiny::reactive({
         switch(
           operate_rv(),
-          "1" = "${err_borrow_max}",
-          "2" = "${err_return_max}",
-          "3" = "${err_write_off_max}"
+          "1" = "err_borrow_max",
+          "2" = "err_return_max",
+          "3" = "err_write_off_max"
         )
       })
 
       min_message_r <- shiny::reactive({
         switch(
           operate_rv(),
-          "1" = "${err_borrow_positive}",
-          "2" = "${err_return_positive}",
-          "3" = "${err_write_off_positive}"
+          "1" = "err_borrow_positive",
+          "2" = "err_return_positive",
+          "3" = "err_write_off_positive"
         )
       })
 
