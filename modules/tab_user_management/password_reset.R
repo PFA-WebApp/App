@@ -35,7 +35,7 @@ password_reset_server <- function(id, .values) {
       output$user_name <- shiny::renderUI({
         shiny::selectInput(
           inputId = ns("user_id"),
-          label = i18n$t("user_name"),
+          label = .values$i18n$t("user_name"),
           choices = user_choices_r(),
           selectize = .values$device$large
         )
@@ -48,7 +48,7 @@ password_reset_server <- function(id, .values) {
       shiny::observeEvent(input$start_reset, {
         shiny::showModal(shiny::modalDialog(
           title = htmltools::tagList(
-            i18n$t("reset_password"),
+            .values$i18n$t("reset_password"),
             shiny::modalButton(
               label = NULL,
               icon = shiny::icon("window-close")
@@ -56,14 +56,14 @@ password_reset_server <- function(id, .values) {
           ),
           easyClose = TRUE,
           htmltools::p(
-            i18n$t(
+            .values$i18n$t(
               "msg_confirm_reset_password",
               user_name_r()
             )
           ),
           footer = shiny::actionButton(
             inputId = ns("confirm_reset"),
-            label = i18n$t("confirm")
+            label = .values$i18n$t("confirm")
           )
         ))
       })
@@ -74,7 +74,7 @@ password_reset_server <- function(id, .values) {
         reset_pwd <- "1234"
 
         shiny::showNotification(
-          ui = i18n$t(
+          ui = .values$i18n$t(
             "msg_reset_password_successful",
             user_name_r(),
             reset_pwd

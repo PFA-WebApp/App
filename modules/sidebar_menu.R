@@ -31,53 +31,53 @@ sidebar_menu_server <- function(id, .values) {
       menu_item_list <- function(selected = NULL) {
         list(
           login = bs4Dash::menuItem(
-            text = i18n$t("tab_login"),
+            text = .values$i18n$t("tab_login"),
             tabName = "login",
             icon = shiny::icon("sign-in-alt")
           ),
           operate = bs4Dash::menuItem(
-            text = i18n$t("tab_operate"),
+            text = .values$i18n$t("tab_operate"),
             tabName = "operate",
             icon = shiny::icon("shipping-fast"),
             selected = selected
           ),
           reporting = bs4Dash::menuItem(
-            text = i18n$t("tab_reporting"),
+            text = .values$i18n$t("tab_reporting"),
             tabName = "reporting",
             icon = shiny::icon("chart-line")
           ),
           sensor_management = bs4Dash::menuItem(
-            text = i18n$t("tab_sensor_management"),
+            text = .values$i18n$t("tab_sensor_management"),
             icon = shiny::icon("temperature-low"),
             startExpanded = TRUE,
             bs4Dash::menuSubItem(
-              text = i18n$t("tab_group"),
+              text = .values$i18n$t("tab_group"),
               tabName = "group",
               icon = shiny::icon("layer-group")
             ),
             bs4Dash::menuSubItem(
-              text = i18n$t("tab_type"),
+              text = .values$i18n$t("tab_type"),
               tabName = "type",
               icon = shiny::icon("tags")
             ),
             bs4Dash::menuSubItem(
-              text = i18n$t("tab_file_management"),
+              text = .values$i18n$t("tab_file_management"),
               tabName = "file_management",
               icon = shiny::icon("file-pdf")
             ),
             bs4Dash::menuSubItem(
-              text = i18n$t("tab_qrcode"),
+              text = .values$i18n$t("tab_qrcode"),
               tabName = "qrcode",
               icon = shiny::icon("qrcode")
             )
           ),
           user_management = bs4Dash::menuItem(
-            text = i18n$t("tab_user_management"),
+            text = .values$i18n$t("tab_user_management"),
             tabName = "user_management",
             icon = shiny::icon("user-edit")
           ),
           settings = bs4Dash::menuItem(
-            text = i18n$t("tab_settings"),
+            text = .values$i18n$t("tab_settings"),
             tabName = "settings",
             icon = shiny::icon("cog")
           )

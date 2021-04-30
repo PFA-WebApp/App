@@ -8,7 +8,7 @@ remove_subtype_allowed <- function(db, subtype_id) {
     allowed <- FALSE
 
     shiny::showNotification(
-      ui = i18n$t("err_at_least_one_subtype_per_type_required"),
+      ui = .values$i18n$t("err_at_least_one_subtype_per_type_required"),
       type = "error"
     )
   }
@@ -17,7 +17,7 @@ remove_subtype_allowed <- function(db, subtype_id) {
     allowed <- FALSE
 
     shiny::showNotification(
-      ui = i18n$t("err_subtype_borrowed"),
+      ui = .values$i18n$t("err_subtype_borrowed"),
       type = "error"
     )
   }

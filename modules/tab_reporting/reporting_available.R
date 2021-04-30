@@ -34,7 +34,7 @@ reporting_available_server <- function(id, .values) {
       output$type <- shiny::renderUI({
         shiny::selectInput(
           inputId = ns("type"),
-          label = i18n$t("type"),
+          label = .values$i18n$t("type"),
           choices = type_choices_r(),
           selectize = .values$device$large
         )
@@ -56,9 +56,9 @@ reporting_available_server <- function(id, .values) {
         .values$language_rv()
 
         c(
-          i18n$t_chr("subtype"),
-          i18n$t_chr("available"),
-          i18n$t_chr("max_available")
+          .values$i18n$t_chr("subtype"),
+          .values$i18n$t_chr("available"),
+          .values$i18n$t_chr("max_available")
         )
       })
 

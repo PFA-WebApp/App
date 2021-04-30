@@ -73,7 +73,7 @@ object_table_critical_quantity_server <- function(id,
       shiny::observeEvent(input$quantity, {
         shiny::showModal(shiny::modalDialog(
           title = htmltools::tagList(
-            i18n$t(label$change_critical_quantity),
+            .values$i18n$t(label$change_critical_quantity),
             shiny::modalButton(
               label = NULL,
               icon = shiny::icon("window-close")
@@ -83,7 +83,7 @@ object_table_critical_quantity_server <- function(id,
           object_quantity_input_ui(
             id = ns("object_quantity_input"),
             old_quantity = old_quantity_r(),
-            label = i18n$t(label$new_critical_quantity)
+            label = .values$i18n$t(label$new_critical_quantity)
           ),
           footer = shiny::uiOutput(
             outputId = ns("confirm_object_quantity")
@@ -96,13 +96,13 @@ object_table_critical_quantity_server <- function(id,
           shinyjs::disabled(
             shiny::actionButton(
               inputId = ns("confirm_object_quantity"),
-              label = i18n$t("confirm")
+              label = .values$i18n$t("confirm")
             )
           )
         } else {
           shiny::actionButton(
             inputId = ns("confirm_object_quantity"),
-            label = i18n$t("confirm")
+            label = .values$i18n$t("confirm")
           )
         }
       })
@@ -118,7 +118,7 @@ object_table_critical_quantity_server <- function(id,
 
         if (success) {
           shiny::showNotification(
-            ui = i18n$t(
+            ui = .values$i18n$t(
               "msg_obj_changed_to",
               label$object_critical_quantity_with_article,
               quantity_return$quantity_r()
@@ -140,7 +140,7 @@ object_table_critical_quantity_server <- function(id,
           .values$update$circulation(.values$update$circulation() + 1)
         } else {
           shiny::showNotification(
-            ui = i18n$t(
+            ui = .values$i18n$t(
               "err_obj_could_not_be_changed",
               label$object_critical_quantity_with_article
             ),

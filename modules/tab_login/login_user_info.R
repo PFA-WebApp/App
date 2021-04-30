@@ -66,7 +66,7 @@ login_user_info_server <- function(id, .values) {
       output$user_logged_since <- shiny::renderUI({
         if (is_logged_r()) {
           bs4Dash::infoBox(
-            title = i18n$t("logged_for"),
+            title = .values$i18n$t("logged_for"),
             value = htmltools::div(
               class = "relative",
               logged_since_r()
@@ -96,7 +96,7 @@ login_user_info_server <- function(id, .values) {
       output$user_last_logged <- shiny::renderUI({
         if (is_logged_r()) {
           bs4Dash::infoBox(
-            title = i18n$t("last_logged_ago"),
+            title = .values$i18n$t("last_logged_ago"),
             value = htmltools::div(
               class = "relative",
               last_logged_r()
@@ -115,7 +115,7 @@ login_user_info_server <- function(id, .values) {
       output$user_times_logged <- shiny::renderUI({
         if (is_logged_r()) {
           bs4Dash::infoBox(
-            title = i18n$t("visits"),
+            title = .values$i18n$t("visits"),
             value = htmltools::div(
               class = "relative",
               times_logged_r()

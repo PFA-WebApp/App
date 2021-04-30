@@ -70,14 +70,14 @@ object_table_remove_object_server <- function(id,
         shiny::showModal(shiny::modalDialog(
           easyClose = TRUE,
           title = htmltools::tagList(
-            i18n$t(label$remove_btn_title),
+            .values$i18n$t(label$remove_btn_title),
             shiny::modalButton(
               label = NULL,
               icon = shiny::icon("window-close")
             )
           ),
           htmltools::p(
-            i18n$t(
+            .values$i18n$t(
               "msg_confirm_remove_obj",
               label$object_with_small_article,
               object_name_r()
@@ -85,7 +85,7 @@ object_table_remove_object_server <- function(id,
           ),
           footer = shiny::actionButton(
             inputId = ns("confirm_remove"),
-            label = i18n$t("confirm")
+            label = .values$i18n$t("confirm")
           )
         ))
       })
@@ -105,7 +105,7 @@ object_table_remove_object_server <- function(id,
 
         if (success) {
           shiny::showNotification(
-            ui = i18n$t(
+            ui = .values$i18n$t(
               "msg_remove_successful",
               "${p_[[2]]} \"${p_[[3]]}\"",
               label$object_with_article,
@@ -116,7 +116,7 @@ object_table_remove_object_server <- function(id,
           )
         } else {
           shiny::showNotification(
-            ui = i18n$t(
+            ui = .values$i18n$t(
               "err_remove_not_successful",
               "${p_[[2]]} \"${p_[[3]]}\"",
               label$object_with_article,

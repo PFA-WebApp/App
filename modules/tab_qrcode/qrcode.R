@@ -60,7 +60,7 @@ qrcode_server <- function(id, .values) {
       output$type <- shiny::renderUI({
         shiny::selectInput(
           inputId = ns("type"),
-          label = i18n$t("type"),
+          label = .values$i18n$t("type"),
           choices = types_r(),
           width = "100%",
           selectize = .values$device$large
@@ -75,7 +75,7 @@ qrcode_server <- function(id, .values) {
       output$base_url <- shiny::renderUI({
         shiny::textInput(
           inputId = ns("base_url"),
-          label = i18n$t("server_domain"),
+          label = .values$i18n$t("server_domain"),
           value = .values$yaml$url
         )
       })
@@ -165,7 +165,7 @@ qrcode_server <- function(id, .values) {
 
         shiny::downloadButton(
           outputId = ns("download"),
-          label = i18n$t(
+          label = .values$i18n$t(
             "download_as",
             toupper(file_type_r())
           ),

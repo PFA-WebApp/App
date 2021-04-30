@@ -52,14 +52,14 @@ user_table_remove_user_server <- function(id,
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
             title = htmltools::tagList(
-              i18n$t("err_access_denied"),
+              .values$i18n$t("err_access_denied"),
               shiny::modalButton(
                 label = NULL,
                 icon = shiny::icon("window-close")
               )
             ),
             htmltools::p(
-              i18n$t("err_remove_standard_user")
+              .values$i18n$t("err_remove_standard_user")
             ),
             footer = NULL
           ))
@@ -76,14 +76,14 @@ user_table_remove_user_server <- function(id,
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
             title = htmltools::tagList(
-              i18n$t("err_access_denied"),
+              .values$i18n$t("err_access_denied"),
               shiny::modalButton(
                 label = NULL,
                 icon = shiny::icon("window-close")
               )
             ),
             htmltools::p(
-              i18n$t(
+              .values$i18n$t(
                 "err_mod_remove_user",
                 user_name_r(),
                 added_from_name_r()
@@ -101,14 +101,14 @@ user_table_remove_user_server <- function(id,
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
             title = htmltools::tagList(
-              i18n$t("err_access_denied"),
+              .values$i18n$t("err_access_denied"),
               shiny::modalButton(
                 label = NULL,
                 icon = shiny::icon("window-close")
               )
             ),
             htmltools::p(
-              i18n$t("err_remove_self_admin")
+              .values$i18n$t("err_remove_self_admin")
             ),
             footer = NULL
           ))
@@ -123,14 +123,14 @@ user_table_remove_user_server <- function(id,
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
             title = htmltools::tagList(
-              i18n$t("err_access_denied"),
+              .values$i18n$t("err_access_denied"),
               shiny::modalButton(
                 label = NULL,
                 icon = shiny::icon("window-close")
               )
             ),
             htmltools::p(
-              i18n$t("err_remove_user_borrowed")
+              .values$i18n$t("err_remove_user_borrowed")
             ),
             footer = NULL
           ))
@@ -141,14 +141,14 @@ user_table_remove_user_server <- function(id,
         shiny::showModal(shiny::modalDialog(
           easyClose = TRUE,
           title = htmltools::tagList(
-            i18n$t("remove_user"),
+            .values$i18n$t("remove_user"),
             shiny::modalButton(
               label = NULL,
               icon = shiny::icon("window-close")
             )
           ),
           htmltools::div(
-            i18n$t(
+            .values$i18n$t(
               "msg_confirm_remove_obj",
               "${user_with_small_article}",
               user_name_r()
@@ -156,7 +156,7 @@ user_table_remove_user_server <- function(id,
           ),
           footer = shiny::actionButton(
             inputId = ns("confirm_remove"),
-            label = i18n$t("confirm")
+            label = .values$i18n$t("confirm")
           )
         ))
       })
@@ -168,7 +168,7 @@ user_table_remove_user_server <- function(id,
 
         if (success) {
           shiny::showNotification(
-            ui = i18n$t(
+            ui = .values$i18n$t(
               "msg_remove_successful",
               "${user_with_article} \"${p_[[2]]}\"",
               user_name_r()
@@ -178,7 +178,7 @@ user_table_remove_user_server <- function(id,
           )
         } else {
           shiny::showNotification(
-            ui = i18n$t(
+            ui = .values$i18n$t(
               "err_remove_not_successful",
               "${user_with_article} \"${p_[[2]]}\""
             ),

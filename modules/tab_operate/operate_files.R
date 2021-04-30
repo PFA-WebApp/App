@@ -59,21 +59,21 @@ operate_files_server <- function(id,
       })
 
       output$group_title <- shiny::renderUI({
-        i18n$i(
+        .values$i18n$i(
           "${groups} (${p_[[1]]})",
           length(group_files_return$files_r())
         )
       })
 
       output$type_title <- shiny::renderUI({
-        i18n$i(
+        .values$i18n$i(
           "${types} (${p_[[1]]})",
           length(type_files_return$files_r())
         )
       })
 
       output$subtype_title <- shiny::renderUI({
-        i18n$i(
+        .values$i18n$i(
           "${subtypes} (${p_[[1]]})",
           length(subtype_files_return$files_r())
         )

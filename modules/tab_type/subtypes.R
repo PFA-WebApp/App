@@ -122,7 +122,7 @@ subtypes_server <- function(id, .values) {
         .values$update$type()
         shiny::selectInput(
           inputId = ns("type"),
-          label = i18n$t("type"),
+          label = .values$i18n$t("type"),
           choices = db_get_types(.values$db),
           selected = input$type,
           selectize = .values$device$large
@@ -133,7 +133,7 @@ subtypes_server <- function(id, .values) {
         shiny::showModal(shiny::modalDialog(
           easyClose = TRUE,
           title = htmltools::tagList(
-            i18n$t("add_subtype"),
+            .values$i18n$t("add_subtype"),
             shiny::modalButton(
               label = NULL,
               icon = shiny::icon("window-close")
@@ -141,12 +141,12 @@ subtypes_server <- function(id, .values) {
           ),
           add_object_ui(
             id = ns("add_object"),
-            label = i18n$t("subtype"),
+            label = .values$i18n$t("subtype"),
             placeholder = NULL,
             object_quantity_input_ui(
               id = ns("object_quantity_input"),
               old_quantity = 0,
-              label = i18n$t("quantity")
+              label = .values$i18n$t("quantity")
             )
           ),
           footer = NULL

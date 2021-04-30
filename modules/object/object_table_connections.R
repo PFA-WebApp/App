@@ -64,7 +64,7 @@ object_table_connections_server <- function(id,
       })
 
       shiny::observeEvent(input$connections, {
-        title <- i18n$t(
+        title <- .values$i18n$t(
           label$change_connections,
           db$func$get_object_name(.values$db, object_id_r())
         )
@@ -80,7 +80,7 @@ object_table_connections_server <- function(id,
           easyClose = TRUE,
           shiny::selectInput(
             inputId = ns("object_connections"),
-            label = i18n$t(label$connections),
+            label = .values$i18n$t(label$connections),
             selected = object_connections_r(),
             choices = db$func$get_possible_connections(.values$db),
             multiple = TRUE,
@@ -88,7 +88,7 @@ object_table_connections_server <- function(id,
           ),
           footer = shiny::actionButton(
             inputId = ns("confirm_object_connections"),
-            label = i18n$t("confirm")
+            label = .values$i18n$t("confirm")
           )
         ))
       })
@@ -120,7 +120,7 @@ object_table_connections_server <- function(id,
         }
 
         shiny::showNotification(
-          ui = i18n$t(
+          ui = .values$i18n$t(
             "msg_connection_modification_successful",
             label$connection_modification,
             db$func$get_object_name(.values$db, object_id_r())

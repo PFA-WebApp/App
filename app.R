@@ -114,7 +114,6 @@ ui_server <- function(source_to_globalenv = FALSE) {
     # SERVER -------------------------------------------------------------------
 
     server <- function(input, output, session) {
-
         # .VALUES ENVIRONMENT ------------------------------------------------
 
         # The .values environment is available to all modules so that arbitrary information
@@ -129,6 +128,8 @@ ui_server <- function(source_to_globalenv = FALSE) {
         # store a trigger for each instance
         .values$trigger_list <- list()
 
+        .values$i18n <- i18n$clone()
+
         .values$user$id <- shiny::reactiveVal(0L)
         .values$user$status <- shiny::reactiveVal("not_logged")
         .values$user$name <- shiny::reactiveVal("")
@@ -141,33 +142,33 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$settings$subtype_name$length <- list(min = 4, max = 32)
 
         .values$settings$status_dict <- list(
-            admin = i18n$t("admin"),
-            mod = i18n$t("mod"),
-            user = i18n$t("user")
+            admin = .values$i18n$t("admin"),
+            mod = .values$i18n$t("mod"),
+            user = .values$i18n$t("user")
         )
 
         .values$settings$status_dict_chr <- list(
-            admin = i18n$t_chr("admin"),
-            mod = i18n$t_chr("mod"),
-            user = i18n$t_chr("user")
+            admin = .values$i18n$t_chr("admin"),
+            mod = .values$i18n$t_chr("mod"),
+            user = .values$i18n$t_chr("user")
         )
 
         .values$settings$time_unit_dict <- function() {
             list(
-                secs = i18n$t("secs"),
-                mins = i18n$t("mins"),
-                hours = i18n$t("hours"),
-                days = i18n$t("days"),
-                weeks = i18n$t("weeks")
+                secs = .values$i18n$t("secs"),
+                mins = .values$i18n$t("mins"),
+                hours = .values$i18n$t("hours"),
+                days = .values$i18n$t("days"),
+                weeks = .values$i18n$t("weeks")
             )
         }
 
         .values$settings$table_dict <- function() {
             .values$language_rv()
             list(
-                "group" = i18n$t_chr("group"),
-                "type" = i18n$t_chr("type"),
-                "subtype" = i18n$t_chr("subtype")
+                "group" = .values$i18n$t_chr("group"),
+                "type" = .values$i18n$t_chr("type"),
+                "subtype" = .values$i18n$t_chr("subtype")
             )
         }
 
@@ -193,11 +194,6 @@ ui_server <- function(source_to_globalenv = FALSE) {
 
         # Internationalization
         .values$language_rv <- shiny::reactiveVal("de")
-
-        .values$i18n_r <- shiny::reactive({
-            .values$language_rv()
-            i18n
-        })
 
         # Language for DT::datatable
         dt_languages <- list(

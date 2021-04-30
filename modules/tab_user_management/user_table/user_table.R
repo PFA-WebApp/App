@@ -101,17 +101,17 @@ user_table_server <- function(id, .values) {
 
         if (.values$user$status() == "admin") {
           c(
-            i18n$t_chr("user_name"),
-            i18n$t_chr("status"),
-            i18n$t_chr("edit_status"),
-            i18n$t_chr("remove"),
-            i18n$t_chr("reset_password")
+            .values$i18n$t_chr("user_name"),
+            .values$i18n$t_chr("status"),
+            .values$i18n$t_chr("edit_status"),
+            .values$i18n$t_chr("remove"),
+            .values$i18n$t_chr("reset_password")
           )
         } else {
           c(
-            i18n$t_chr("user_name"),
-            i18n$t_chr("status"),
-            i18n$t_chr("remove")
+            .values$i18n$t_chr("user_name"),
+            .values$i18n$t_chr("status"),
+            .values$i18n$t_chr("remove")
           )
         }
       })

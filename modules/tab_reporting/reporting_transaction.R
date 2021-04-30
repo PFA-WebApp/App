@@ -69,7 +69,7 @@ reporting_transaction_server <- function(id, .values) {
             user_name = dplyr::case_when(
               as.logical(user_removed) ~
                 paste0(
-                  user_name, ":", user_id, " (", i18n$t_chr("removed"), ")"
+                  user_name, ":", user_id, " (", .values$i18n$t_chr("removed"), ")"
                 ),
               TRUE ~ user_name
             ),
@@ -77,14 +77,14 @@ reporting_transaction_server <- function(id, .values) {
               as.logical(type_removed) ~ subtype_name,
               as.logical(subtype_removed) ~
                 paste0(
-                  subtype_name, ":", subtype_id, " (", i18n$t_chr("removed"), ")"
+                  subtype_name, ":", subtype_id, " (", .values$i18n$t_chr("removed"), ")"
                 ),
               TRUE ~ subtype_name
             ),
             type_name = dplyr::case_when(
               as.logical(type_removed) ~
                 paste0(
-                  type_name, ":", type_id, " (", i18n$t_chr("removed"), ")"
+                  type_name, ":", type_id, " (", .values$i18n$t_chr("removed"), ")"
                 ),
               TRUE ~ type_name
             ),
@@ -104,11 +104,11 @@ reporting_transaction_server <- function(id, .values) {
           )
 
         names(tbl) <- c(
-          i18n$t_chr("user_name"),
-          i18n$t_chr("type"),
-          i18n$t_chr("subtype"),
-          i18n$t_chr("date"),
-          i18n$t_chr("quantity"),
+          .values$i18n$t_chr("user_name"),
+          .values$i18n$t_chr("type"),
+          .values$i18n$t_chr("subtype"),
+          .values$i18n$t_chr("date"),
+          .values$i18n$t_chr("quantity"),
           "user_removed",
           "subtype_removed",
           "type_removed",
@@ -144,25 +144,25 @@ reporting_transaction_server <- function(id, .values) {
             )
           )
         ) %>%  DT::formatStyle(
-          columns = i18n$t_chr("quantity"),
+          columns = .values$i18n$t_chr("quantity"),
           valueColumns = "quantity_color",
           color = DT::styleValue()
         ) %>% DT::formatStyle(
-          columns = i18n$t_chr("user_name"),
+          columns = .values$i18n$t_chr("user_name"),
           valueColumns = "user_removed",
           color = DT::styleInterval(
             cuts = 0,
             values = c("inherit", "rgb(221, 75, 57)")
           )
         ) %>% DT::formatStyle(
-          columns = i18n$t_chr("subtype"),
+          columns = .values$i18n$t_chr("subtype"),
           valueColumns = "subtype_removed",
           color = DT::styleInterval(
             cuts = 0,
             values = c("inherit", "rgb(221, 75, 57)")
           )
         ) %>% DT::formatStyle(
-          columns = i18n$t_chr("type"),
+          columns = .values$i18n$t_chr("type"),
           valueColumns = "type_removed",
           color = DT::styleInterval(
             cuts = 0,

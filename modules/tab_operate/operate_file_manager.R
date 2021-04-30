@@ -87,8 +87,8 @@ operate_file_manager_server <- function(id,
       file_table_names_r <- shiny::reactive({
         .values$language_rv()
         c(
-          i18n$t_chr("file"),
-          if (length(object_ids_r()) > 1) i18n$t_chr(label$object_name)
+          .values$i18n$t_chr("file"),
+          if (length(object_ids_r()) > 1) .values$i18n$t_chr(label$object_name)
         )
       })
 
@@ -129,7 +129,7 @@ operate_file_manager_server <- function(id,
         if (length(files_r())) {
           shiny::downloadButton(
             outputId = ns("download_all"),
-            label = i18n$t("download_directory"),
+            label = .values$i18n$t("download_directory"),
             width = "100%",
             style = "display: block"
           )

@@ -10,7 +10,7 @@ remove_type_allowed <- function(db, type_id) {
     allowed <- FALSE
 
     shiny::showNotification(
-      ui = i18n$t("err_type_subtype_borrowed"),
+      ui = .values$i18n$t("err_type_subtype_borrowed"),
       type = "error"
     )
   }

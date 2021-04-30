@@ -59,16 +59,16 @@ reporting_table_server <- function(id, .values, settings, object_id_r = NULL) {
 
         if (settings$summary %in% c("user", "all")) {
           c(
-            i18n$t_chr("type"),
-            i18n$t_chr("subtype"),
-            i18n$t_chr("quantity"),
-            i18n$t_chr("last_borrowed")
+            .values$i18n$t_chr("type"),
+            .values$i18n$t_chr("subtype"),
+            .values$i18n$t_chr("quantity"),
+            .values$i18n$t_chr("last_borrowed")
           )
         } else {
           c(
-            i18n$t_chr("user_name"),
-            i18n$t_chr("quantity"),
-            i18n$t_chr("last_borrowed")
+            .values$i18n$t_chr("user_name"),
+            .values$i18n$t_chr("quantity"),
+            .values$i18n$t_chr("last_borrowed")
           )
         }
       })

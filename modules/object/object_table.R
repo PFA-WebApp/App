@@ -165,7 +165,7 @@ object_table_server <- function(id,
       colnames_r <- shiny::reactive({
         .values$language_rv()
 
-        purrr::map_chr(label$colnames, i18n$t_chr)
+        purrr::map_chr(label$colnames, .values$i18n$t_chr)
       })
 
       column_connections_r <- shiny::reactive({

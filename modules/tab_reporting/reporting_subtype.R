@@ -29,7 +29,7 @@ reporting_subtype_server <- function(id, .values) {
       output$type <- shiny::renderUI({
         shiny::selectInput(
           inputId = ns("type"),
-          label = i18n$t("type"),
+          label = .values$i18n$t("type"),
           choices = type_choices_r(),
           width = "100%",
           selectize = .values$device$large
@@ -44,7 +44,7 @@ reporting_subtype_server <- function(id, .values) {
       output$subtype <- shiny::renderUI({
         shiny::selectInput(
           inputId = ns("subtype"),
-          label = i18n$t("subtype"),
+          label = .values$i18n$t("subtype"),
           choices = subtype_choices_r(),
           width = "100%",
           selectize = .values$device$large

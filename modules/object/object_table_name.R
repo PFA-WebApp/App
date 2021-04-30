@@ -79,7 +79,7 @@ object_table_name_server <- function(id,
       shiny::observeEvent(object_id_r(), {
         shiny::showModal(shiny::modalDialog(
           title = htmltools::tagList(
-            i18n$t(label$change_name),
+            .values$i18n$t(label$change_name),
             shiny::modalButton(
               label = NULL,
               icon = shiny::icon("window-close")
@@ -88,7 +88,7 @@ object_table_name_server <- function(id,
           easyClose = TRUE,
           shiny::textInput(
             inputId = ns("object_name"),
-            label = i18n$t(label$new_name),
+            label = .values$i18n$t(label$new_name),
             value = old_object_name_r()
           ),
           shiny::uiOutput(
@@ -107,7 +107,7 @@ object_table_name_server <- function(id,
 
       output$wrong_name_length <- shiny::renderUI({
         if (name_too_short_r()) {
-          return(i18n$t(
+          return(.values$i18n$t(
             "err_min_chars",
             label$object_name_with_article,
             format_number(.values$settings[[settings$length_name]]$length$min)
@@ -115,7 +115,7 @@ object_table_name_server <- function(id,
         }
 
         if (name_too_short_r()) {
-          return(i18n$t(
+          return(.values$i18n$t(
             "err_max_chars",
             label$object_name_with_article,
             format_number(.values$settings[[settings$length_name]]$length$max)
@@ -125,7 +125,7 @@ object_table_name_server <- function(id,
 
       output$name_taken <- shiny::renderUI({
         if (name_taken_r()) {
-          i18n$t(
+          .values$i18n$t(
             "err_name_taken",
             label$object_name_with_article
           )
@@ -137,13 +137,13 @@ object_table_name_server <- function(id,
           shinyjs::disabled(
             shiny::actionButton(
               inputId = ns("confirm_object_name"),
-              label = i18n$t("confirm")
+              label = .values$i18n$t("confirm")
             )
           )
         } else {
           shiny::actionButton(
             inputId = ns("confirm_object_name"),
-            label = i18n$t("confirm")
+            label = .values$i18n$t("confirm")
           )
         }
       })
@@ -174,7 +174,7 @@ object_table_name_server <- function(id,
 
         if (success) {
           shiny::showNotification(
-            ui = i18n$t(
+            ui = .values$i18n$t(
               "msg_obj_changed_to",
               label$object_name_with_article,
               input$object_name
@@ -184,7 +184,7 @@ object_table_name_server <- function(id,
           )
         } else {
           shiny::showNotification(
-            ui = i18n$t(
+            ui = .values$i18n$t(
               "err_object_could_not_be_changed",
               label$object_name_with_article
             ),

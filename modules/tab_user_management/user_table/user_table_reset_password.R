@@ -38,7 +38,7 @@ user_table_reset_password_server <- function(id, .values) {
         if (.values$yaml$showcase && user_id_r() %in% 1:3) {
           shiny::showModal(shiny::modalDialog(
             title = htmltools::tagList(
-              i18n$t("err_access_denied"),
+              .values$i18n$t("err_access_denied"),
               shiny::modalButton(
                 label = NULL,
                 icon = shiny::icon("window-close")
@@ -46,7 +46,7 @@ user_table_reset_password_server <- function(id, .values) {
             ),
             easyClose = TRUE,
             htmltools::p(
-              i18n$t("err_reset_password_standard_user")
+              .values$i18n$t("err_reset_password_standard_user")
             ),
             footer = NULL
           ))
@@ -56,7 +56,7 @@ user_table_reset_password_server <- function(id, .values) {
 
         shiny::showModal(shiny::modalDialog(
           title = htmltools::tagList(
-            i18n$t("reset_password"),
+            .values$i18n$t("reset_password"),
             shiny::modalButton(
               label = NULL,
               icon = shiny::icon("window-close")
@@ -64,14 +64,14 @@ user_table_reset_password_server <- function(id, .values) {
           ),
           easyClose = TRUE,
           htmltools::p(
-            i18n$t(
+            .values$i18n$t(
               "msg_confirm_reset_password",
               user_name_r()
             )
           ),
           footer = shiny::actionButton(
             inputId = ns("confirm_reset"),
-            label = i18n$t("confirm")
+            label = .values$i18n$t("confirm")
           )
         ))
       })
@@ -82,7 +82,7 @@ user_table_reset_password_server <- function(id, .values) {
         reset_pwd <- "1234"
 
         shiny::showNotification(
-          ui = i18n$t(
+          ui = .values$i18n$t(
             "msg_reset_password_successful",
             user_name_r(),
             reset_pwd

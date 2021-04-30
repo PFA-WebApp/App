@@ -37,7 +37,7 @@ settings_password_server <- function(id, .values) {
 
       output$wrong_password_length <- shiny::renderUI({
         if (password_too_short_r()) {
-          return(i18n$t(
+          return(.values$i18n$t(
             "err_min_chars",
             "${password_with_article}",
             format_number(.values$settings$password$length$min)
@@ -45,7 +45,7 @@ settings_password_server <- function(id, .values) {
         }
 
         if (password_too_long_r()) {
-          return(i18n$t(
+          return(.values$i18n$t(
             "err_max_chars",
             "${password_with_article}",
             format_number(.values$settings$password$length$max)
@@ -55,7 +55,7 @@ settings_password_server <- function(id, .values) {
 
       output$non_matching_passwords <- shiny::renderUI({
         if (non_matching_passwords_r()) {
-          i18n$t("err_non_matching_passwords")
+          .values$i18n$t("err_non_matching_passwords")
         }
       })
 
@@ -82,14 +82,14 @@ settings_password_server <- function(id, .values) {
           shinyjs::disabled(
             shiny::actionButton(
               inputId = ns("change_password"),
-              label = i18n$t("edit_password"),
+              label = .values$i18n$t("edit_password"),
               width = "100%"
             )
           )
         } else {
           shiny::actionButton(
             inputId = ns("change_password"),
-            label = i18n$t("edit_password"),
+            label = .values$i18n$t("edit_password"),
             width = "100%"
           )
         }
@@ -110,7 +110,7 @@ settings_password_server <- function(id, .values) {
 
         if (.values$yaml$showcase && .values$user$id() %in% 1:3) {
           shiny::showNotification(
-            ui = i18n$t(
+            ui = .values$i18n$t(
               "err_edit_standard_user",
               "${password_with_article}"
             ),
@@ -122,7 +122,7 @@ settings_password_server <- function(id, .values) {
         }
 
         shiny::showNotification(
-          ui = i18n$t("msg_password_change_successful"),
+          ui = .values$i18n$t("msg_password_change_successful"),
           type = "warning",
           duration = 5
         )

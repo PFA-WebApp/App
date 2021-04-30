@@ -26,7 +26,7 @@ reporting_user_server <- function(id, .values) {
       output$select_user <- shiny::renderUI({
         shiny::selectInput(
           inputId = ns("user"),
-          label = i18n$t("user"),
+          label = .values$i18n$t("user"),
           choices = user_choices_r(),
           selected = .values$user$id(),
           selectize = .values$device$large

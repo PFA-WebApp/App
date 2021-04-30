@@ -51,7 +51,7 @@ operate_groups_server <- function(id, .values, type_id_r) {
 
                   shiny::showModal(shiny::modalDialog(
                     title = htmltools::tagList(
-                      i18n$t("included_types"),
+                      .values$i18n$t("included_types"),
                       shiny::modalButton(
                         label = NULL,
                         icon = shiny::icon("window-close")
@@ -59,7 +59,7 @@ operate_groups_server <- function(id, .values, type_id_r) {
                     ),
                     easyClose = TRUE,
                     htmltools::p(
-                      i18n$t("click_type_to_prepare_operate")
+                      .values$i18n$t("click_type_to_prepare_operate")
                     ),
                     htmltools::br(),
                     operate_group_types_ui(
@@ -84,7 +84,7 @@ operate_groups_server <- function(id, .values, type_id_r) {
         } else {
           htmltools::tags$li(
             class = "st-badge bordered bg-lightgray",
-            i18n$t("no_group_available")
+            .values$i18n$t("no_group_available")
           )
         }
       })

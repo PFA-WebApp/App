@@ -37,14 +37,14 @@ settings_user_name_server <- function(id, .values) {
       output$user_name <- shiny::renderUI({
         shiny::textInput(
           inputId = ns("user_name"),
-          label = i18n$t("new_user_name"),
+          label = .values$i18n$t("new_user_name"),
           value = .values$user$name()
         )
       })
 
       output$wrong_user_name_length <- shiny::renderUI({
         if (user_name_too_short_r()) {
-          return(i18n$t(
+          return(.values$i18n$t(
             "err_min_chars",
             "${user_name_with_article}",
             format_number(.values$settings$user_name$length$min)
@@ -52,7 +52,7 @@ settings_user_name_server <- function(id, .values) {
         }
 
         if (user_name_too_long_r()) {
-          return(i18n$t(
+          return(.values$i18n$t(
             "err_max_chars",
             "${user_name_with_article}",
             format_number(.values$settings$user_name$length$max)
@@ -62,7 +62,7 @@ settings_user_name_server <- function(id, .values) {
 
       output$user_name_taken <- shiny::renderUI({
         if (user_name_taken_r()) {
-          i18n$t(
+          .values$i18n$t(
             "err_name_taken",
             "${user_name_with_article}"
           )
@@ -94,14 +94,14 @@ settings_user_name_server <- function(id, .values) {
           shinyjs::disabled(
             shiny::actionButton(
               inputId = ns("change_user_name"),
-              label = i18n$t("edit_user_name"),
+              label = .values$i18n$t("edit_user_name"),
               width = "100%"
             )
           )
         } else {
           shiny::actionButton(
             inputId = ns("change_user_name"),
-            label = i18n$t("edit_user_name"),
+            label = .values$i18n$t("edit_user_name"),
             width = "100%"
           )
         }
@@ -115,7 +115,7 @@ settings_user_name_server <- function(id, .values) {
 
         if (.values$yaml$showcase && .values$user$id() %in% 1:3) {
           shiny::showNotification(
-            ui = i18n$t(
+            ui = .values$i18n$t(
               "err_edit_standard_user",
               "${user_name_with_article}"
             ),
@@ -135,7 +135,7 @@ settings_user_name_server <- function(id, .values) {
 
         if (!pwd_correct) {
           shiny::showNotification(
-            ui = i18n$t("err_wrong_password"),
+            ui = .values$i18n$t("err_wrong_password"),
             type = "error",
             duration = 3
           )
@@ -146,7 +146,7 @@ settings_user_name_server <- function(id, .values) {
 
           if (success) {
             shiny::showNotification(
-              ui = i18n$t(
+              ui = .values$i18n$t(
                 "msg_edit_user_name_successful",
                 input$user_name
               ),
@@ -155,7 +155,7 @@ settings_user_name_server <- function(id, .values) {
             )
           } else {
             shiny::showNotification(
-              ui = i18n$t("err_edit_user_name_not_successful"),
+              ui = .values$i18n$t("err_edit_user_name_not_successful"),
               duration = 5,
               type = "error"
             )

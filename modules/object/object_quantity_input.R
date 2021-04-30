@@ -45,7 +45,7 @@ object_quantity_input_server <- function(id,
 
       output$not_integer <- shiny::renderUI({
         if (not_integer_r()) {
-          i18n$t(
+          .values$i18n$t(
             "err_must_be_integer",
             object_label
           )
@@ -54,7 +54,7 @@ object_quantity_input_server <- function(id,
 
       output$negative <- shiny::renderUI({
         if (negative_r()) {
-          i18n$t(
+          .values$i18n$t(
             "err_must_be_positive",
             object_label
           )
@@ -63,7 +63,7 @@ object_quantity_input_server <- function(id,
 
       output$too_small <- shiny::renderUI({
         if (too_small_r()) {
-          i18n$t(
+          .values$i18n$t(
             min_message_r(),
             min_r()
           )
@@ -74,7 +74,7 @@ object_quantity_input_server <- function(id,
         if (too_big_r()) {
           if (!nchar(max_message_r())) return()
 
-          i18n$t(
+          .values$i18n$t(
             max_message_r(),
             max_r()
           )

@@ -66,7 +66,7 @@ add_user_server <- function(id, .values) {
       output$status <- shiny::renderUI({
         shiny::selectInput(
           inputId = ns("user_status"),
-          label = i18n$t("status"),
+          label = .values$i18n$t("status"),
           choices = choices_r(),
           selectize = .values$device$large
         )
@@ -74,7 +74,7 @@ add_user_server <- function(id, .values) {
 
       output$wrong_name_length <- shiny::renderUI({
         if (user_name_too_short_r()) {
-          return(i18n$t(
+          return(.values$i18n$t(
             "err_min_chars",
             "${user_name_with_article}",
             format_number(.values$settings$user_name$length$min)
@@ -82,7 +82,7 @@ add_user_server <- function(id, .values) {
         }
 
         if (user_name_too_long_r()) {
-          return(i18n$t(
+          return(.values$i18n$t(
             "err_max_chars",
             "${user_name_with_article}",
             format_number(.values$settings$user_name$length$max)
@@ -92,7 +92,7 @@ add_user_server <- function(id, .values) {
 
       output$user_name_taken <- shiny::renderUI({
         if (user_name_taken_r()) {
-          i18n$t(
+          .values$i18n$t(
             "err_name_taken",
             "${user_name_with_article}"
           )
@@ -101,7 +101,7 @@ add_user_server <- function(id, .values) {
 
       output$wrong_password_length <- shiny::renderUI({
         if (password_too_short_r()) {
-          return(i18n$t(
+          return(.values$i18n$t(
             "err_min_chars",
             "${password_with_article}",
             format_number(.values$settings$password$length$min)
@@ -109,7 +109,7 @@ add_user_server <- function(id, .values) {
         }
 
         if (password_too_long_r()) {
-          return(i18n$t(
+          return(.values$i18n$t(
             "err_max_chars",
             "${password_with_article}",
             format_number(.values$settings$password$length$max)
@@ -119,7 +119,7 @@ add_user_server <- function(id, .values) {
 
       output$non_matching_passwords <- shiny::renderUI({
         if (non_matching_passwords_r()) {
-          i18n$t("err_non_matching_passwords")
+          .values$i18n$t("err_non_matching_passwords")
         }
       })
 
@@ -128,14 +128,14 @@ add_user_server <- function(id, .values) {
           shinyjs::disabled(
             shiny::actionButton(
               inputId = ns("add_user"),
-              label = i18n$t("add_user"),
+              label = .values$i18n$t("add_user"),
               width = "100%"
             )
           )
         } else {
           shiny::actionButton(
             inputId = ns("add_user"),
-            label = i18n$t("add_user"),
+            label = .values$i18n$t("add_user"),
             width = "100%"
           )
         }
@@ -203,7 +203,7 @@ add_user_server <- function(id, .values) {
 
         if (success) {
           shiny::showNotification(
-            ui = i18n$t(
+            ui = .values$i18n$t(
               "msg_add_user_successful",
               input$user_name
             ),
@@ -212,7 +212,7 @@ add_user_server <- function(id, .values) {
           )
         } else {
           shiny::showNotification(
-            ui = i18n$t("err_add_user_not_successful"),
+            ui = .values$i18n$t("err_add_user_not_successful"),
             duration = 5,
             type = "error"
           )

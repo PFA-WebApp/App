@@ -43,14 +43,14 @@ user_table_change_status_server <- function(id, .values) {
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
             title = htmltools::tagList(
-              i18n$t("err_access_denied"),
+              .values$i18n$t("err_access_denied"),
               shiny::modalButton(
                 label = NULL,
                 icon = shiny::icon("window-close")
               )
             ),
             htmltools::p(
-              i18n$t(
+              .values$i18n$t(
                 "err_edit_standard_user",
                 "${status_with_article}"
               )
@@ -66,14 +66,14 @@ user_table_change_status_server <- function(id, .values) {
           shiny::showModal(shiny::modalDialog(
             easyClose = TRUE,
             title = htmltools::tagList(
-              i18n$t("err_access_denied"),
+              .values$i18n$t("err_access_denied"),
               shiny::modalButton(
                 label = NULL,
                 icon = shiny::icon("window-close")
               )
             ),
             htmltools::p(
-              i18n$t("err_edit_own_status_admin")
+              .values$i18n$t("err_edit_own_status_admin")
             ),
             footer = NULL
           ))
@@ -83,7 +83,7 @@ user_table_change_status_server <- function(id, .values) {
 
         shiny::showModal(shiny::modalDialog(
           title = htmltools::tagList(
-            i18n$t("edit_status"),
+            .values$i18n$t("edit_status"),
             shiny::modalButton(
               label = NULL,
               icon = shiny::icon("window-close")
@@ -92,7 +92,7 @@ user_table_change_status_server <- function(id, .values) {
           easyClose = TRUE,
           shiny::selectInput(
             inputId = ns("user_status"),
-            label = i18n$t("edit_status"),
+            label = .values$i18n$t("edit_status"),
             choices = c(
               Administrator = "admin",
               Moderator = "mod",
@@ -103,7 +103,7 @@ user_table_change_status_server <- function(id, .values) {
           ),
           footer = shiny::actionButton(
             inputId = ns("confirm_status"),
-            label = i18n$t("confirm")
+            label = .values$i18n$t("confirm")
           )
         ))
       })
@@ -115,7 +115,7 @@ user_table_change_status_server <- function(id, .values) {
 
         if (success) {
           shiny::showNotification(
-            ui = i18n$t(
+            ui = .values$i18n$t(
               "msg_edit_status_successful",
               user_name_r(),
               .values$settings$status_dict[input$user_status]
@@ -125,7 +125,7 @@ user_table_change_status_server <- function(id, .values) {
           )
         } else {
           shiny::showNotification(
-            ui = i18n$t(
+            ui = .values$i18n$t(
               "err_edit_status_not_successful",
               user_name_r()
             ),
