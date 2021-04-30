@@ -93,13 +93,6 @@
       "Repository": "CRAN",
       "Hash": "50c838a310445e954bc13f26f26a6ecf"
     },
-    "backports": {
-      "Package": "backports",
-      "Version": "1.2.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "644043219fc24e190c2f620c1a380a69"
-    },
     "base64enc": {
       "Package": "base64enc",
       "Version": "0.1-3",
@@ -165,13 +158,6 @@
       "RemoteSha": "8af39cf9470818310659ed1567859dc6421638ca",
       "RemoteHost": "api.github.com",
       "Hash": "fa05e74e7312309ec353572f594eddd0"
-    },
-    "checkmate": {
-      "Package": "checkmate",
-      "Version": "2.0.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "a667800d5f0350371bedeb8b8b950289"
     },
     "cli": {
       "Package": "cli",
@@ -505,8 +491,8 @@
       "RemoteUsername": "DavidBarke",
       "RemoteRepo": "shiny.i18n",
       "RemoteRef": "master",
-      "RemoteSha": "2f08ab648487114ea62d6880720c9e0cee6aaf47",
-      "Hash": "b575c02c2b20aecbfbf73e0db1d7ea4a"
+      "RemoteSha": "5aae8a4ba7f8874302abee309acf6def30b50a28",
+      "Hash": "c398b17db41bed1027585a2c2b8a0f59"
     },
     "shinybrowser": {
       "Package": "shinybrowser",
@@ -519,13 +505,6 @@
       "RemoteRef": "master",
       "RemoteSha": "114e4e0887a79c9d01620bb1df393add78ed1b47",
       "Hash": "0abe8c6ee8bcdd0a48fdb2d04a01ddc3"
-    },
-    "shinydisconnect": {
-      "Package": "shinydisconnect",
-      "Version": "0.1.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "0246e91be508acf9dd58c00db3dd765d"
     },
     "shinyjs": {
       "Package": "shinyjs",
