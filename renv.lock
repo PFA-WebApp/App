@@ -491,8 +491,8 @@
       "RemoteUsername": "DavidBarke",
       "RemoteRepo": "shiny.i18n",
       "RemoteRef": "master",
-      "RemoteSha": "41c59a2659f327848aed5b1e6e3a61381446b47f",
-      "Hash": "46a7752d78b33724f27323b3e2998ebc"
+      "RemoteSha": "5aae8a4ba7f8874302abee309acf6def30b50a28",
+      "Hash": "c398b17db41bed1027585a2c2b8a0f59"
     },
     "shinybrowser": {
       "Package": "shinybrowser",
