@@ -19,9 +19,13 @@ db_length <- function(db, name) {
 #' @template name
 #'
 #' @export
-db_get_table <- function(db, name, include_removed = FALSE) {
+db_get_table <- function(db, name, include_removed = FALSE, include_rowid = FALSE) {
+  columns <- if (include_rowid) "rowid, *" else "*"
+
   query <- paste(
-    "SELECT * FROM",
+    "SELECT",
+    columns,
+    "FROM",
     name
   )
 
@@ -35,5 +39,15 @@ db_get_table <- function(db, name, include_removed = FALSE) {
   DBI::dbGetQuery(
     db,
     query
+  )
+}
+
+
+
+#' @export
+db_connect <- function() {
+  DBI::dbConnect(
+    RSQLite::SQLite(),
+    "./db/db.sqlite"
   )
 }
