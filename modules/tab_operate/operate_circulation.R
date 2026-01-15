@@ -88,7 +88,7 @@ operate_circulation_server <- function(id, .values, trigger_type_id_r) {
       })
 
       type_id_r <- shiny::reactive({
-        shiny::req(input$type)
+        input$type %||% types_r()[1]
       })
 
       type_name_r <- shiny::reactive({
