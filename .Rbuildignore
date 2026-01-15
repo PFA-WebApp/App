@@ -1,0 +1,5 @@
+^renv$
+^renv\.lock$
+^App\.Rproj$
+^\.Rproj\.user$
+^Sensotheka\.Rproj$
