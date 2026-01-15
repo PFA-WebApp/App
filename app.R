@@ -1,7 +1,9 @@
 library(shiny)
 library(shinyjs)
 library(dplyr)
+# library needs to be called, otherwise qrcode generation does not work
 library(qrcode)
+library(shiny.i18n)
 
 # app.yml stores settings that may differ between execution environments
 app_yml <- "./app.yml"
@@ -14,6 +16,13 @@ if (!file.exists(app_yml)) {
     )
 
     yaml::write_yaml(x, app_yml)
+}
+
+if (!dir.exists("files")) {
+    dir.create("files")
+    dir.create("files/group")
+    dir.create("files/type")
+    dir.create("files/subtype")
 }
 
 addResourcePath("files", "./files")
@@ -47,18 +56,28 @@ ui_server <- function(source_to_globalenv = FALSE) {
 
     # Globals ------------------------------------------------------------------
 
+    # Translator
+    i18n <- shiny.i18n::Translator$new(
+        translation_json_path = "translation/translation.json"
+    )
+    i18n$set_language("de")
+
     # Allow bigger file inputs
     options(shiny.maxRequestSize = 100*1024^2)
 
     # UI -----------------------------------------------------------------------
     ui <- htmltools::tagList(
+        # Enable shiny.18n
+        shiny.i18n::usei18n(i18n),
         waiter::use_waiter(),
         waiter::waiter_show_on_load(
             html = waiter::spin_solar()
         ),
-        htmltools::includeScript("www/js/dark-mode.js"),
-        htmltools::includeScript("www/js/fileInputText.js"),
         tags$head(
+            # Include custom scripts
+            htmltools::includeScript("www/js/dark-mode.js"),
+            htmltools::includeScript("www/js/fileInputText.js"),
+            htmltools::includeScript("www/js/language-selector.js"),
             # Include custom css styles
             htmltools::includeCSS("www/css/styles.css"),
             htmltools::includeCSS("www/css/dt-dark.css"),
@@ -71,6 +90,8 @@ ui_server <- function(source_to_globalenv = FALSE) {
         container_ui(
             id = "container"
         ),
+        # Enable shinybrowser
+        shinybrowser::detect(),
         # Enable rclipboard
         rclipboard::rclipboardSetup(),
         # Enable shinyjs
@@ -80,12 +101,19 @@ ui_server <- function(source_to_globalenv = FALSE) {
             "js/cookies.js",
             functions = c("getCookie", "setCookie", "rmCookie")
         )
+        #),
+        # shinydisconnect::disconnectMessage(
+        #     text = "Verbindung zum Server unterbrochen. Lade neu und versuche es erneut!",
+        #     refresh = "Neu laden",
+        #     background = "#343a40",
+        #     colour = "white",
+        #     top = "center"
+        # )
     )
 
     # SERVER -------------------------------------------------------------------
 
     server <- function(input, output, session) {
-
         # .VALUES ENVIRONMENT ------------------------------------------------
 
         # The .values environment is available to all modules so that arbitrary information
@@ -100,6 +128,8 @@ ui_server <- function(source_to_globalenv = FALSE) {
         # store a trigger for each instance
         .values$trigger_list <- list()
 
+        .values$i18n <- i18n$clone()
+
         .values$user$id <- shiny::reactiveVal(0L)
         .values$user$status <- shiny::reactiveVal("not_logged")
         .values$user$name <- shiny::reactiveVal("")
@@ -110,24 +140,41 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$settings$group_name$length <- list(min = 4, max = 32)
         .values$settings$type_name$length <- list(min = 4, max = 32)
         .values$settings$subtype_name$length <- list(min = 4, max = 32)
-        .values$settings$status_dict <- c(
-            admin = "Administrator",
-            mod = "Moderator",
-            user = "Benutzer"
-        )
-        .values$settings$time_unit_dict <- c(
-            secs = "Sekunden",
-            mins = "Minuten",
-            hours = "Stunden",
-            days = "Tagen",
-            weeks = "Wochen"
-        )
-        .values$settings$table_dict <- c(
-            "group" = "Gruppe",
-            "type" = "Typ",
-            "subtype" = "Untertyp"
+
+        .values$settings$status_dict <- list(
+            admin = .values$i18n$t("admin"),
+            mod = .values$i18n$t("mod"),
+            user = .values$i18n$t("user")
         )
 
+        .values$settings$status_dict_chr <- list(
+            admin = .values$i18n$t_chr("admin"),
+            mod = .values$i18n$t_chr("mod"),
+            user = .values$i18n$t_chr("user")
+        )
+
+        .values$settings$time_unit_dict <- function() {
+            list(
+                secs = .values$i18n$t("secs"),
+                mins = .values$i18n$t("mins"),
+                hours = .values$i18n$t("hours"),
+                days = .values$i18n$t("days"),
+                weeks = .values$i18n$t("weeks")
+            )
+        }
+
+        .values$settings$table_dict <- function() {
+            .values$language_rv()
+            list(
+                "group" = .values$i18n$t_chr("group"),
+                "type" = .values$i18n$t_chr("type"),
+                "subtype" = .values$i18n$t_chr("subtype")
+            )
+        }
+
+        # These reactiveVals should be written after the corresponding database
+        # table has been updated. They should be read in all location where
+        # the content of the corresponding table is retrieved
         .values$update$user <- shiny::reactiveVal(0)
         .values$update$group <- shiny::reactiveVal(0)
         .values$update$type <- shiny::reactiveVal(0)
@@ -136,10 +183,34 @@ ui_server <- function(source_to_globalenv = FALSE) {
         .values$update$files <- shiny::reactiveVal(0)
         .values$update$circulation <- shiny::reactiveVal(0)
 
+        # Query string's type parameter
         .values$query$type <- shiny::reactiveVal(NULL)
+
+        # Store reference to this session
+        .values$app_session <- session
+
+        # Detect if mobile device or not
+        shiny::observe(.values$device$large <- shinybrowser::get_width() > 768)
+
+        # Internationalization
+        .values$language_rv <- shiny::reactiveVal("de")
+
+        # Language for DT::datatable
+        dt_languages <- list(
+            de = "//cdn.datatables.net/plug-ins/1.10.24/i18n/de_de.json",
+            en = "//cdn.datatables.net/plug-ins/1.10.24/i18n/en-gb.json",
+            es = "//cdn.datatables.net/plug-ins/1.10.24/i18n/es_es.json",
+            fr = "//cdn.datatables.net/plug-ins/1.10.24/i18n/fr_fr.json"
+        )
+
+        .values$dt_language_r <- shiny::reactive({
+            dt_languages[[.values$language_rv()]]
+        })
 
         # Connect to db
         .values$db <- DBI::dbConnect(RSQLite::SQLite(), "./db/db.sqlite")
+        # Enable foreign key support
+        DBI::dbExecute(.values$db, "PRAGMA foreign_keys=ON")
 
         # Store app.yml contents
         .values$yaml <- yaml::read_yaml(app_yml)
@@ -156,6 +227,23 @@ ui_server <- function(source_to_globalenv = FALSE) {
         # Hide waiter when initialisation is done
         waiter::waiter_hide()
 
+        # Handle dark mode cookie
+        shiny::observeEvent(TRUE, {
+            js$getCookie(
+                cookie = "dark-mode",
+                id = "cookie_dark_mode"
+            )
+        }, once = TRUE)
+
+        shiny::observeEvent(input$dark_mode, {
+            js$setCookie(
+                cookie = "dark-mode",
+                value = input$dark_mode,
+                id = "cookie_dark_mode"
+            )
+        })
+
+        # Disconnect on session end
         session$onSessionEnded(function() {
             DBI::dbDisconnect(.values$db)
         })

@@ -8,27 +8,27 @@ reporting_ui <- function(id) {
     bs4Dash::tabBox(
       id = ns("tabs"),
       width = 12,
-      title = "Ausleihübersicht",
+      title = i18n$t("lending_overview"),
       shiny::tabPanel(
-        title = "Gesamt",
+        title = i18n$t("total"),
         reporting_all_ui(
           id = ns("reporting_all")
         )
       ),
       shiny::tabPanel(
-        title = "Nach Untertyp",
+        title = i18n$t("by_subtype"),
         reporting_subtype_ui(
           id = ns("reporting_subtype")
         )
       ),
       shiny::tabPanel(
-        title = "Nach Nutzer",
+        title = i18n$t("by_user"),
         reporting_user_ui(
           id = ns("reporting_user")
         )
       ),
       shiny::tabPanel(
-        title = "Transaktionen",
+        title = i18n$t("transactions"),
         reporting_transaction_ui(
           id = ns("reporting_transaction")
         )

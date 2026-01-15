@@ -74,7 +74,27 @@ object_table_server <- function(id,
           id = "object_table_quantity",
           .values = .values,
           settings = settings,
-          db = db,
+          db = list(
+            func = list(
+              get_object_quantity = db$func$get_object_quantity,
+              set_object_quantity = db$func$set_object_quantity
+            )
+          ),
+          label = label
+        )
+      }
+
+      if ("critical_quantity" %in% settings$show) {
+        object_table_critical_quantity_server(
+          id = "object_table_critical_quantity",
+          .values = .values,
+          settings = settings,
+          db = list(
+            func = list(
+              get_object_quantity = db$func$get_object_critical_quantity,
+              set_object_quantity = db$func$set_object_critical_quantity
+            )
+          ),
           label = label
         )
       }
@@ -90,8 +110,10 @@ object_table_server <- function(id,
       }
 
       # object table -----------------------------------------------------------
-      output$object_table <- DT::renderDataTable({
-        .values$update[[settings$update_name]]()
+      raw_tbl_r <- shiny::reactive({
+        purrr::walk(settings$update_name, function(update_name) {
+          .values$update[[update_name]]()
+        })
 
         tbl <- db_get_table(.values$db, db$table)
 
@@ -105,66 +127,117 @@ object_table_server <- function(id,
           )
         }
 
+        tbl
+      })
+
+      tbl_r <- shiny::reactive({
+        tbl <- raw_tbl_r()
+
         if ("connections" %in% settings$show) {
-          tbl$connections <- as.character(
-            map_ui(
-              id = ns("object_table_connections"),
-              object_ids = tbl$rowid,
-              ui_func = object_table_connections_ui
-            )
-          )
+          tbl$connections <- column_connections_r()
         }
 
         if ("name" %in% settings$show) {
-          tbl$name <- as.character(
-            map_ui(
-              id = ns("object_table_name"),
-              object_ids = tbl$rowid,
-              ui_func = object_table_name_ui,
-              ui_args = list(
-                name = function(object_id) {
-                  db$func$get_object_name(.values$db, object_id)
-                }
-              )
-            )
-          )
+          tbl$name <- column_name_r()
         }
 
         if ("quantity" %in% settings$show) {
-          tbl$quantity <- as.character(
-            map_ui(
-              id = ns("object_table_quantity"),
-              object_ids = tbl$rowid,
-              ui_func = object_table_quantity_ui,
-              ui_args = list(
-                quantity = function(object_id) {
-                  db$func$get_object_quantity(.values$db, object_id)
-                }
-              )
-            )
-          )
+          tbl$quantity <- column_quantity_r()
+        }
+
+        if ("critical_quantity" %in% settings$show) {
+          tbl$critical_quantity <- column_critical_quantity_r()
         }
 
         if ("remove" %in% settings$show) {
-          tbl$remove <- as.character(
-            map_ui(
-              id = ns("object_table_remove_object"),
-              object_ids = tbl$rowid,
-              ui_func = object_table_remove_object_ui
-            )
-          )
+          tbl$remove <- column_remove_r()
         }
 
         tbl <- tbl[settings$show]
         tbl$id <- seq_len(nrow(tbl))
         tbl <- dplyr::relocate(tbl, id)
 
-        targets <- which(settings$show != "name")
-
         stopifnot(length(tbl) == length(label$colnames) + 1)
 
+        tbl
+      })
+
+      colnames_r <- shiny::reactive({
+        .values$language_rv()
+
+        purrr::map_chr(label$colnames, .values$i18n$t_chr)
+      })
+
+      column_connections_r <- shiny::reactive({
+        as.character(
+          map_ui(
+            id = ns("object_table_connections"),
+            object_ids = raw_tbl_r()$rowid,
+            ui_func = object_table_connections_ui
+          )
+        )
+      })
+
+      column_name_r <- shiny::reactive({
+        as.character(
+          map_ui(
+            id = ns("object_table_name"),
+            object_ids = raw_tbl_r()$rowid,
+            ui_func = object_table_name_ui,
+            ui_args = list(
+              name = function(object_id) {
+                db$func$get_object_name(.values$db, object_id)
+              }
+            )
+          )
+        )
+      })
+
+      column_quantity_r <- shiny::reactive({
+        as.character(
+          map_ui(
+            id = ns("object_table_quantity"),
+            object_ids = raw_tbl_r()$rowid,
+            ui_func = object_table_quantity_ui,
+            ui_args = list(
+              quantity = function(object_id) {
+                db$func$get_object_quantity(.values$db, object_id)
+              }
+            )
+          )
+        )
+      })
+
+      column_critical_quantity_r <- shiny::reactive({
+        as.character(
+          map_ui(
+            id = ns("object_table_critical_quantity"),
+            object_ids = raw_tbl_r()$rowid,
+            ui_func = object_table_critical_quantity_ui,
+            ui_args = list(
+              quantity = function(object_id) {
+                db$func$get_object_critical_quantity(.values$db, object_id)
+              }
+            )
+          )
+        )
+      })
+
+      column_remove_r <- shiny::reactive({
+        as.character(
+          map_ui(
+            id = ns("object_table_remove_object"),
+            object_ids = raw_tbl_r()$rowid,
+            ui_func = object_table_remove_object_ui
+          )
+        )
+      })
+
+      output$object_table <- DT::renderDataTable({
+        targets <- which(settings$show != "name")
+
         DT::datatable(
-          data = tbl,
+          data = tbl_r(),
           options = list(
             columnDefs = list(
               list(
@@ -175,10 +248,13 @@ object_table_server <- function(id,
                 className = "dt-left",
                 targets = 0
               )
+            ),
+            language = list(
+              url = .values$dt_language_r()
             )
           ),
           escape = FALSE,
-          colnames = c("", label$colnames),
+          colnames = c("", colnames_r()),
           rownames = FALSE
         )
       })

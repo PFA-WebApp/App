@@ -4,7 +4,7 @@ user_table_ui <- function(id) {
   bs4Dash::box(
     width = NULL,
     status = "primary",
-    title = "Nutzertabelle",
+    title = i18n$t("user_table"),
     solidHeader = TRUE,
     DT::dataTableOutput(
       outputId = ns("user_table")
@@ -61,9 +61,11 @@ user_table_server <- function(id, .values) {
           )
         })
 
+        .values$language_rv()
+
         tbl <- tbl %>%
           dplyr::select(name, status, change_status, remove, reset_password) %>%
-          dplyr::mutate(status = .values$settings$status_dict[status]) %>%
+          dplyr::mutate(status = .values$settings$status_dict_chr[status]) %>%
           dplyr::arrange(name)
 
         tbl <- tbl[, col_names_by_status_r()]
@@ -76,6 +78,9 @@ user_table_server <- function(id, .values) {
                 className = 'dt-center',
                 targets = column_def_targets_r()
               )
+            ),
+            language = list(
+              url = .values$dt_language_r()
             )
           ),
           escape = FALSE,
@@ -92,13 +97,22 @@ user_table_server <- function(id, .values) {
       })
 
       col_display_names_by_status_r <- shiny::reactive({
+        .values$language_rv()
+
         if (.values$user$status() == "admin") {
           c(
-            "Benutzername", "Status", "Status ändern", "Entfernen",
-            "Passwort zurücksetzen"
+            .values$i18n$t_chr("user_name"),
+            .values$i18n$t_chr("status"),
+            .values$i18n$t_chr("edit_status"),
+            .values$i18n$t_chr("remove"),
+            .values$i18n$t_chr("reset_password")
           )
         } else {
-          c("Benutzername", "Status", "Entfernen")
+          c(
+            .values$i18n$t_chr("user_name"),
+            .values$i18n$t_chr("status"),
+            .values$i18n$t_chr("remove")
+          )
         }
       })
 

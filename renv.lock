@@ -185,6 +185,13 @@
       "Version": "0.3.2",
       "Source": "Repository"
     },
+    "evaluate": {
+      "Package": "evaluate",
+      "Version": "0.14",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "ec8ca05cffcc70569eaaad8469d2a3a7"
+    },
     "fansi": {
       "Package": "fansi",
       "Version": "0.4.2",
@@ -228,6 +235,13 @@
       "Version": "1.8.0",
       "Source": "Repository"
     },
+    "highr": {
+      "Package": "highr",
+      "Version": "0.8",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "4dc5bb88961e347a0f4d8aad597cbfac"
+    },
     "htmltools": {
       "Package": "htmltools",
       "Version": "0.5.9",
@@ -257,6 +271,13 @@
       "Package": "jsonlite",
       "Version": "2.0.0",
       "Source": "Repository"
+    },
+    "knitr": {
+      "Package": "knitr",
+      "Version": "1.31",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "c3994c036d19fc22c5e2a209c8298bfb"
     },
     "later": {
       "Package": "later",
@@ -288,6 +309,13 @@
       "Package": "magrittr",
       "Version": "2.0.4",
       "Source": "Repository"
+    },
+    "markdown": {
+      "Package": "markdown",
+      "Version": "1.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "61e4a10781dd00d7d81dd06ca9b94e95"
     },
     "memoise": {
       "Package": "memoise",
@@ -373,6 +401,13 @@
       "Version": "1.1.7",
       "Source": "Repository"
     },
+    "rmarkdown": {
+      "Package": "rmarkdown",
+      "Version": "2.6",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "bc4bac38960b446c183957bfd563e763"
+    },
     "rstudioapi": {
       "Package": "rstudioapi",
       "Version": "0.13",
@@ -398,6 +433,30 @@
       "RemoteRef": "master",
       "RemoteSha": "60db1e02b03d8e6fb146c9bb1bbfbce269231add",
       "Hash": "1e32111f1a62bd24b8604353665f8e2f"
+    },
+    "shiny.i18n": {
+      "Package": "shiny.i18n",
+      "Version": "0.2.1",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "DavidBarke",
+      "RemoteRepo": "shiny.i18n",
+      "RemoteRef": "master",
+      "RemoteSha": "41c59a2659f327848aed5b1e6e3a61381446b47f",
+      "Hash": "46a7752d78b33724f27323b3e2998ebc"
+    },
+    "shinybrowser": {
+      "Package": "shinybrowser",
+      "Version": "0.0.0.9001",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "daattali",
+      "RemoteRepo": "shinybrowser",
+      "RemoteRef": "master",
+      "RemoteSha": "114e4e0887a79c9d01620bb1df393add78ed1b47",
+      "Hash": "0abe8c6ee8bcdd0a48fdb2d04a01ddc3"
     },
     "shinyjs": {
       "Package": "shinyjs",
@@ -452,6 +511,13 @@
       "Repository": "CRAN",
       "Hash": "6ea435c354e8448819627cf686f66e0a"
     },
+    "tinytex": {
+      "Package": "tinytex",
+      "Version": "0.29",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "f0b0ba735febac9a8344253ae6fa93f5"
+    },
     "utf8": {
       "Package": "utf8",
       "Version": "1.1.4",
@@ -477,6 +543,13 @@
       "Source": "Repository",
       "Repository": "CRAN",
       "Hash": "caf4781c674ffa549a4676d2d77b13cc"
+    },
+    "xfun": {
+      "Package": "xfun",
+      "Version": "0.21",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "f3ddcca198959a42e8cb6b06c30d4f1e"
     },
     "xtable": {
       "Package": "xtable",

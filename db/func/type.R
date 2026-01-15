@@ -13,10 +13,21 @@ db_add_type <- function(db, type_name) {
     removed = 0
   )
 
-  DBI::dbAppendTable(db, "type", entry)
+  success <- tryCatch(
+    DBI::dbAppendTable(db, "type", entry),
+    `Rcpp::exception` = function(e) {
+      if (stringr::str_detect(e$message, "UNIQUE.*type_name")) {
+        return(0)
+      }
+
+      stop(e)
+    }
+  )
 
   id <- max(DBI::dbGetQuery(db, "SELECT rowid FROM type")$rowid)
   dir_create("type", id)
+
+  success
 }
 
 
@@ -54,10 +65,19 @@ db_remove_type <- function(db, type_id) {
 #'
 #' @export
 db_set_type_name <- function(db, type_id, type_name) {
-  DBI::dbExecute(
-    db,
-    "UPDATE type SET type_name = ? WHERE rowid = ?",
-    params = list(type_name, type_id)
+  tryCatch(
+    DBI::dbExecute(
+      db,
+      "UPDATE type SET type_name = ? WHERE rowid = ?",
+      params = list(type_name, type_id)
+    ),
+    `Rcpp::exception` = function(e) {
+      if (stringr::str_detect(e$message, "UNIQUE.*type_name")) {
+        return(0)
+      }
+
+      stop(e)
+    }
   )
 }
 

@@ -6,20 +6,20 @@ group_ui <- function(id) {
       width = 6,
       add_object_box_ui(
         id = ns("add_group"),
-        title = "Gruppe hinzufügen",
-        label = "Gruppenname",
-        placeholder = "Versuchsaufbau"
+        title = i18n$t("add_group"),
+        label = i18n$t("group_name"),
+        placeholder = NULL
       ),
       object_table_box_ui(
         id = ns("group_table"),
-        title = "Gruppentabelle"
+        title = i18n$t("group_table")
       )
     ),
     shiny::column(
       width = 6,
       show_connections_ui(
         id = ns("show_types"),
-        title = "Typen anzeigen"
+        title = i18n$t("show_types")
       )
     )
   )
@@ -55,19 +55,19 @@ group_server <- function(id, .values) {
       )
 
       label <- list(
-        add_label = "Gruppe hinzufügen",
-        change_connections = "Typen bearbeiten für Gruppe",
-        change_name = "Gruppenname bearbeiten",
-        colnames = c("Gruppenname", "Typen bearbeiten", "Entfernen"),
-        connection_modification = "Die Typen von Gruppe",
-        connections = "Typen",
-        connection_name = "Typname",
-        new_name = "Neuer Gruppenname",
-        object = "Gruppe",
-        object_name_with_article = "Der Gruppenname",
-        object_with_article = "Die Gruppe",
-        object_with_small_article = "die Gruppe",
-        remove_btn_title = "Gruppe entfernen"
+        add_label = "add_group",
+        change_connections = "edit_group_types",
+        change_name = "edit_group_name",
+        colnames = c("group_name", "edit_types", "remove"),
+        connection_modification = "${types_of_group}",
+        connections = "types",
+        connection_name = "type_name",
+        new_name = "new_group_name",
+        object = "group",
+        object_name_with_article = "${group_name_with_article}",
+        object_with_article = "${group_with_article}",
+        object_with_small_article = "${group_with_small_article}",
+        remove_btn_title = "remove_group"
       )
 
       add_object_server(

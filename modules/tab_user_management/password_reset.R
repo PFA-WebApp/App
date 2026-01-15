@@ -6,14 +6,14 @@ password_reset_ui <- function(id) {
   bs4Dash::box(
     width = NULL,
     status = "primary",
-    title = "Nutzerpasswort zurücksetzen",
+    title = i18n$t("reset_password"),
     solidHeader = TRUE,
     shiny::uiOutput(
       outputId = ns("user_name")
     ),
     shiny::actionButton(
       inputId = ns("start_reset"),
-      label = "Zurücksetzen",
+      label = i18n$t("reset"),
       width = "100%"
     )
   )
@@ -35,8 +35,9 @@ password_reset_server <- function(id, .values) {
       output$user_name <- shiny::renderUI({
         shiny::selectInput(
           inputId = ns("user_id"),
-          label = "Benutzername",
-          choices = user_choices_r()
+          label = .values$i18n$t("user_name"),
+          choices = user_choices_r(),
+          selectize = .values$device$large
         )
       })
 
@@ -47,23 +48,22 @@ password_reset_server <- function(id, .values) {
       shiny::observeEvent(input$start_reset, {
         shiny::showModal(shiny::modalDialog(
           title = htmltools::tagList(
-            "Passwort zurücksetzen",
+            .values$i18n$t("reset_password"),
             shiny::modalButton(
               label = NULL,
               icon = shiny::icon("window-close")
             )
           ),
           easyClose = TRUE,
-          htmltools::div(
-            paste0(
-              "Bist Du sicher, dass Du das Passwort für \"",
-              user_name_r(),
-              "\" zurücksetzen möchtest?"
+          htmltools::p(
+            .values$i18n$t(
+              "msg_confirm_reset_password",
+              user_name_r()
             )
           ),
           footer = shiny::actionButton(
             inputId = ns("confirm_reset"),
-            label = "Ja"
+            label = .values$i18n$t("confirm")
           )
         ))
       })
@@ -74,12 +74,10 @@ password_reset_server <- function(id, .values) {
         reset_pwd <- "1234"
 
         shiny::showNotification(
-          ui = paste0(
-            "Das Passwort für \"",
+          ui = .values$i18n$t(
+            "msg_reset_password_successful",
             user_name_r(),
-            "\" wurde erfolgreich auf \"",
-            reset_pwd,
-            "\" zurückgesetzt."
+            reset_pwd
           ),
           type = "warning",
           duration = NULL

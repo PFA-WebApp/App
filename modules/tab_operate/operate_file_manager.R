@@ -84,6 +84,14 @@ operate_file_manager_server <- function(id,
         file.path(tbl$path, tbl$file)
       })
 
+      file_table_names_r <- shiny::reactive({
+        .values$language_rv()
+        c(
+          .values$i18n$t_chr("file"),
+          if (length(object_ids_r()) > 1) .values$i18n$t_chr(label$object_name)
+        )
+      })
+
       output$files <- DT::renderDataTable({
         files_ui <- purrr::map2_chr(
           files_r(), href_r(),
@@ -96,17 +104,24 @@ operate_file_manager_server <- function(id,
         )
 
         tbl <- tibble::tibble(
-          Datei = files_ui
+          file = files_ui
         )
 
         # Add object_name_information (multiple groups)
         if (length(object_ids_r()) > 1) {
-          tbl[[label$object_name]] <- files_table_r()$name
+          tbl[[settings$table_name]] <- files_table_r()$name
         }
+
+        names(tbl) <- file_table_names_r()
 
         DT::datatable(
           tbl,
-          escape = FALSE
+          escape = FALSE,
+          options = list(
+            language = list(
+              url = .values$dt_language_r()
+            )
+          )
         )
       })
 
@@ -114,7 +129,7 @@ operate_file_manager_server <- function(id,
         if (length(files_r())) {
           shiny::downloadButton(
             outputId = ns("download_all"),
-            label = "Verzeichnis herunterladen",
+            label = .values$i18n$t("download_directory"),
             width = "100%",
             style = "display: block"
           )
@@ -135,7 +150,7 @@ operate_file_manager_server <- function(id,
 
       download_all_name_r <- shiny::reactive({
         name <- type_name_r() %_%
-          .values$settings$table_dict[settings$table_name] %>%
+          .values$settings$table_dict()[[settings$table_name]] %>%
           paste0(".zip")
         stringr::str_replace_all(name, "\\s", "_")
       })

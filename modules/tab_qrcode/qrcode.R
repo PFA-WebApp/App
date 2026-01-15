@@ -4,7 +4,7 @@ qrcode_ui <- function(id) {
   bs4Dash::box(
     width = 12,
     status = "success",
-    title = "QR-Code generieren",
+    title = i18n$t("generate_qrcode"),
     solidHeader = TRUE,
     shiny::uiOutput(
       outputId = ns("type")
@@ -24,7 +24,7 @@ qrcode_ui <- function(id) {
         object_quantity_input_ui(
           id = ns("width"),
           old_quantity = 210,
-          label = "Breite (in mm)"
+          label = i18n$t("width_in_mm")
         )
       ),
       shiny::column(
@@ -32,7 +32,7 @@ qrcode_ui <- function(id) {
         object_quantity_input_ui(
           id = ns("height"),
           old_quantity = 297,
-          label = "Höhe (in mm)"
+          label = i18n$t("height_in_mm")
         )
       )
     ),
@@ -60,9 +60,10 @@ qrcode_server <- function(id, .values) {
       output$type <- shiny::renderUI({
         shiny::selectInput(
           inputId = ns("type"),
-          label = "Typ",
+          label = .values$i18n$t("type"),
           choices = types_r(),
-          width = "100%"
+          width = "100%",
+          selectize = .values$device$large
         )
       })
 
@@ -74,7 +75,7 @@ qrcode_server <- function(id, .values) {
       output$base_url <- shiny::renderUI({
         shiny::textInput(
           inputId = ns("base_url"),
-          label = "Serverdomäne",
+          label = .values$i18n$t("server_domain"),
           value = .values$yaml$url
         )
       })
@@ -144,7 +145,8 @@ qrcode_server <- function(id, .values) {
                   PDF = "pdf",
                   PNG = "png",
                   SVG = "svg"
-                )
+                ),
+                selectize = .values$device$large
               )
             ),
             shiny::column(
@@ -163,7 +165,10 @@ qrcode_server <- function(id, .values) {
 
         shiny::downloadButton(
           outputId = ns("download"),
-          label = paste("Als", toupper(file_type_r()), "herunterladen"),
+          label = .values$i18n$t(
+            "download_as",
+            toupper(file_type_r())
+          ),
           icon = shiny::icon(icon_name),
           style = "width: 100%"
         )
@@ -193,9 +198,9 @@ qrcode_server <- function(id, .values) {
         .values = .values,
         min_r = min_width_r,
         min_message_r = shiny::reactive({
-          "Die minimale Seitenbreite muss mindestens 32 mm betragen.\n\n"
+          "err_min_qrcode_width"
         }),
-        object_label = "Die Seitenbreite"
+        object_label = "${page_width_with_article}"
       )
 
       min_height_r <- shiny::reactive(47)
@@ -205,9 +210,9 @@ qrcode_server <- function(id, .values) {
         .values = .values,
         min_r = min_height_r,
         min_message_r = shiny::reactive({
-          "Die minimale Seitenhöhe muss mindestens 47 mm betragen.\n\n"
+          "err_min_qrcode_height"
         }),
-        object_label = "Die Seitenbreite"
+        object_label = "${page_height_with_article}"
       )
     }
   )

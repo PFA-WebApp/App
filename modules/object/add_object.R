@@ -12,10 +12,12 @@ add_object_ui <- function(...,
       placeholder = placeholder
     ),
     shiny::uiOutput(
-      outputId = ns("wrong_name_length")
+      outputId = ns("wrong_name_length"),
+      class = "pfa-error"
     ),
     shiny::uiOutput(
-      outputId = ns("name_taken")
+      outputId = ns("name_taken"),
+      class = "pfa-error"
     ),
     ...,
     shiny::uiOutput(
@@ -49,14 +51,17 @@ add_object_box_ui <- function(...,
       placeholder = placeholder
     ),
     shiny::uiOutput(
-      outputId = ns("wrong_name_length")
+      outputId = ns("wrong_name_length"),
+      class = "pfa-error"
     ),
     shiny::uiOutput(
-      outputId = ns("name_taken")
+      outputId = ns("name_taken"),
+      class = "pfa-error"
     ),
     ...,
     shiny::uiOutput(
-      outputId = ns("add_object")
+      outputId = ns("add_object"),
+      class = "pfa-error"
     )
   )
 }
@@ -76,40 +81,30 @@ add_object_server <- function(id,
       on_add_rv <- shiny::reactiveVal(0)
 
       output$wrong_name_length <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !name_too_short_r(),
-            paste(
-              label$object_name_with_article,
-              "benötigt mindestens",
-              as_german(.values$settings[[settings$length_name]]$length$min),
-              "Zeichen!\n\n"
-            )
-          ),
-          shiny::need(
-            !name_too_long_r(),
-            paste(
-              label$object_name_with_article,
-              "darf nicht länger sein als",
-              as_german(.values$settings[[settings$length_name]]$length$max),
-              "Zeichen!\n\n"
-            )
-          ),
-          errorClass = "PFA"
-        )
+        if (name_too_short_r()) {
+          return(.values$i18n$t(
+            "err_min_chars",
+            label$object_name_with_article,
+            format_number(.values$settings[[settings$length_name]]$length$min)
+          ))
+        }
+
+        if (name_too_long_r()) {
+          return(.values$i18n$t(
+            "err_max_chars",
+            label$object_name_with_article,
+            format_number(.values$settings[[settings$length_name]]$length$max)
+          ))
+        }
       })
 
       output$name_taken <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !name_taken_r(),
-            paste(
-              label$object_name_with_article,
-              "existiert bereits!\n\n"
-            )
-          ),
-          errorClass = "PFA"
-        )
+        if (name_taken_r()) {
+          .values$i18n$t(
+            "err_name_taken",
+            label$object_name_with_article
+          )
+        }
       })
 
       output$add_object <- shiny::renderUI({
@@ -117,14 +112,14 @@ add_object_server <- function(id,
           shinyjs::disabled(
             shiny::actionButton(
               inputId = ns("add_object"),
-              label = label$add_label,
+              label = .values$i18n$t(label$add_label),
               width = "100%"
             )
           )
         } else {
           shiny::actionButton(
             inputId = ns("add_object"),
-            label = label$add_label,
+            label = .values$i18n$t(label$add_label),
             width = "100%"
           )
         }
@@ -164,20 +159,35 @@ add_object_server <- function(id,
           value = ""
         )
 
-        shiny::showNotification(
-          ui = paste0(
-            label$object_with_article,
-            " \"",
-            input$object_name,
-            "\" wurde erfolgreich hinzugefügt."
+        success <- db$func$add_object(.values$db, input$object_name)
+
+        if (success) {
+          shiny::showNotification(
+            ui = .values$i18n$t(
+              "msg_object_added_successfully",
+              label$object_with_article,
+              input$object_name
+            ),
+            duration = 5,
+            type = "warning"
           )
-        )
+        } else {
+          shiny::showNotification(
+            ui = .values$i18n$t(
+              "err_object_added_from_another_user",
+              label$object_with_article,
+              input$object_name
+            ),
+            duration = 5,
+            type = "error"
+          )
+        }
 
-        db$func$add_object(.values$db, input$object_name)
-
-        .values$update[[settings$update_name]](
-          .values$update[[settings$update_name]]() + 1
-        )
+        purrr::walk(settings$update_name, function(update_name) {
+          .values$update[[update_name]](
+            .values$update[[update_name]]() + 1
+          )
+        })
 
         on_add_rv(on_add_rv() + 1)
       })

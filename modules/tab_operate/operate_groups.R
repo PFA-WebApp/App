@@ -5,9 +5,9 @@ operate_groups_ui <- function(id) {
     width = NULL,
     solidHeader = TRUE,
     status = "primary",
-    title = "Gruppen des ausgewählten Typs",
+    title = i18n$t("groups_of_selected_type"),
     htmltools::p(
-      "Klicke auf eine Gruppe, um weitere Typen dieser Gruppe anzuzeigen."
+      i18n$t("click_group_to_show_types")
     ),
     shiny::uiOutput(
       outputId = ns("groups"),
@@ -51,7 +51,7 @@ operate_groups_server <- function(id, .values, type_id_r) {
 
                   shiny::showModal(shiny::modalDialog(
                     title = htmltools::tagList(
-                      "Enthaltene Typen",
+                      .values$i18n$t("included_types"),
                       shiny::modalButton(
                         label = NULL,
                         icon = shiny::icon("window-close")
@@ -59,8 +59,7 @@ operate_groups_server <- function(id, .values, type_id_r) {
                     ),
                     easyClose = TRUE,
                     htmltools::p(
-                      "Klicke auf einen Typen, um die Ausleihe bzw. die Rückgabe
-                    vorzubereiten."
+                      .values$i18n$t("click_type_to_prepare_operate")
                     ),
                     htmltools::br(),
                     operate_group_types_ui(
@@ -85,7 +84,7 @@ operate_groups_server <- function(id, .values, type_id_r) {
         } else {
           htmltools::tags$li(
             class = "st-badge bordered bg-lightgray",
-            "Keine Gruppe vorhanden"
+            .values$i18n$t("no_group_available")
           )
         }
       })

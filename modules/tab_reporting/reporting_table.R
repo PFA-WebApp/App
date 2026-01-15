@@ -15,6 +15,8 @@ reporting_table_server <- function(id, .values, settings, object_id_r = NULL) {
 
       borrow_summary_r <- shiny::reactive({
         .values$update$circulation()
+        .values$update$subtype()
+        .values$update$type()
 
         switch(
           settings$summary,
@@ -30,7 +32,7 @@ reporting_table_server <- function(id, .values, settings, object_id_r = NULL) {
 
       formatted_borrow_summary_r <- shiny::reactive({
         if (settings$summary %in% c("user", "all")) {
-          borrow_summary_r() %>%
+          tbl <- borrow_summary_r() %>%
             dplyr::mutate(
               type_id = db_get_type_id_by_subtype_id(.values$db, subtype_id),
               type_name = db_get_type_name(.values$db, type_id),
@@ -38,8 +40,7 @@ reporting_table_server <- function(id, .values, settings, object_id_r = NULL) {
             ) %>%
             dplyr::arrange(type_name, subtype_name) %>%
             dplyr::select(
-              Typ = type_name, Untertyp = subtype_name, Menge = quantity,
-              `Zuletzt ausgeliehen` = time
+              type_name, subtype_name, quantity, time
             )
         } else {
           borrow_summary_r() %>%
@@ -48,13 +49,43 @@ reporting_table_server <- function(id, .values, settings, object_id_r = NULL) {
             ) %>%
             dplyr::arrange(user_name) %>%
             dplyr::select(
-              Name = user_name, Menge = quantity, `Zuletzt ausgeliehen` = time
+              user_name, quantity, time
             )
         }
       })
 
+      tbl_names_r <- shiny::reactive({
+        .values$language_rv()
+
+        if (settings$summary %in% c("user", "all")) {
+          c(
+            .values$i18n$t_chr("type"),
+            .values$i18n$t_chr("subtype"),
+            .values$i18n$t_chr("quantity"),
+            .values$i18n$t_chr("last_borrowed")
+          )
+        } else {
+          c(
+            .values$i18n$t_chr("user_name"),
+            .values$i18n$t_chr("quantity"),
+            .values$i18n$t_chr("last_borrowed")
+          )
+        }
+      })
+
       output$table <- DT::renderDataTable({
-        DT::datatable(formatted_borrow_summary_r())
+        tbl <- formatted_borrow_summary_r()
+
+        names(tbl) <- tbl_names_r()
+
+        DT::datatable(
+          tbl,
+          options = list(
+            language = list(
+              url = .values$dt_language_r()
+            )
+          )
+        )
       })
     }
   )

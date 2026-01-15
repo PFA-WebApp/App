@@ -23,17 +23,27 @@ show_connections_server <- function(id, .values, settings, db, label) {
       ns <- session$ns
 
       objects_r <- shiny::reactive({
-        .values$update[[settings$update_name]]()
+        purrr::walk(settings$update_name, function(update_name) {
+          .values$update[[update_name]]()
+        })
+
         db$func$get_objects(.values$db)
       })
 
       output$select_object <- shiny::renderUI({
         shiny::selectInput(
           inputId = ns("object"),
-          label = label$object,
+          label = .values$i18n$t(label$object),
           choices = objects_r(),
-          selected = NA
+          selected = NA,
+          selectize = .values$device$large
         )
+      })
+
+      colnames_r <- shiny::reactive({
+        .values$language_rv()
+
+        .values$i18n$t_chr(label$connection_name)
       })
 
       output$connections_table <- DT::renderDataTable({
@@ -45,7 +55,12 @@ show_connections_server <- function(id, .values, settings, db, label) {
 
         DT::datatable(
           tbl,
-          colnames = label$connection_name
+          colnames = colnames_r(),
+          options = list(
+            language = list(
+              url = .values$dt_language_r()
+            )
+          )
         )
       })
     }

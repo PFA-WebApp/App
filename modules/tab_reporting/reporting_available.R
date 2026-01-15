@@ -5,9 +5,13 @@ reporting_available_ui <- function(id) {
     width = 12,
     solidHeader = TRUE,
     status = "primary",
-    title = "Bestandsübersicht",
+    title = i18n$t("stock_overview"),
     shiny::uiOutput(
       outputId = ns("type")
+    ),
+    shiny::checkboxInput(
+      inputId = ns("critical"),
+      label = i18n$t("only_critical_stocks")
     ),
     DT::dataTableOutput(
       outputId = ns("table")
@@ -30,30 +34,57 @@ reporting_available_server <- function(id, .values) {
       output$type <- shiny::renderUI({
         shiny::selectInput(
           inputId = ns("type"),
-          label = "Typ",
-          choices = type_choices_r()
+          label = .values$i18n$t("type"),
+          choices = type_choices_r(),
+          selectize = .values$device$large
         )
       })
 
       available_table_r <- shiny::reactive({
         .values$update$circulation()
-        db_get_available_summary(.values$db, shiny::req(input$type))
+        tbl <- db_get_available_summary(.values$db, shiny::req(input$type))
+
+        if (input$critical) {
+          tbl <- tbl %>%
+            dplyr::filter(quantity <= critical_quantity)
+        }
+
+        tbl
+      })
+
+      tbl_names_r <- shiny::reactive({
+        .values$language_rv()
+
+        c(
+          .values$i18n$t_chr("subtype"),
+          .values$i18n$t_chr("available"),
+          .values$i18n$t_chr("max_available")
+        )
       })
 
       formatted_available_table_r <- shiny::reactive({
-        available_table_r() %>%
+        tbl <- available_table_r() %>%
           dplyr::mutate(
             subtype_name = db_get_subtype_name(.values$db, subtype_id)
           ) %>%
           dplyr::select(
-            Untertyp = subtype_name,
-            "Verfügbar" = quantity,
-            "Maximal verfügbar" = max_quantity
+            subtype_name, quantity, max_quantity
           )
+
+        names(tbl) <- tbl_names_r()
+
+        tbl
       })
 
       output$table <- DT::renderDataTable({
-        DT::datatable(formatted_available_table_r())
+        DT::datatable(
+          formatted_available_table_r(),
+          options = list(
+            language = list(
+              url = .values$dt_language_r()
+            )
+          )
+        )
       })
     }
   )

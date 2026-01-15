@@ -24,7 +24,7 @@ container_ui <- function(id) {
       title = bs4Dash::dashboardBrand(
         title = "Sensotheka",
         image = "img/sensotheka.png",
-        href = "https://github.com/PFA-WebApp/App"
+        href = "https://pfa-webapp.github.io/Docs/"
       ),
       rightUi = htmltools::tagList(
         htmltools::tags$li(
@@ -35,6 +35,19 @@ container_ui <- function(id) {
             href = "https://github.com/PFA-WebApp/App",
             shiny::icon("github")
           )
+        ),
+        htmltools::tags$li(
+          # Fake dropdown
+          class = "dropdown",
+          shiny::actionLink(
+            inputId = ns("refresh_db"),
+            label = NULL,
+            icon = shiny::icon("sync"),
+            class = "refresh-link"
+          )
+        ),
+        language_selector(
+          inputId = ns("language")
         )
       )
     ),
@@ -118,6 +131,12 @@ container_server <- function(id, .values) {
         .values = .values
       )
 
+      shiny::observeEvent(input$language, {
+        shiny.i18n::update_lang(.values$app_session, input$language)
+        .values$i18n$set_language(input$language)
+        .values$language_rv(input$language)
+      })
+
       servers <- list(
         login = function() {
           login_server(
@@ -182,6 +201,18 @@ container_server <- function(id, .values) {
           id = sidebar_menu_return$sidebar_r(),
           servers = servers,
           called_rv = called_rv
+        )
+      })
+
+      shiny::observeEvent(input$refresh_db, {
+        purrr::walk(.values$update, function(rv) {
+          rv(rv() + 1)
+        })
+
+        shiny::showNotification(
+          ui = .values$i18n$t("data_refreshed"),
+          duration = 5,
+          type = "warning"
         )
       })
     }

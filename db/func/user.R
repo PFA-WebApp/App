@@ -31,7 +31,16 @@ db_add_user <- function(db,
     removed = 0
   )
 
-  DBI::dbAppendTable(db, "user", entry)
+  tryCatch(
+    DBI::dbAppendTable(db, "user", entry),
+    `Rcpp::exception` = function(e) {
+      if (stringr::str_detect(e$message, "user\\.name")) {
+        return(0)
+      }
+
+      stop(e)
+    }
+  )
 }
 
 
@@ -81,10 +90,19 @@ db_get_user_name <- function(db, user_id) {
 #'
 #' @export
 db_set_user_name <- function(db, user_id, user_name) {
-  DBI::dbExecute(
-    db,
-    "UPDATE user SET name = ? WHERE rowid = ?",
-    params = list(user_name, user_id)
+  tryCatch(
+    DBI::dbExecute(
+      db,
+      "UPDATE user SET name = ? WHERE rowid = ?",
+      params = list(user_name, user_id)
+    ),
+    `Rcpp::exception` = function(e) {
+      if (stringr::str_detect(e$message, "UNIQUE.*user\\.name")) {
+        return(0)
+      }
+
+      stop(e)
+    }
   )
 }
 

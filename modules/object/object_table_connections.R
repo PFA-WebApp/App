@@ -64,10 +64,9 @@ object_table_connections_server <- function(id,
       })
 
       shiny::observeEvent(input$connections, {
-        title <- paste0(
+        title <- .values$i18n$t(
           label$change_connections,
-          " \"", db$func$get_object_name(.values$db, object_id_r()),
-          "\""
+          db$func$get_object_name(.values$db, object_id_r())
         )
 
         shiny::showModal(shiny::modalDialog(
@@ -81,14 +80,15 @@ object_table_connections_server <- function(id,
           easyClose = TRUE,
           shiny::selectInput(
             inputId = ns("object_connections"),
-            label = label$connections,
+            label = .values$i18n$t(label$connections),
             selected = object_connections_r(),
             choices = db$func$get_possible_connections(.values$db),
-            multiple = TRUE
+            multiple = TRUE,
+            selectize = .values$device$large
           ),
           footer = shiny::actionButton(
             inputId = ns("confirm_object_connections"),
-            label = "Bestätigen"
+            label = .values$i18n$t("confirm")
           )
         ))
       })
@@ -120,11 +120,10 @@ object_table_connections_server <- function(id,
         }
 
         shiny::showNotification(
-          ui = paste0(
+          ui = .values$i18n$t(
+            "msg_connection_modification_successful",
             label$connection_modification,
-            " \"",
-            db$func$get_object_name(.values$db, object_id_r()),
-            "\" wurden erfolgreich bearbeitet."
+            db$func$get_object_name(.values$db, object_id_r())
           ),
           type = "warning",
           duration = 5

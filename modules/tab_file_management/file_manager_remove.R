@@ -43,21 +43,20 @@ file_manager_remove_server <- function(id,
       shiny::observeEvent(file_r(), {
         shiny::showModal(shiny::modalDialog(
           title = htmltools::tagList(
-            "Datei löschen",
+            .values$i18n$t("remove_file"),
             shiny::modalButton(
               label = NULL,
               icon = shiny::icon("window-close")
             )
           ),
           easyClose = TRUE,
-          paste0(
-            "Bist Du sicher, dass Du die Datei \"",
-            file_r(),
-            "\" löschen möchtest?"
+          .values$i18n$t(
+            "msg_confirm_file_remove",
+            file_r()
           ),
           footer = shiny::actionButton(
             inputId = ns("confirm_remove"),
-            label = "Bestätigen"
+            label = .values$i18n$t("confirm")
           )
         ))
       }, priority = -1)
@@ -68,10 +67,10 @@ file_manager_remove_server <- function(id,
         file.remove(file_path_r())
 
         shiny::showNotification(
-          ui = paste0(
-            "Die Datei \"",
-            file_r(),
-            "\" wurde erfolgreich gelöscht."
+          ui = .values$i18n$t(
+            "msg_remove_successful",
+            "${file_with_article} \"${p_[[2]]}\"",
+            file_r()
           ),
           type = "warning",
           duration = 5

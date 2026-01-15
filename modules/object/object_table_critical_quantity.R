@@ -1,4 +1,4 @@
-object_table_quantity_ui <- function(id, object_id, quantity) {
+object_table_critical_quantity_ui <- function(id, object_id, quantity) {
   ns <- shiny::NS(id)
 
   as.character(
@@ -24,11 +24,11 @@ object_table_quantity_ui <- function(id, object_id, quantity) {
   )
 }
 
-object_table_quantity_server <- function(id,
-                                         .values,
-                                         settings,
-                                         db,
-                                         label
+object_table_critical_quantity_server <- function(id,
+                                                  .values,
+                                                  settings,
+                                                  db,
+                                                  label
 ) {
   required <- list(
     settings = "update_name",
@@ -38,9 +38,9 @@ object_table_quantity_server <- function(id,
       "set_object_quantity"
     ),
     label = c(
-      "change_quantity",
-      "new_quantity",
-      "object_quantity_with_article"
+      "change_critical_quantity",
+      "new_critical_quantity",
+      "object_critical_quantity_with_article"
     )
   )
 
@@ -73,7 +73,7 @@ object_table_quantity_server <- function(id,
       shiny::observeEvent(input$quantity, {
         shiny::showModal(shiny::modalDialog(
           title = htmltools::tagList(
-            .values$i18n$t(label$change_quantity),
+            .values$i18n$t(label$change_critical_quantity),
             shiny::modalButton(
               label = NULL,
               icon = shiny::icon("window-close")
@@ -83,7 +83,7 @@ object_table_quantity_server <- function(id,
           object_quantity_input_ui(
             id = ns("object_quantity_input"),
             old_quantity = old_quantity_r(),
-            label = .values$i18n$t(label$new_quantity)
+            label = .values$i18n$t(label$new_critical_quantity)
           ),
           footer = shiny::uiOutput(
             outputId = ns("confirm_object_quantity")
@@ -120,7 +120,7 @@ object_table_quantity_server <- function(id,
           shiny::showNotification(
             ui = .values$i18n$t(
               "msg_obj_changed_to",
-              label$object_quantity_with_article,
+              label$object_critical_quantity_with_article,
               quantity_return$quantity_r()
             ),
             type = "warning",
@@ -142,7 +142,7 @@ object_table_quantity_server <- function(id,
           shiny::showNotification(
             ui = .values$i18n$t(
               "err_obj_could_not_be_changed",
-              label$object_quantity_with_article
+              label$object_critical_quantity_with_article
             ),
             type = "error",
             duration = 5
@@ -165,9 +165,9 @@ object_table_quantity_server <- function(id,
       quantity_return <- object_quantity_input_server(
         id = "object_quantity_input",
         .values = .values,
-        min_r = min_r,
+        min_r = shiny::reactive(0),
         min_message_r = shiny::reactive({
-          "err_min_subtype_quantity"
+          "err_min_critical_quantity"
         })
       )
     }

@@ -5,20 +5,22 @@ settings_password_ui <- function(id) {
     width = NULL,
     solidHeader = TRUE,
     status = "primary",
-    title = "Passwort ändern",
+    title = i18n$t("edit_password"),
     shiny::passwordInput(
       inputId = ns("user_password_1"),
-      label = "Neues Passwort"
+      label = i18n$t("new_password")
     ),
     shiny::uiOutput(
-      outputId = ns("wrong_password_length")
+      outputId = ns("wrong_password_length"),
+      class = "pfa-error"
     ),
     shiny::passwordInput(
       inputId = ns("user_password_2"),
-      label = "Neues Passwort bestätigen"
+      label = i18n$t("confirm_new_password")
     ),
     shiny::uiOutput(
-      outputId = ns("non_matching_passwords")
+      outputId = ns("non_matching_passwords"),
+      class = "pfa-error"
     ),
     shiny::uiOutput(
       outputId = ns("change_password")
@@ -34,35 +36,27 @@ settings_password_server <- function(id, .values) {
       ns <- session$ns
 
       output$wrong_password_length <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !password_too_short_r(),
-            paste(
-              "Das Passwort benötigt mindestens",
-              as_german(.values$settings$password$length$min),
-              "Zeichen!\n\n"
-            )
-          ),
-          shiny::need(
-            !password_too_long_r(),
-            paste(
-              "Das Passwort darf nicht länger sein als",
-              as_german(.values$settings$password$length$max),
-              "Zeichen!\n\n"
-            )
-          ),
-          errorClass = "PFA"
-        )
+        if (password_too_short_r()) {
+          return(.values$i18n$t(
+            "err_min_chars",
+            "${password_with_article}",
+            format_number(.values$settings$password$length$min)
+          ))
+        }
+
+        if (password_too_long_r()) {
+          return(.values$i18n$t(
+            "err_max_chars",
+            "${password_with_article}",
+            format_number(.values$settings$password$length$max)
+          ))
+        }
       })
 
       output$non_matching_passwords <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !non_matching_passwords_r(),
-            "Die Passwörter stimmen nicht überein!\n\n"
-          ),
-          errorClass = "PFA"
-        )
+        if (non_matching_passwords_r()) {
+          .values$i18n$t("err_non_matching_passwords")
+        }
       })
 
       password_too_short_r <- shiny::reactive({
@@ -88,14 +82,14 @@ settings_password_server <- function(id, .values) {
           shinyjs::disabled(
             shiny::actionButton(
               inputId = ns("change_password"),
-              label = "Passwort ändern",
+              label = .values$i18n$t("edit_password"),
               width = "100%"
             )
           )
         } else {
           shiny::actionButton(
             inputId = ns("change_password"),
-            label = "Passwort ändern",
+            label = .values$i18n$t("edit_password"),
             width = "100%"
           )
         }
@@ -116,8 +110,10 @@ settings_password_server <- function(id, .values) {
 
         if (.values$yaml$showcase && .values$user$id() %in% 1:3) {
           shiny::showNotification(
-            ui = "Das Passwort der Standardnutzer kann in der Testversion nicht
-            geändert werden.",
+            ui = .values$i18n$t(
+              "err_edit_standard_user",
+              "${password_with_article}"
+            ),
             type = "error",
             duration = 5
           )
@@ -126,7 +122,7 @@ settings_password_server <- function(id, .values) {
         }
 
         shiny::showNotification(
-          ui = "Dein Passwort wurde erfolgreich geändert.",
+          ui = .values$i18n$t("msg_password_change_successful"),
           type = "warning",
           duration = 5
         )

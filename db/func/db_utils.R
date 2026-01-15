@@ -20,12 +20,8 @@ db_length <- function(db, name) {
 #'
 #' @export
 db_get_table <- function(db, name, include_removed = FALSE) {
-  fields <- c("rowid", DBI::dbListFields(db, name))
-
   query <- paste(
-    "SELECT",
-    paste(fields, collapse = ", "),
-    "FROM",
+    "SELECT * FROM",
     name
   )
 

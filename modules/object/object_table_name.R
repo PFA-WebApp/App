@@ -67,7 +67,10 @@ object_table_name_server <- function(id,
       })
 
       old_object_name_r <- shiny::reactive({
-        .values$update[[settings$update_name]]()
+        purrr::walk(settings$update_name, function(update_name) {
+          .values$update[[update_name]]()
+        })
+
         db$func$get_object_name(.values$db, object_id_r())
       })
 
@@ -76,7 +79,7 @@ object_table_name_server <- function(id,
       shiny::observeEvent(object_id_r(), {
         shiny::showModal(shiny::modalDialog(
           title = htmltools::tagList(
-            label$change_name,
+            .values$i18n$t(label$change_name),
             shiny::modalButton(
               label = NULL,
               icon = shiny::icon("window-close")
@@ -85,14 +88,16 @@ object_table_name_server <- function(id,
           easyClose = TRUE,
           shiny::textInput(
             inputId = ns("object_name"),
-            label = label$new_name,
+            label = .values$i18n$t(label$new_name),
             value = old_object_name_r()
           ),
           shiny::uiOutput(
-            outputId = ns("wrong_name_length")
+            outputId = ns("wrong_name_length"),
+            class = "pfa-error"
           ),
           shiny::uiOutput(
-            outputId = ns("name_taken")
+            outputId = ns("name_taken"),
+            class = "pfa-error"
           ),
           footer = shiny::uiOutput(
             outputId = ns("confirm_object_name")
@@ -101,40 +106,30 @@ object_table_name_server <- function(id,
       }, priority = -1)
 
       output$wrong_name_length <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !name_too_short_r(),
-            paste(
-              label$object_name_with_article,
-              "benötigt mindestens",
-              as_german(.values$settings[[settings$length_name]]$length$min),
-              "Zeichen!\n\n"
-            )
-          ),
-          shiny::need(
-            !name_too_long_r(),
-            paste(
-              label$object_name_with_article,
-              "darf nicht länger sein als",
-              as_german(.values$settings[[settings$length_name]]$length$max),
-              "Zeichen!\n\n"
-            )
-          ),
-          errorClass = "PFA"
-        )
+        if (name_too_short_r()) {
+          return(.values$i18n$t(
+            "err_min_chars",
+            label$object_name_with_article,
+            format_number(.values$settings[[settings$length_name]]$length$min)
+          ))
+        }
+
+        if (name_too_short_r()) {
+          return(.values$i18n$t(
+            "err_max_chars",
+            label$object_name_with_article,
+            format_number(.values$settings[[settings$length_name]]$length$max)
+          ))
+        }
       })
 
       output$name_taken <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !name_taken_r(),
-            paste(
-              label$object_name_with_article,
-              "existiert bereits!\n\n"
-            )
-          ),
-          errorClass = "PFA"
-        )
+        if (name_taken_r()) {
+          .values$i18n$t(
+            "err_name_taken",
+            label$object_name_with_article
+          )
+        }
       })
 
       output$confirm_object_name <- shiny::renderUI({
@@ -142,13 +137,13 @@ object_table_name_server <- function(id,
           shinyjs::disabled(
             shiny::actionButton(
               inputId = ns("confirm_object_name"),
-              label = "Bestätigen"
+              label = .values$i18n$t("confirm")
             )
           )
         } else {
           shiny::actionButton(
             inputId = ns("confirm_object_name"),
-            label = "Bestätigen"
+            label = .values$i18n$t("confirm")
           )
         }
       })
@@ -179,29 +174,30 @@ object_table_name_server <- function(id,
 
         if (success) {
           shiny::showNotification(
-            ui = paste0(
+            ui = .values$i18n$t(
+              "msg_obj_changed_to",
               label$object_name_with_article,
-              " wurde erfolgreich zu \"",
-              input$object_name,
-              "\" geändert."
+              input$object_name
             ),
             type = "warning",
             duration = 5
           )
         } else {
           shiny::showNotification(
-            ui = paste0(
-              label$object_name_with_article,
-              " konnte nicht geändert werden."
+            ui = .values$i18n$t(
+              "err_object_could_not_be_changed",
+              label$object_name_with_article
             ),
             type = "error",
             duration = 5
           )
         }
 
-        .values$update[[settings$update_name]](
-          .values$update[[settings$update_name]]() + 1
-        )
+        purrr::walk(settings$update_name, function(update_name) {
+          .values$update[[update_name]](
+            .values$update[[update_name]]() + 1
+          )
+        })
       })
     }
   )

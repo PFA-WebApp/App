@@ -9,18 +9,30 @@
 #' @family subtype
 #'
 #' @export
-db_add_subtype <- function(db, type_id, subtype_name, quantity) {
+db_add_subtype <- function(db, type_id, subtype_name, quantity, critical_quantity) {
   entry <- tibble::tibble(
     type_id = type_id,
     subtype_name = subtype_name,
     quantity = quantity,
+    critical_quantity = critical_quantity,
     removed = 0
   )
 
-  DBI::dbAppendTable(db, "subtype", entry)
+  success <- tryCatch(
+    DBI::dbAppendTable(db, "subtype", entry),
+    `Rcpp::exception` = function(e) {
+      if (stringr::str_detect(e$message, "UNIQUE.*type_id.*subtype_name")) {
+        return(0)
+      }
+
+      stop(e)
+    }
+  )
 
   id <- max(DBI::dbGetQuery(db, "SELECT rowid FROM subtype")$rowid)
   dir_create("subtype", id)
+
+  success
 }
 
 
@@ -35,10 +47,19 @@ db_add_subtype <- function(db, type_id, subtype_name, quantity) {
 #'
 #' @export
 db_set_subtype_name <- function(db, subtype_id, subtype_name) {
-  DBI::dbExecute(
-    db,
-    "UPDATE subtype SET subtype_name = ? WHERE rowid = ?",
-    params = list(subtype_name, subtype_id)
+  tryCatch(
+    DBI::dbExecute(
+      db,
+      "UPDATE subtype SET subtype_name = ? WHERE rowid = ?",
+      params = list(subtype_name, subtype_id)
+    ),
+    `Rcpp::exception` = function(e) {
+      if (stringr::str_detect(e$message, "UNIQUE.*type_id.*subtype_name")) {
+        return(0)
+      }
+
+      stop(e)
+    }
   )
 }
 
@@ -112,10 +133,19 @@ db_set_subtype_max_quantity <- function(db, subtype_id, quantity) {
 #'
 #' @export
 db_change_subtype_max_quantity <- function(db, subtype_id, amount) {
-  DBI::dbExecute(
-    db,
-    "UPDATE subtype SET quantity = quantity + ? WHERE rowid = ?",
-    params = list(amount, subtype_id)
+  tryCatch(
+    DBI::dbExecute(
+      db,
+      "UPDATE subtype SET quantity = quantity + ? WHERE rowid = ?",
+      params = list(amount, subtype_id)
+    ),
+    `Rcpp::exception` = function(e) {
+      if (stringr::str_detect(e$message, "CHECK.*quantity")) {
+        return(0)
+      }
+
+      stop(e)
+    }
   )
 }
 
@@ -160,7 +190,7 @@ db_get_subtypes_by_type_id <- function(db, type_id) {
 db_get_type_id_by_subtype_id <- function(db, subtype_id) {
   DBI::dbGetQuery(
     db,
-    "SELECT type_id FROM subtype WHERE rowid = ? AND removed = 0",
+    "SELECT type_id FROM subtype WHERE rowid = ?",
     params = list(subtype_id)
   )$type_id
 }
@@ -194,6 +224,23 @@ db_get_subtypes <- function(db, include_removed = FALSE) {
   names(x) <- tbl$subtype_name
 
   x
+}
+
+
+
+#' Get Subtype ID by Subtype Name and Type ID
+#'
+#' @template db
+#'
+#' @family subtype
+#'
+#' @export
+db_get_subtype_id <- function(db, type_id, subtype_name) {
+  DBI::dbGetQuery(
+    db,
+    "SELECT rowid FROM subtype WHERE type_id = ? AND subtype_name = ?",
+    params = list(type_id, subtype_name)
+  )$rowid
 }
 
 
@@ -304,4 +351,38 @@ db_has_subtype_name <- function(db, subtype_name) {
 #' @export
 db_has_type_subtype_name <- function(db, type_id, name) {
   name %in% names(db_get_subtypes_by_type_id(db, type_id))
+}
+
+
+
+#' Set Critical Quantity
+#'
+#' @template db
+#'
+#' @family subtype
+#'
+#' @export
+db_set_critical_quantity <- function(db, subtype_id, critical_quantity) {
+  DBI::dbExecute(
+    db,
+    "UPDATE subtype SET critical_quantity = ? WHERE rowid = ?",
+    params = list(critical_quantity, subtype_id)
+  )
+}
+
+
+
+#' Get Critical Quantity
+#'
+#' @template db
+#'
+#' @family subtype
+#'
+#' @export
+db_get_critical_quantity <- function(db, subtype_id) {
+  DBI::dbGetQuery(
+    db,
+    "SELECT critical_quantity FROM subtype WHERE rowid = ?",
+    params = list(subtype_id)
+  )$critical_quantity
 }

@@ -48,12 +48,14 @@ db_get_circulation_table <- function(db) {
       user.removed AS user_removed,
       user.name AS user_name,
       subtype.subtype_name AS subtype_name,
-      type.type_name AS type_name
+      subtype.removed AS subtype_removed,
+      type.type_name AS type_name,
+      type.removed AS type_removed,
+      type.rowid AS type_id
     FROM circulation
     INNER JOIN user ON circulation.user_id = user.rowid
     INNER JOIN subtype ON circulation.subtype_id = subtype.rowid
     INNER JOIN type ON subtype.type_id = type.rowid
-    WHERE circulation.op_type = 1
     "
   )
 }
@@ -213,11 +215,16 @@ borrow_summary <- function(tbl, group_by) {
 #'
 #' @export
 db_get_available_summary <- function(db, type_id) {
-  subtype_ids <- db_get_subtypes_by_type_id(db, type_id)
+  DBI::dbWithTransaction(
+    db, {
+      subtype_ids <- db_get_subtypes_by_type_id(db, type_id)
 
-  tibble::tibble(
-    subtype_id = subtype_ids,
-    quantity = db_get_available_quantity(db, subtype_ids),
-    max_quantity = db_get_subtype_max_quantity(db, subtype_ids)
+      tibble::tibble(
+        subtype_id = subtype_ids,
+        quantity = db_get_available_quantity(db, subtype_ids),
+        max_quantity = db_get_subtype_max_quantity(db, subtype_ids),
+        critical_quantity = db_get_critical_quantity(db, subtype_ids)
+      )
+    }
   )
 }

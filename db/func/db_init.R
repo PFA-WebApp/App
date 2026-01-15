@@ -75,20 +75,27 @@ db_init <- function(path = "db/db.sqlite") {
 
 #' @export
 create_user_table <- function(db) {
-  tbl <- tibble::tibble(
-    hash = character(),
-    name = character(),
-    status = character(),
-    password = character(),
-    added_from = character(),
-    time_added = character(),
-    time_current_logged = character(),
-    time_previous_logged = character(),
-    times_logged = integer(),
-    removed = integer()
+  DBI::dbExecute(
+    db,
+    "CREATE TABLE user (
+      rowid INTEGER NOT NULL PRIMARY KEY,
+      hash VARCHAR(255),
+      name VARCHAR(255),
+      status VARCHAR(255) CHECK(status IN ('admin', 'mod', 'user')),
+      password VARCHAR(255),
+      added_from INT,
+      time_added VARCHAR(255),
+      time_current_logged VARCHAR(255),
+      time_previous_logged VARCHAR(255),
+      times_logged INT CHECK(times_logged >= 0),
+      removed INT CHECK(removed IN (0, 1))
+    )"
   )
 
-  DBI::dbCreateTable(db, "user", tbl)
+  DBI::dbExecute(
+    db,
+    "CREATE UNIQUE INDEX not_removed_names ON user(name) WHERE removed = 0"
+  )
 }
 
 
@@ -113,59 +120,102 @@ create_subtype_table <- function(db) {
     type_id = integer(),
     subtype_name = character(),
     quantity = integer(),
+    critical_quantity = integer(),
     removed = integer()
   )
 
-  DBI::dbCreateTable(db, "subtype", tbl)
+  DBI::dbExecute(
+    db,
+    "CREATE TABLE subtype (
+      rowid INTEGER NOT NULL PRIMARY KEY,
+      type_id INT,
+      subtype_name VARCHAR(255),
+      quantity INT CHECK(quantity >= 0),
+      critical_quantity INT CHECK(quantity >= 0),
+      removed INT CHECK(removed IN (0, 1)),
+      FOREIGN KEY(type_id) REFERENCES type(rowid)
+    )"
+  )
+
+  DBI::dbExecute(
+    db,
+    "CREATE UNIQUE INDEX not_removed_subtype_names
+    ON subtype(type_id, subtype_name)
+    WHERE removed = 0"
+  )
 }
 
 
 
 #' @export
 create_type_table <- function(db) {
-  tbl <- tibble::tibble(
-    type_name = character(),
-    removed = integer()
+  DBI::dbExecute(
+    db,
+    "CREATE TABLE type (
+      rowid INTEGER NOT NULL PRIMARY KEY,
+      type_name VARCHAR(255),
+      removed int CHECK(removed IN (0, 1))
+    )"
   )
 
-  DBI::dbCreateTable(db, "type", tbl)
+  DBI::dbExecute(
+    db,
+    "CREATE UNIQUE INDEX not_removed_type_names
+    ON type(type_name) WHERE removed = 0"
+  )
 }
 
 
 
 #' @export
 create_group_table <- function(db) {
-  tbl <- tibble::tibble(
-    group_name = character(),
-    removed = integer()
+  DBI::dbExecute(
+    db,
+    "CREATE TABLE groups (
+      rowid INTEGER NOT NULL PRIMARY KEY,
+      group_name VARCHAR(255),
+      removed int CHECK(removed IN (0, 1))
+    )"
   )
 
-  DBI::dbCreateTable(db, "groups", tbl)
+  DBI::dbExecute(
+    db,
+    "CREATE UNIQUE INDEX not_removed_group_names
+    ON groups(group_name) WHERE removed = 0"
+  )
 }
 
 
 
 #' @export
 create_group_type_table <- function(db) {
-  tbl <- tibble::tibble(
-    group_id = integer(),
-    type_id = integer()
+  DBI::dbExecute(
+    db,
+    "CREATE TABLE group_type (
+      rowid INTEGER NOT NULL PRIMARY KEY,
+      group_id INT,
+      type_id INT,
+      FOREIGN KEY(group_id) REFERENCES groups(rowid)
+      FOREIGN KEY(type_id) REFERENCES type(rowid)
+    )"
   )
-
-  DBI::dbCreateTable(db, "group_type", tbl)
 }
 
 
 
 #' @export
 create_circulation_table <- function(db) {
-  tbl <- tibble::tibble(
-    user_id = integer(),
-    subtype_id = integer(),
-    quantity = integer(),
-    time = character(),
-    op_type = integer()
+  DBI::dbExecute(
+    db,
+    "CREATE TABLE circulation (
+      rowid INTEGER NOT NULL PRIMARY KEY,
+      user_id INT,
+      subtype_id INT,
+      quantity INT,
+      time VARCHAR(255),
+      op_type INT,
+      FOREIGN KEY(user_id) REFERENCES user(rowid),
+      FOREIGN KEY(subtype_id) REFERENCES subtype(rowid)
+    )"
   )
-
-  DBI::dbCreateTable(db, "circulation", tbl)
 }

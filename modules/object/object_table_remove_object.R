@@ -59,7 +59,10 @@ object_table_remove_object_server <- function(id,
       )
 
       object_name_r <- shiny::reactive({
-        .values$update[[settings$update_name]]()
+        purrr::walk(settings$update_name, function(update_name) {
+          .values$update[[update_name]]()
+        })
+
         db$func$get_object_name(.values$db, object_id_r())
       })
 
@@ -67,24 +70,22 @@ object_table_remove_object_server <- function(id,
         shiny::showModal(shiny::modalDialog(
           easyClose = TRUE,
           title = htmltools::tagList(
-            label$remove_btn_title,
+            .values$i18n$t(label$remove_btn_title),
             shiny::modalButton(
               label = NULL,
               icon = shiny::icon("window-close")
             )
           ),
-          htmltools::div(
-            paste0(
-              "Bist du sicher, dass du ",
+          htmltools::p(
+            .values$i18n$t(
+              "msg_confirm_remove_obj",
               label$object_with_small_article,
-              " \"",
-              object_name_r(),
-              "\" löschen möchtest?"
+              object_name_r()
             )
           ),
           footer = shiny::actionButton(
             inputId = ns("confirm_remove"),
-            label = "Ja"
+            label = .values$i18n$t("confirm")
           )
         ))
       })
@@ -104,29 +105,35 @@ object_table_remove_object_server <- function(id,
 
         if (success) {
           shiny::showNotification(
-            ui = paste0(
+            ui = .values$i18n$t(
+              "msg_remove_successful",
+              "${p_[[2]]} \"${p_[[3]]}\"",
               label$object_with_article,
-              " \"",
-              object_name_r(),
-              "\" wurde erfolgreich gelöscht."
+              object_name_r()
             ),
             type = "warning",
             duration = 5
           )
         } else {
           shiny::showNotification(
-            ui = paste0(
+            ui = .values$i18n$t(
+              "err_remove_not_successful",
+              "${p_[[2]]} \"${p_[[3]]}\"",
               label$object_with_article,
-              " \"",
-              object_name_r(),
-              "\" konnte nicht gelöscht werden."
+              object_name_r()
             ),
             type = "error",
             duration = 5
           )
         }
 
-        .values$update[[settings$update_name]](.values$update[[settings$update_name]]() + 1)
+        purrr::walk(settings$update_name, function(update_name) {
+          .values$update[[update_name]](
+            .values$update[[update_name]]() + 1
+          )
+        })
+
+        .values$update$circulation(.values$update$circulation() + 1)
       })
     }
   )

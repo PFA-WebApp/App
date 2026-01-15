@@ -6,13 +6,13 @@ type_ui <- function(id) {
       width = 6,
       add_object_box_ui(
         id = ns("add_type"),
-        title = "Typ hinzufügen",
-        label = "Typname",
+        title = i18n$t("add_type"),
+        label = i18n$t("type_name"),
         placeholder = "PT 100"
       ),
       object_table_box_ui(
         id = ns("type_table"),
-        title = "Typtabelle"
+        title = i18n$t("type_table")
       )
     ),
     shiny::column(
@@ -23,7 +23,7 @@ type_ui <- function(id) {
       ),
       show_connections_ui(
         id = ns("show_groups"),
-        title = "Gruppen anzeigen"
+        title = i18n$t("show_groups")
       )
     )
   )
@@ -57,9 +57,40 @@ type_server <- function(id, .values) {
         name_column = "type_name",
         func = list(
           add_object = function(db, name) {
-            db_add_type(db, name)
-            id <- db_get_type_id(db, name)
-            db_add_subtype(db, id, "Standard", 0)
+            success <- db_add_type(db, name)
+
+            if (!success) return(FALSE)
+
+            type_id <- db_get_type_id(
+              db = db,
+              type_name = name
+            )
+
+            db_add_subtype(
+              db = db,
+              type_id = type_id,
+              subtype_name = "Standard",
+              quantity = 0,
+              critical_quantity = 0
+            )
+
+            subtype_id <- db_get_subtype_id(
+              db = db,
+              type_id = type_id,
+              subtype_name = "Standard"
+            )
+
+            db_add_circulation(
+              db = db,
+              user_id = .values$user$id(),
+              subtype_id = subtype_id,
+              quantity = 0,
+              op_type = 2
+            )
+
+            .values$update$circulation(.values$update$circulation() + 1)
+
+            TRUE
           },
           get_connections = db_get_groups_by_type,
           get_possible_connections = db_get_groups,
@@ -71,24 +102,25 @@ type_server <- function(id, .values) {
           remove_object = function(db, type_id) {
             db_remove_type(db, type_id)
             db_remove_subtypes_by_type_id(db, type_id)
-          }
+          },
+          remove_object_allowed = remove_type_allowed
         )
       )
 
       label <- list(
-        add_label = "Typ hinzufügen",
-        change_connections = "Gruppen bearbeiten für Typ",
-        change_name = "Typname bearbeiten",
-        colnames = c("Typname", "Gruppen bearbeiten", "Entfernen"),
-        connection_modification = "Die Gruppen von Typ",
-        connections = "Gruppen",
-        connection_name = "Gruppenname",
-        new_name = "Neuer Typname",
-        object = "Typ",
-        object_name_with_article = "Der Typname",
-        object_with_article = "Der Typ",
-        object_with_small_article = "den Typen",
-        remove_btn_title = "Typ entfernen"
+        add_label = "add_type",
+        change_connections = "edit_type_groups",
+        change_name = "edit_type_name",
+        colnames = c("type_name", "edit_groups", "remove"),
+        connection_modification = "${groups_of_type}",
+        connections = "groups",
+        connection_name = "group_name",
+        new_name = "new_type_name",
+        object = "type",
+        object_name_with_article = "${type_name_with_article}",
+        object_with_article = "${type_with_article}",
+        object_with_small_article = "${type_with_small_article}",
+        remove_btn_title = "remove_type"
       )
 
 

@@ -10,16 +10,20 @@ object_quantity_input_ui <- function(id, old_quantity, label) {
       step = 1
     ),
     shiny::uiOutput(
-      outputId = ns("not_integer")
+      outputId = ns("not_integer"),
+      class = "pfa-error"
     ),
     shiny::uiOutput(
-      outputId = ns("negative")
+      outputId = ns("negative"),
+      class = "pfa-error"
     ),
     shiny::uiOutput(
-      outputId = ns("too_small")
+      outputId = ns("too_small"),
+      class = "pfa-error"
     ),
     shiny::uiOutput(
-      outputId = ns("too_big")
+      outputId = ns("too_big"),
+      class = "pfa-error"
     )
   )
 }
@@ -31,7 +35,7 @@ object_quantity_input_server <- function(id,
                                          max_message_r = shiny::reactive(""),
                                          min_r = shiny::reactive(-Inf),
                                          min_message_r = shiny::reactive(""),
-                                         object_label = "Die Menge"
+                                         object_label = "${quantity}"
 ) {
   shiny::moduleServer(
     id,
@@ -40,53 +44,45 @@ object_quantity_input_server <- function(id,
       ns <- session$ns
 
       output$not_integer <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !not_integer_r(),
-            glue::glue(
-              "{object} muss ganzzahlig sein!\n\n",
-              object = object_label
-            )
-          ),
-          errorClass = "PFA"
-        )
+        if (not_integer_r()) {
+          .values$i18n$t(
+            "err_must_be_integer",
+            object_label
+          )
+        }
       })
 
       output$negative <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !negative_r(),
-            glue::glue(
-              "{object} muss größer gleich Null sein!\n\n",
-              object = object_label
-            )
-          ),
-          errorClass = "PFA"
-        )
+        if (negative_r()) {
+          .values$i18n$t(
+            "err_must_be_positive",
+            object_label
+          )
+        }
       })
 
       output$too_small <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !too_small_r(),
-            min_message_r()
-          ),
-          errorClass = "PFA"
-        )
+        if (too_small_r()) {
+          .values$i18n$t(
+            min_message_r(),
+            min_r()
+          )
+        }
       })
 
       output$too_big <- shiny::renderUI({
-        shiny::validate(
-          shiny::need(
-            !too_big_r(),
-            max_message_r()
-          ),
-          errorClass = "PFA"
-        )
+        if (too_big_r()) {
+          if (!nchar(max_message_r())) return()
+
+          .values$i18n$t(
+            max_message_r(),
+            max_r()
+          )
+        }
       })
 
       not_integer_r <- shiny::reactive({
-        if (is.null(input$object_quantity)) return(TRUE)
+        if (is_empty(input$object_quantity)) return(TRUE)
         quantity <- as.integer(input$object_quantity)
         if (is.na(quantity)) return(TRUE)
         quantity != input$object_quantity
@@ -94,17 +90,17 @@ object_quantity_input_server <- function(id,
 
       negative_r <- shiny::reactive({
         if (min_r() > 0) return(FALSE)
-        if (is.null(input$object_quantity)) return(TRUE)
+        if (is_empty(input$object_quantity)) return(TRUE)
         input$object_quantity < 0
       })
 
       too_small_r <- shiny::reactive({
-        if (is.null(input$object_quantity)) return(TRUE)
+        if (is_empty(input$object_quantity)) return(TRUE)
         input$object_quantity < min_r()
       })
 
       too_big_r <- shiny::reactive({
-        if (is.null(input$object_quantity)) return(TRUE)
+        if (is_empty(input$object_quantity)) return(TRUE)
         input$object_quantity > max_r()
       })
 
