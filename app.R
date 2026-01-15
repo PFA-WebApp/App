@@ -60,7 +60,6 @@ ui_server <- function(source_to_globalenv = FALSE) {
     i18n <- shiny.i18n::Translator$new(
         translation_json_path = "translation/translation.json"
     )
-    i18n$set_language("de")
 
     # Allow bigger file inputs
     options(shiny.maxRequestSize = 100*1024^2)
@@ -252,9 +251,9 @@ ui_server <- function(source_to_globalenv = FALSE) {
     return(list(ui = ui, server = server))
 }
 
-ui_server <- ui_server(source_to_globalenv = FALSE)
+ui_server_list <- ui_server(source_to_globalenv = FALSE)
 
-ui <- ui_server$ui
-server <- ui_server$server
+ui <- ui_server_list$ui
+server <- ui_server_list$server
 
 shinyApp(ui, server)
