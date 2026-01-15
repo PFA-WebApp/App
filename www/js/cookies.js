@@ -6,7 +6,7 @@ shinyjs.getCookie = function(params) {
 shinyjs.setCookie = function(params) {
   Cookies.set(params.cookie, params.value, {
     sameSite: 'strict',
-    expires: 1
+    expires: 7
   });
   Shiny.setInputValue(params.id, params.value);
 };
@@ -14,7 +14,7 @@ shinyjs.setCookie = function(params) {
 shinyjs.rmCookie = function(params) {
   Cookies.remove(params.cookie, {
     sameSite: 'strict',
-    expires: 1
+    expires: 7
   });
   Shiny.setInputValue(params.id, undefined);
 };
